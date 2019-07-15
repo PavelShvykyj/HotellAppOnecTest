@@ -1,0 +1,27 @@
+<h1>Counter</h1>
+
+<p>This is a simple example of an Angular component.</p>
+
+<p>Current count: <strong>{{ currentCount }}</strong></p>
+
+<button class="btn btn-primary" (click)="incrementCounter()">Increment</button>
+<button class="btn btn-primary" (click)="Onectest()">test</button>
+
+<table class="table"  *ngIf="log.length != 0">
+    <thead class="thead-dark">
+        <tr>
+            <th> Start </th>
+            <th> Type</th>
+            <th> Duration </th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let message of log">
+        <td> {{message.start |  date: 'mediumTime'}} </td>
+        <td> {{message.content  }}</td>
+        <td> {{message.duration  }}</td>
+    </tr>
+    </tbody>
+</table>
+
+
