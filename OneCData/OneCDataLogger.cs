@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,10 +23,10 @@ namespace TestCOneConnection.OneCData
         public List<IMessage> Messages { get => _messages; }
         
 
-        public OneCDataLogger(Boolean UseLog)
+        public OneCDataLogger(IOptions<OneCOptions> options)
         {
             _messages = new List<IMessage>();
-            _uselogg = UseLog;
+            _uselogg = options.Value.USE_LOG;
         }
 
         public IMessage StartMessage(string messagecontent, object addparams ) {

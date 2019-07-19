@@ -8,25 +8,25 @@ namespace TestCOneConnection.RequestProxy
 {
     public class ProxyServise : IRequestProxy
     {
-        private IOneCDataProvider OneCDataProvider { get; }
+        private readonly IOneCDataProvider _OneCDataProvider;
 
         // delegates
         private Func<IProxyParametr, Task<IProxyResponse>> GetRoomStockDelegate;
 
-        public ProxyServise(IRestClientAccessor client ) 
+        public ProxyServise(IOneCDataProvider OneCDataProvider) 
         {
-            OneCDataProvider = new OneCDataProvider(client);
+            _OneCDataProvider = OneCDataProvider;
             InitDelegates();
         }
 
         private void InitDelegates()
         {
-            GetRoomStockDelegate += OneCDataProvider.APIManager.GetRoomStock;
+            GetRoomStockDelegate += _OneCDataProvider.APIManager.GetRoomStock;
         }
 
         public List<IMessage> GetOneCSessionLog()
         {
-            return OneCDataProvider.SessionManager.Logg;
+            return _OneCDataProvider.SessionManager.Logg;
         }
 
         public async  Task<IProxyResponse> GetRoomStock(IProxyParametr Parametr)

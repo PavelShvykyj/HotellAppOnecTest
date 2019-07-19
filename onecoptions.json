@@ -1,0 +1,10 @@
+﻿{
+  "BASE_URL": "http://localhost/base/hs/Worksheets/",
+  "LOGIN": "Admin",
+  "PASSWORD": "1",
+  "REQUEST_TIMEOUT": "5000",
+  "USE_LOG": "true",
+  "PING_FREQUENCY": "5000",
+  "MAX_BADREQUEST_COUNT": "3"
+
+}

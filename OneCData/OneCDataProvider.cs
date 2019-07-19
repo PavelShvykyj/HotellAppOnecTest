@@ -8,13 +8,17 @@ namespace TestCOneConnection.OneCData
 {
     public class OneCDataProvider : IOneCDataProvider
     {
-        public OneCAPIManager APIManager { get; }
-        public OneCSessionManager SessionManager { get; }
+        public IOneCAPIManager APIManager { get => _APIManager; }
+        public IOneCSessionManager SessionManager { get => _SessionManager; }
 
-        public OneCDataProvider(IRestClientAccessor ClienAccessor)
+        private readonly IOneCAPIManager _APIManager;
+        private readonly IOneCSessionManager _SessionManager;
+
+
+        public OneCDataProvider(IOneCAPIManager OneCAPIManager, IOneCSessionManager OneCSessionManager)
         {
-            SessionManager = new OneCSessionManager(ClienAccessor);
-            APIManager = new OneCAPIManager(ClienAccessor);
+            _SessionManager = OneCSessionManager;
+            _APIManager = OneCAPIManager;
         }
     }
 }

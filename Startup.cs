@@ -23,8 +23,14 @@ namespace TestCOneConnection
         public void ConfigureServices(IServiceCollection services)
         {
 
-            
-            services.AddSingleton<IRestClientAccessor> (new RestClientAccessor());
+            services.AddOptions();
+            services.Configure<OneCOptions>(Configuration);
+
+            services.AddSingleton<IRestClientAccessor, RestClientAccessor> ();
+            services.AddSingleton<IOneCDataLogger, OneCDataLogger>();
+            services.AddSingleton<IOneCAPIManager, OneCAPIManager>();
+            services.AddSingleton<IOneCSessionManager, OneCSessionManager>();
+            services.AddSingleton<IOneCDataProvider, OneCDataProvider>();
             services.AddSingleton<IRequestProxy, ProxyServise>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -35,10 +41,12 @@ namespace TestCOneConnection
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOneCSessionManager OneCSessionManager)
         {
             if (env.IsDevelopment())
             {
@@ -74,6 +82,12 @@ namespace TestCOneConnection
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            /// поскольку services.Add не создает екземпляр класса то первичный запуск 
+            /// подключения к 1С делаем вручную тут а не в кострукторе класа как пердпологалось
+            OneCSessionManager.StartSessionAsync();
+             
+            //app.ApplicationServices.GetService<OneCSessionManager>().StartSessionAsync();
         }
     }
 }

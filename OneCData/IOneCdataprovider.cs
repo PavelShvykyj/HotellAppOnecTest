@@ -8,7 +8,7 @@ namespace TestCOneConnection.OneCData
 {
     public interface IOneCDataProvider : IDataProvider
     {
-        OneCSessionManager SessionManager { get; }
-        OneCAPIManager APIManager { get; }
+        IOneCSessionManager SessionManager { get; }
+        IOneCAPIManager APIManager { get; }
     }
 }

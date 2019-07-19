@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Microsoft.Extensions.Options;
+using RestSharp;
 using RestSharp.Authenticators;
 
 namespace TestCOneConnection.OneCData { 
@@ -7,10 +8,10 @@ namespace TestCOneConnection.OneCData {
         
         public RestClient Client { get;  }
         
-        public RestClientAccessor()
+        public RestClientAccessor(IOptions<OneCOptions> options)
         {
-            Client = new RestClient("http://localhost/base/hs/Worksheets/");
-            Client.Authenticator = new HttpBasicAuthenticator("Admin", "1");
+            Client = new RestClient(options.Value.BASE_URL);
+            Client.Authenticator = new HttpBasicAuthenticator(options.Value.LOGIN, options.Value.PASSWORD);
         }
 
     }

@@ -15,9 +15,9 @@ namespace TestCOneConnection.OneCData
         public object FormatedAswer { get ; set ; }
     }
 
-    public class OneCAPIManager
+    public class OneCAPIManager : IOneCAPIManager
     {
-        private IRestClientAccessor _client;
+        private readonly IRestClientAccessor _client;
 
         public OneCAPIManager(IRestClientAccessor ClientAccessor)
         {
