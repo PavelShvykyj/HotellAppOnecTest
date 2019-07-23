@@ -1,27 +1,82 @@
-<h1>Counter</h1>
-
-<p>This is a simple example of an Angular component.</p>
-
-<p>Current count: <strong>{{ currentCount }}</strong></p>
-
-<button class="btn btn-primary" (click)="incrementCounter()">Increment</button>
-<button class="btn btn-primary" (click)="Onectest()">test</button>
-
-<table class="table"  *ngIf="log.length != 0">
-    <thead class="thead-dark">
-        <tr>
-            <th> Start </th>
-            <th> Type</th>
-            <th> Duration </th>
-        </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let message of log">
-        <td> {{message.start |  date: 'mediumTime'}} </td>
-        <td> {{message.content  }}</td>
-        <td> {{message.duration  }}</td>
-    </tr>
-    </tbody>
-</table>
 
 
+<div class="container">
+  <div class="row">
+    <div class="col col-4">
+      <div class="card w-100">
+        <div class="card-header">
+          Статус сессии 1С
+        
+          <div class="spinner-grow" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        
+
+
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"> LastResponseStatus : {{sessionstatus.LastResponseStatus}} </li>
+          <li class="list-group-item"> BadResponseCount : {{sessionstatus.BadResponseCount}}</li>
+          <li class="list-group-item"> PingTimerStarted : {{sessionstatus.PingTimerStarted}}</li>
+          <li class="list-group-item"> Session ID : {{sessionstatus.OneCSesionId}}</li>
+        </ul>
+
+        <div class="card-footer text-muted">
+          <div class="btn-group-vertical w-100 mt-2" role="group">
+                <button type="button" class="btn btn-dark border border-secondary text-truncate" (click)="GetOneCSesiionStatus()">
+                  <p class="button-text text-truncate">Обновить</p>
+                  <p class="button-text text-truncate">данные</p>
+                </button>
+                <button type="button" class="btn btn-dark border border-secondary mh-100 h-100 text-truncate" (click)="StartOneCSesiionStatus()">
+                  <span class="button-text text-truncate">Запустить сесии</span>
+                </button>
+                <button type="button" class="btn btn-dark border border-secondary mh-100 h-100 text-truncate" (click)="StopOneCSesiionStatus()">
+                  <span class="button-text text-truncate">Остановить сесии</span>
+                </button>
+        
+                <button type="button" class="btn btn-dark border border-secondary mh-100 h-100 text-truncate" (click)="GetOptions()">
+                  <span class="button-text text-truncate">Options on console</span>
+                </button>
+                <button type="button" class="btn btn-dark border border-secondary mh-100 h-100 text-truncate" (click)="SetOptions()">
+                  <span class="button-text text-truncate">Set Options</span>
+                </button>
+        
+        
+          </div>
+        </div>
+
+      </div>
+    
+    
+    
+    </div>
+
+    <div class="col col-8 form-col">
+
+            <button class="btn btn-dark  w-100" (click)="Onectest()">Refresh</button>   
+      <div class="table-sizing scrollable-y">
+
+        <table class="table table-striped table-bordered">
+          
+          <thead class="thead-dark">
+                
+            <tr>
+              <th> Start </th>
+              <th> Type</th>
+              <th> Duration </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="log.length != 0">
+            <tr *ngFor="let message of log">
+              <td> {{message.start |  date: 'mediumTime'}} </td>
+              <td> {{message.content  }}</td>
+              <td> {{message.duration  }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+</div>

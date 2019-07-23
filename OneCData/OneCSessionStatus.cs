@@ -8,5 +8,6 @@ namespace TestCOneConnection.OneCData
         public HttpStatusCode LastResponseStatus { get ; set ; }
         public byte BadResponseCount { get ; set ; }
         public bool PingTimerStarted { get ; set ; }
+        public string  OneCSesionId { get; set; }
     }
 }

@@ -24,6 +24,11 @@ namespace TestCOneConnection.RequestProxy
     public interface IRequestProxy
     {
         List<IMessage> GetOneCSessionLog();
-        Task<IProxyResponse > GetRoomStock(IProxyParametr Parametr);
+        IOneCSessionStatus GetOneCSessionStatus();
+        Task StartOneCSession();
+        Task StopOneCSession();
+        Task<IProxyResponse> GetRoomStock(IProxyParametr Parametr);
+        string GetOptions();
+        void SetOptions(IOneCOptions newoptions);
     }
 }

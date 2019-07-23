@@ -1,7 +1,7 @@
 ﻿
 namespace TestCOneConnection.OneCData
 {
-    public class OneCOptions
+    public class OneCOptions : IOneCOptions
     {
         public string BASE_URL { get; set; }
         public string LOGIN { get; set; }

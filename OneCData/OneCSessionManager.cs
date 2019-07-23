@@ -48,7 +48,8 @@ namespace TestCOneConnection.OneCData
             {
                 BadResponseCount = 0,
                 LastResponseStatus = HttpStatusCode.OK,
-                PingTimerStarted = false
+                PingTimerStarted = false,
+                OneCSesionId = ""
             };
             
             ///// перенесено в startup - Configure см. коментарий там
@@ -108,6 +109,8 @@ namespace TestCOneConnection.OneCData
             _sessionstatus.BadResponseCount = 0;
 
             RestResponseCookie cookie = response.Cookies.SingleOrDefault(c => c.Name == "ibsession");
+            _sessionstatus.OneCSesionId = cookie.Value.ToString();
+
             _client.CookieContainer.Add(new Cookie(cookie.Name, cookie.Value.ToString(), cookie.Path, cookie.Domain));
             StartPing();
         }
@@ -135,6 +138,8 @@ namespace TestCOneConnection.OneCData
         private void ExecuteStopSession(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
         {
             _sessionstatus.LastResponseStatus = response.StatusCode;
+            _sessionstatus.OneCSesionId = "";
+
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.OK)
             {
                 _sessionstatus.BadResponseCount += 1;
@@ -143,8 +148,6 @@ namespace TestCOneConnection.OneCData
                     StopPing();
                     return;
                 }
-
-
             }
 
             _sessionstatus.BadResponseCount = 0;

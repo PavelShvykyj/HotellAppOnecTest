@@ -47,6 +47,46 @@ namespace TestCOneConnection.Controllers
 
         }
 
+        [HttpGet("onecsessionstatus")]
+        public IActionResult GetOneCSesiionStatus()
+        {
+            return Ok(_proxy.GetOneCSessionStatus());
+        }
+
+        [HttpGet("startonecsession")]
+        public async Task<IActionResult> StartOneCSesiion()
+        {
+            await _proxy.StartOneCSession();
+            return Ok();
+        }
+
+        [HttpGet("stoponecsession")]
+        public async Task<IActionResult> StopOneCSesiion()
+        {
+            await _proxy.StopOneCSession();
+            return Ok();
+        }
+
+        [HttpGet("onecoptions")]
+        public IActionResult GetOneCoptions()
+        {
+            return Ok(_proxy.GetOptions());
+        }
+
+        [HttpPost("onecoptions")]
+        public IActionResult SetOneCoptions([FromBody] OneCOptions newoptions)
+        {
+            if (newoptions == null)
+            {
+                return Ok("empty body");
+            }
+            
+
+            _proxy.SetOptions(newoptions);
+            return Ok(newoptions);
+        }
+
+
         // GET api/<controller>/5
         [HttpGet("{id}")]
         public string Get(int id)
@@ -69,6 +109,9 @@ namespace TestCOneConnection.Controllers
 
             return Ok(response.FormatedAswer);
         }
+
+
+
 
 
         // POST api/<controller>

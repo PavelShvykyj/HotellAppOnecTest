@@ -10,5 +10,6 @@ namespace TestCOneConnection.OneCData
     {
         IOneCSessionManager SessionManager { get; }
         IOneCAPIManager APIManager { get; }
+        IOneCOptionsManager OptionsManager { get; }
     }
 }

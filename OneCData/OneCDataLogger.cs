@@ -52,6 +52,10 @@ namespace TestCOneConnection.OneCData
             message.finish = messagefinish;
             message.duration = (message.start - message.finish).Milliseconds;
             _messages.Add(message);
+            if (_messages.Count > 50)
+            {
+                _messages.Remove(_messages.ElementAt(0));       
+            }
 
         }
 

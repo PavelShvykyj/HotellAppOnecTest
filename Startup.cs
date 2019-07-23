@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 using TestCOneConnection.OneCData;
 using TestCOneConnection.RequestProxy;
 
@@ -32,8 +33,18 @@ namespace TestCOneConnection
             services.AddSingleton<IOneCSessionManager, OneCSessionManager>();
             services.AddSingleton<IOneCDataProvider, OneCDataProvider>();
             services.AddSingleton<IRequestProxy, ProxyServise>();
+            services.AddSingleton<IOneCOptionsManager, OneCOptionsManager>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(opt =>
+            {
+                var resolver = opt.SerializerSettings.ContractResolver;
+                if (resolver != null)
+                {
+                    var res = resolver as DefaultContractResolver;
+                    res.NamingStrategy = null;  // <<!-- this removes the camelcasing
+                }
+            });
             //services.AddHttpClient();
 
             // In production, the Angular files will be served from this directory

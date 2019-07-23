@@ -10,15 +10,18 @@ namespace TestCOneConnection.OneCData
     {
         public IOneCAPIManager APIManager { get => _APIManager; }
         public IOneCSessionManager SessionManager { get => _SessionManager; }
+        public IOneCOptionsManager OptionsManager { get => _OptionsManager; }
 
         private readonly IOneCAPIManager _APIManager;
         private readonly IOneCSessionManager _SessionManager;
+        private readonly IOneCOptionsManager _OptionsManager;
 
 
-        public OneCDataProvider(IOneCAPIManager OneCAPIManager, IOneCSessionManager OneCSessionManager)
+        public OneCDataProvider(IOneCAPIManager OneCAPIManager, IOneCSessionManager OneCSessionManager, IOneCOptionsManager OneCOptionsManager)
         {
             _SessionManager = OneCSessionManager;
             _APIManager = OneCAPIManager;
+            _OptionsManager = OneCOptionsManager;
         }
     }
 }
