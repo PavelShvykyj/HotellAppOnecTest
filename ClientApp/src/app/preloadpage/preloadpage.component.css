@@ -1,0 +1,7 @@
+.timerfont {
+    font-size: 75%;
+}
+
+.timerposition {
+    transform: translateX(-50px); 
+}

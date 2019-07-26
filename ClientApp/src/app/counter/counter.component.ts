@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ILoggmessage } from '../../loggmessage';
 import { IOneCSessionStatus } from './OneCSessionStatus';
-
+//import { NgxSpinnerService } from "ngx-spinner";
 
 
 
@@ -18,14 +18,18 @@ export class CounterComponent {
   public log : Array<ILoggmessage> = [];
   public sessionstatus : IOneCSessionStatus = this.EmptyOneCSessionStatus()
   public options;
+  public requeststarted : boolean = false;
 
   public incrementCounter() {
     this.currentCount++;
   }
 
   
-  constructor(private http: HttpClient) {
-    this.log.length
+  constructor(private http: HttpClient
+              //private spinner: NgxSpinnerService
+              ) 
+  {
+    
     
   }
 
@@ -61,15 +65,22 @@ export class CounterComponent {
     let connection = this.BASE_URL + "/Values/onecoptions";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     
-
+    //this.spinner.show();
+    this.requeststarted = true;
     this.http.get(connection, {
       headers: headers,
       observe: 'body',
       withCredentials: true,
       reportProgress: false,
       responseType: 'text'
-    }).subscribe(res => {let options = JSON.parse(res);  console.log(options); this.options = options},
-                 err => console.log(err) );
+    }).subscribe(res => {let options = JSON.parse(res);  console.log(options); this.options = options; 
+                          this.requeststarted = false;
+                          //this.spinner.hide(); 
+                        },
+                 err => {console.log(err); 
+                  this.requeststarted = false;
+                        //this.spinner.hide();
+                        });
   }
 
 
@@ -81,7 +92,7 @@ export class CounterComponent {
 
     let connection = this.BASE_URL + "/Values/onecsessionstatus";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
-    
+    this.requeststarted = true;
 
     this.http.get(connection, {
       headers: headers,
@@ -89,8 +100,14 @@ export class CounterComponent {
       withCredentials: true,
       reportProgress: false,
       responseType: 'text'
-    }).subscribe(res => this.sessionstatus = JSON.parse(res),
-                 err => console.log(err) );
+    }).subscribe(res => {this.sessionstatus = JSON.parse(res); 
+                          this.requeststarted = false;
+                          //this.spinner.hide();
+                        },
+                 err => {console.log(err); 
+                  this.requeststarted = false;       
+                  //this.spinner.hide();
+                        } );
   }
 
 
@@ -99,17 +116,21 @@ export class CounterComponent {
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     
     
-
+    this.requeststarted = true;
     this.http.get(connection, {
       headers: headers,
       observe: 'body',
       withCredentials: true,
       reportProgress: false,
       responseType: 'text'
-    }).subscribe(res => {this.log = JSON.parse(res); this.log.sort((a,b) => (a.start > b.start) ? -1 : ((b.start > a.start) ? 1 : 0)
-                                                                  )
+    }).subscribe(res => {this.log = JSON.parse(res); this.log.sort((a,b) => (a.start > b.start) ? -1 : ((b.start > a.start) ? 1 : 0));
+      this.requeststarted = false;
+                        //this.spinner.hide();
                         },
-                 err => console.log(err) );
+                 err => {console.log(err); 
+                  this.requeststarted = false;      
+                  //this.spinner.hide();
+                         });
 
 
   }
@@ -117,7 +138,8 @@ export class CounterComponent {
   async StartOneCSesiionStatus() {
     let connection = this.BASE_URL + "/Values/startonecsession";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
-    
+    //this.spinner.show();
+    this.requeststarted = true;
     await this.http.get(connection, {
       headers: headers,
       observe: 'body',
@@ -125,14 +147,16 @@ export class CounterComponent {
       reportProgress: false,
       responseType: 'text'
     }).toPromise();
-
+    //this.spinner.hide();
+    this.requeststarted = false;
     this.GetOneCSesiionStatus();
   }
 
   async StopOneCSesiionStatus() {
     let connection = this.BASE_URL + "/Values/stoponecsession";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
-    
+    this.requeststarted = true;
+    //this.spinner.show();
     await this.http.get(connection, {
       headers: headers,
       observe: 'body',
@@ -140,7 +164,8 @@ export class CounterComponent {
       reportProgress: false,
       responseType: 'text'
     }).toPromise();
-
+    this.requeststarted = false;
+    //this.spinner.hide();
 
     this.GetOneCSesiionStatus();
   }

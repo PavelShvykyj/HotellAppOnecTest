@@ -6,12 +6,13 @@
       <div class="card w-100">
         <div class="card-header">
           Статус сессии 1С
-        
-          <div class="spinner-grow" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        
-
+          <!-- <ngx-spinner class="h-100 w-100" [fullScreen]="false" type="ball-scale-multiple" >
+          </ngx-spinner> -->
+           
+            <div  *ngIf="requeststarted" class="d-flex alert alert-warning">
+              <mat-progress-spinner  diameter = 25 mode="indeterminate"></mat-progress-spinner>  
+              <span class="pl-2">"Загружаем данные ..."</span>
+            </div> 
 
         </div>
         <ul class="list-group list-group-flush">
