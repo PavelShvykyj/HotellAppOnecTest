@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterEventHendlerService } from '../router-event-hendler.service';
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+// import { RouterEventHendlerService } from '../router-event-hendler.service';
+// import { Subscription } from 'rxjs';
+// import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,19 +11,20 @@ import { Router } from '@angular/router';
 })
 export class OneCOptionsFormComponent implements OnInit, OnDestroy {
 
-  private eventSubsciption : Subscription;
-  constructor(private router : Router) {
-    this.eventSubsciption = this.router.events.subscribe(event  => {
-      console.log("event in component", event);
-    });
+  // private eventSubsciption : Subscription;
+  constructor() {
+    // (private router : Router)
+    // this.eventSubsciption = this.router.events.subscribe(event  => {
+    //   console.log("event in component", event);
+    // });
    }
 
   ngOnInit() {
   }
 
   ngOnDestroy() {
-    console.log("OPTIONS DESTROIDE")
-    this.eventSubsciption.unsubscribe();
+    // console.log("OPTIONS DESTROIDE")
+    // this.eventSubsciption.unsubscribe();
   }
 
 }

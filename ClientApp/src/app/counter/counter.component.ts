@@ -170,6 +170,10 @@ export class CounterComponent {
     this.GetOneCSesiionStatus();
   }
 
+  ShowProgress() {
+    this.requeststarted = !this.requeststarted;
+  }
+
 
   EmptyOneCSessionStatus() : IOneCSessionStatus {
 

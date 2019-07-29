@@ -19,7 +19,7 @@ export class RouterEventHendlerService {
 
   constructor(private router : Router) {
     this.router.events.subscribe((event : Event) => {
-      console.log("event in service", event);
+      //console.log("event in service", event);
       this.eventSubject.next(event);
     });
    }

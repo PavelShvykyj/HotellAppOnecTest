@@ -8,11 +8,11 @@
           Статус сессии 1С
           <!-- <ngx-spinner class="h-100 w-100" [fullScreen]="false" type="ball-scale-multiple" >
           </ngx-spinner> -->
-           
-            <div  *ngIf="requeststarted" class="d-flex alert alert-warning">
+          <preloadpage [spindiametr]=25 *ngIf="requeststarted"></preloadpage>
+            <!-- <div  *ngIf="requeststarted" class="d-flex alert alert-warning">
               <mat-progress-spinner  diameter = 25 mode="indeterminate"></mat-progress-spinner>  
               <span class="pl-2">"Загружаем данные ..."</span>
-            </div> 
+            </div>  -->
 
         </div>
         <ul class="list-group list-group-flush">
@@ -41,7 +41,11 @@
                 <button type="button" class="btn btn-dark border border-secondary mh-100 h-100 text-truncate" (click)="SetOptions()">
                   <span class="button-text text-truncate">Set Options</span>
                 </button>
-        
+
+                <button type="button" class="btn btn-dark border border-secondary mh-100 h-100 text-truncate" (click)="ShowProgress()">
+                  <span class="button-text text-truncate">show progress</span>
+                </button>
+
         
           </div>
         </div>

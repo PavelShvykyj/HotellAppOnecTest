@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RouterEventHendlerService } from '../router-event-hendler.service';
+import { NavigationStart, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-nav-menu',
@@ -9,11 +10,25 @@ import { RouterEventHendlerService } from '../router-event-hendler.service';
 })
 export class NavMenuComponent implements OnDestroy {
   isExpanded = false;
+  isDataLoading = false;
+
 
   private eventSubsciption : Subscription;
   constructor(private routeventer : RouterEventHendlerService) {
       this.eventSubsciption = this.routeventer.eventEmiter.subscribe(event  => {
-      //console.log("In nav menu ",event);
+      if (event instanceof NavigationStart) {
+        this.isDataLoading = true;
+      }
+
+      else if(event instanceof NavigationEnd) {
+        
+        setTimeout(() => {
+          this.isDataLoading = false;
+        }, 2500);
+      }
+
+      
+        //console.log("In nav menu ", event);
     })
 
    }

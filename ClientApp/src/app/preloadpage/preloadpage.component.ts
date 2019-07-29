@@ -1,15 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { appearLeftTrigger, appearOpacityTrigger } from './preloadpage.animate';
+
 
 @Component({
   selector: 'preloadpage',
   templateUrl: './preloadpage.component.html',
-  styleUrls: ['./preloadpage.component.css']
+  styleUrls: ['./preloadpage.component.css'],
+  animations : [ appearLeftTrigger, appearOpacityTrigger
+
+]
 })
 export class PreloadpageComponent implements OnInit {
 
-  
+  @Input('spindiametr')
+  public spindiametr : number = 50
+
   private _spenttime : Date = new Date();
   private spenttime : Date = this._spenttime;
+
 
 
   constructor() { 
