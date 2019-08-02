@@ -16,17 +16,27 @@
     }
   }
 
+ 
   .link-active {
     color: $lihgt-color !important;
+    opacity: 1 !important;
+    font-size: 150%;
+    font-weight: bolder;
   }
 
+
   .mat-nav-link {
+    color: map-get($theme_prop, lightcolor) ;
+    opacity: 0.7 ;
+
     &:hover {
-      color: $dark-color !important;
+      color: $dark-color ;
+      opacity: 1 ;  
     }
 
     &:focus {
-      color: $lihgt-color !important;
+      color: $lihgt-color ;
+      opacity: 1 ;  
     }
   }
 
