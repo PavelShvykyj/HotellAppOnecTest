@@ -1,0 +1,94 @@
+@import '~@angular/material/theming';
+@import '../../themes.scss';
+@import '../../global.inherit.theme.scss';
+
+@mixin mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color) {
+  .dark {
+    background-color: $background-color;
+    color: map-get($theme_prop, lightcolor) !important;
+
+    &:hover {
+      background: $background-color !important;
+    }
+
+    &:focus {
+      background: $background-color !important;
+    }
+  }
+
+  .link-active {
+    color: $lihgt-color !important;
+  }
+
+  .mat-nav-link {
+    &:hover {
+      color: $dark-color !important;
+    }
+
+    &:focus {
+      color: $lihgt-color !important;
+    }
+  }
+
+  .mat-nav-item {
+    &:hover {
+      background: $background-color !important;
+    }
+
+    &:focus {
+      background: $background-color !important;
+    }
+  }
+}
+
+.brown-theme-nav {
+  @include custom-inherit-theme($brown-app-theme);
+  $theme_prop: theme_prop($brown-app-theme);
+  $background-color : mat-color(map-get($theme_prop, accent), 900);
+  $dark-color: mat-color(map-get($theme_prop, primary), 900);
+  $lihgt-color: mat-color(map-get($theme_prop, primary), 500);
+  @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);
+}
+
+.contrast-theme-nav {
+  @include custom-inherit-theme($contrast-app-theme);
+  $theme_prop: theme_prop($contrast-app-theme);
+  $background-color : mat-color(map-get($theme_prop, primary), 900);
+  $dark-color: mat-color($mat-blue-grey,100);
+  $lihgt-color: mat-color(map-get($theme_prop, accent), 500);
+  @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);
+}
+
+.grey-theme-nav {
+  @include custom-inherit-theme($grey-app-theme);
+  $theme_prop: theme_prop($grey-app-theme);
+  $background-color : mat-color(map-get($theme_prop, primary), 900);
+  $dark-color: mat-color($mat-blue-grey,400);
+  $lihgt-color: mat-color($mat-blue-grey,100);
+  @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);
+
+}
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.spaser {
+  margin: auto;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}

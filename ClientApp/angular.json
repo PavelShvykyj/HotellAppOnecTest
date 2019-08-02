@@ -24,8 +24,10 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "src/styles.css"
+              
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.css"
+
             ],
             "scripts": []
           },
@@ -145,5 +147,10 @@
       }
     }
   },
-  "defaultProject": "TestCOneConnection"
+  "defaultProject": "TestCOneConnection",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }

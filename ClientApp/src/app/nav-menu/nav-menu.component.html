@@ -1,35 +1,46 @@
-<header>
-  <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3'>
-    <div class="container">
-      <a class="navbar-brand" [routerLink]='["/"]'>TestCOneConnection</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded" (click)="toggle()">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]='{"show": isExpanded}'>
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/counter"]'>Counter</a>
-          </li>
-          
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/roomstock"]'>roomstock</a>
-          </li>
+<div class="grey-theme-nav"
 
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/onecoptions"]'>Options</a>
-          </li>
-          
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/fetch-data"]'>Fetch data</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
+[ngClass]="{'brown-theme-nav': themes['brown'],
+'grey-theme-nav': themes['grey'],
+'contrast-theme-nav': themes['contrast']
+}">
 
-<preloadpage  *ngIf="isDataLoading"></preloadpage>
+  <mat-toolbar class="navbar mat-navbar navbar-expand-sm navbar-dark dark mb-1  ">
+    <a class="navbar-brand" [routerLink]='["/"]'>Simple Hotel</a>
+    <span class="m-auto"></span> <!-- разделитель создает пространство в флекс контейнере за счет авто марджина -->
+    <ul class="navbar-nav mr-2">
+      <li class="nav-item mat-nav-item">
+        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/"]' [routerLinkActiveOptions]="{exact:
+          true}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item mat-nav-item">
+        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/counter"]'>Сounter</a>
+      </li>
+      <li class="nav-item mat-nav-item">
+        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/onecoptions"]'>Onecoptions</a>
+      </li>
+      <li class="nav-item mat-nav-item">
+        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/roomstock"]'>Roomstock</a>
+      </li>
+    
+    </ul>
+  </mat-toolbar>
+
+  <div class="d-flex flex-wrap m-1">
+    <button  mat-raised-button color="accent"  > accent </button>
+    <button  mat-raised-button color="primary" > primary </button>
+    <button  mat-raised-button color="warn" > warn </button>
+    <button  mat-raised-button  > clear </button>
+  </div>
+
+</div>
+
+
+<div  class="d-flex flex-wrap m-1">
+  <button  mat-raised-button (click)="SetTheme('brown')">brown</button> 
+  <button  mat-raised-button  (click)="SetTheme('grey')"> grey </button>
+  <button  mat-raised-button  (click)="SetTheme('contrast')"> Contrast </button>
+</div>
+
+
+<preloadpage *ngIf="isDataLoading"></preloadpage>

@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+
+
+$brown-app-primary: mat-palette($mat-amber,200,100,50);
+$brown-app-accent:  mat-palette($mat-brown, 800, 400, 100);
+$brown-app-warn:    mat-palette($mat-red);
+$brown-app-theme: mat-light-theme($brown-app-primary, $brown-app-accent, $brown-app-warn);
+
+$grey-app-primary: mat-palette($mat-deep-purple);
+$grey-app-accent:  mat-palette($mat-blue-grey);
+$grey-app-warn:    mat-palette($mat-red);
+$grey-app-theme: mat-light-theme($grey-app-primary, $grey-app-accent, $grey-app-warn);
+
+$contrast-app-primary: mat-palette($mat-grey,900,300,500);
+$contrast-app-accent:  mat-palette($mat-deep-orange);
+$contrast-app-warn:    mat-palette($mat-yellow);
+$contrast-app-theme: mat-light-theme($contrast-app-primary, $contrast-app-accent, $contrast-app-warn);

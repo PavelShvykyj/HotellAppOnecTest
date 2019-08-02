@@ -12,13 +12,19 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { RoomstockComponent } from './roomstock/roomstock.component';
 //import { NgxSpinnerModule } from "ngx-spinner";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { RouterEventHendlerService } from './router-event-hendler.service';
+import { PreloadpageComponent } from './preloadpage/preloadpage.component';
+import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
-import { RouterEventHendlerService } from './router-event-hendler.service';
-import { PreloadpageComponent } from './preloadpage/preloadpage.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatButtonModule} from '@angular/material/button';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
 
 /// MATERIAL COMPONENTS ///
 
@@ -32,6 +38,7 @@ import { PreloadpageComponent } from './preloadpage/preloadpage.component';
     FetchDataComponent,
     RoomstockComponent,
     OneCOptionsFormComponent,
+    
     PreloadpageComponent
     
   ],
@@ -39,7 +46,13 @@ import { PreloadpageComponent } from './preloadpage/preloadpage.component';
     /// MATERIAL COMPONENTS ///
     MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
     /// MATERIAL COMPONENTS ///
+    FlexLayoutModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,

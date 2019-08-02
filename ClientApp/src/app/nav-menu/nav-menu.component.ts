@@ -6,12 +6,17 @@ import { NavigationStart, NavigationEnd } from '@angular/router';
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  styleUrls: ['./nav-menu.component.scss']
 })
 export class NavMenuComponent implements OnDestroy {
   isExpanded = false;
   isDataLoading = false;
 
+  themes = {
+    "brown" : true,
+    "grey"  : false,
+    "contrast"  : false,
+  }
 
   private eventSubsciption : Subscription;
   constructor(private routeventer : RouterEventHendlerService) {
@@ -44,4 +49,16 @@ export class NavMenuComponent implements OnDestroy {
   toggle() {
     this.isExpanded = !this.isExpanded;
   }
+
+  SetTheme(theme : string) {
+    let props : Array<string> = Object.getOwnPropertyNames(this.themes);
+    props.forEach(element => {
+      this.themes[element] = false;
+    });
+
+    this.themes[theme] = true;
+
+  }
+
+
 }
