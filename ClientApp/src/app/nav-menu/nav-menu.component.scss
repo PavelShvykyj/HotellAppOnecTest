@@ -2,6 +2,7 @@
 @import '../../themes.scss';
 @import '../../global.inherit.theme.scss';
 
+
 @mixin mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color) {
   .dark {
     background-color: $background-color;
@@ -12,21 +13,22 @@
     }
 
     &:focus {
+      border: none !important;
       background: $background-color !important;
     }
   }
 
- 
   .link-active {
     color: $lihgt-color !important;
     opacity: 1 !important;
-    font-size: 150%;
+    font-size: 120%;
     font-weight: bolder;
   }
 
 
+
   .mat-nav-link {
-    color: map-get($theme_prop, lightcolor) ;
+    color: map-get($theme_prop, lightcolor);
     opacity: 0.7 ;
 
     &:hover {
@@ -35,7 +37,8 @@
     }
 
     &:focus {
-      color: $lihgt-color ;
+      border: none !important;
+      color: $lihgt-color !important;
       opacity: 1 ;  
     }
   }
@@ -46,12 +49,39 @@
     }
 
     &:focus {
+      border: none !important;
       background: $background-color !important;
+    }
+  }
+
+  button.mat-nav-item.link-active>span, button.mat-nav-item.link-active>mat-icon {
+    opacity: 1 !important;
+  }
+
+  button.mat-nav-item>span, button.mat-nav-item>mat-icon {
+    opacity: 0.7 !important;
+  }
+
+  button.mat-nav-link {
+    &:focus {
+      border: none !important;
+    }
+  }
+ 
+  button.mat-nav-item  {
+    &:hover {
+      color: $dark-color !important;
+      opacity: 1 !important;  
+    }
+
+    &:focus {
+      border: none !important;
+      opacity: 1 !important;  
     }
   }
 }
 
-.brown-theme-nav {
+::ng-deep .brown-theme-nav {
   @include custom-inherit-theme($brown-app-theme);
   $theme_prop: theme_prop($brown-app-theme);
   $background-color : mat-color(map-get($theme_prop, accent), 900);
@@ -60,7 +90,7 @@
   @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);
 }
 
-.contrast-theme-nav {
+::ng-deep .contrast-theme-nav {
   @include custom-inherit-theme($contrast-app-theme);
   $theme_prop: theme_prop($contrast-app-theme);
   $background-color : mat-color(map-get($theme_prop, primary), 900);
@@ -69,7 +99,7 @@
   @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);
 }
 
-.grey-theme-nav {
+::ng-deep .grey-theme-nav {
   @include custom-inherit-theme($grey-app-theme);
   $theme_prop: theme_prop($grey-app-theme);
   $background-color : mat-color(map-get($theme_prop, primary), 900);
@@ -78,6 +108,18 @@
   @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);
 
 }
+
+::ng-deep .mat-menu-content  {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+::ng-deep .mat-menu-item>.mat-icon-no-color, .mat-menu-item>span {
+  color: inherit !important;
+}
+
+
+
 
 a.navbar-brand {
   white-space: normal;

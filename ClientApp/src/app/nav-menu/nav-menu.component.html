@@ -1,128 +1,72 @@
-<div class="grey-theme-nav" [ngClass]="{'brown-theme-nav': themes['brown'],
-'grey-theme-nav': themes['grey'],
-'contrast-theme-nav': themes['contrast']
-}">
+<div [ngClass]="{'brown-theme-nav': themes['brown'],
+              'grey-theme-nav': themes['grey'],
+              'contrast-theme-nav': themes['contrast']}">
 
-  <mat-toolbar class=" mat-navbar  dark mb-1  ">
-    <!-- <a class="navbar-brand" [routerLink]='["/"]'>Simple Hotel</a>
-    <span class="m-auto"></span>  разделитель создает пространство в флекс контейнере за счет авто марджина 
-    <ul class="navbar-nav mr-2">
-      <mat-list-item> class="nav-item mat-nav-item">
-        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/"]' [routerLinkActiveOptions]="{exact:
-          true}">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <mat-list-item> class="nav-item mat-nav-item">
-        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/counter"]'>Сounter</a>
-      </li>
-      <mat-list-item> class="nav-item mat-nav-item">
-        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/onecoptions"]'>Onecoptions</a>
-      </li>
-      <mat-list-item> class="nav-item mat-nav-item">
-        <a class="nav-link mat-nav-link " routerLinkActive="link-active" [routerLink]='["/roomstock"]'>Roomstock</a>
-      </li>
-    
-    </ul> -->
-
+  <mat-toolbar class="mat-navbar dark mb-1">
     <a class="mat-nav-link" [routerLink]='["/"]'>Simple Hotel</a>
+ 
     <span class="m-auto"></span> <!-- разделитель создает пространство в флекс контейнере за счет авто марджина -->
 
-    <mat-nav-list fxLayout fxLayoutAlign="center center" class=" p-0 h-100 ">
-      <mat-list-item fxFlex="1 1 auto" class=" mat-nav-item ">
-        <a 
-          mat-line
-          class=" mat-nav-link pr-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/"]'
-          [routerLinkActiveOptions]="{exact:true}"
-        >  
-          <span >Home</span>
-        </a>
-        <mat-icon 
-          class="mat-nav-link pl-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/"]'
-          [routerLinkActiveOptions]="{exact:true}"
-        >home
-        </mat-icon>
-      
-      </mat-list-item>
-      
-      <mat-list-item fxFlex="1 1 auto" class=" mat-nav-item ">
-        <a 
-          matLine
-          class=" mat-nav-link pr-1" 
-          routerLinkActive="link-active" 
-          [routerLink]='["/counter"]'>
-          <span>Сounter</span>
-        </a>
-        <mat-icon 
-          class="mat-nav-link pl-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/counter"]'
-          [routerLinkActiveOptions]="{exact:true}"
-        >timer
-        </mat-icon>
+    <mat-action-list fxLayout fxLayoutAlign="center center" class=" p-0 h-100 ">
 
-      </mat-list-item>
-      <mat-list-item fxFlex="1 1 auto" class=" mat-nav-item ">
-        
-        <a 
-          matLine
-          class=" mat-nav-link pr-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/onecoptions"]'
-        >
-          <span>Onecoptions</span> 
-        </a>
+      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/" routerLinkActive="link-active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <span>Home</span>
+        <mat-icon class="px-2">home</mat-icon>
+      </button>
 
-        <mat-icon 
-          class="mat-nav-link pl-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/onecoptions"]'
-          [routerLinkActiveOptions]="{exact:true}"
-        >build
-        </mat-icon>
+      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/counter" routerLinkActive="link-active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <span>Counter</span>
+        <mat-icon class="px-2">timer</mat-icon>
+      </button>
 
+      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/onecoptions" routerLinkActive="link-active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <span>Onecoptions</span>
+        <mat-icon class="px-2">build</mat-icon>
+      </button>
 
-      </mat-list-item>
-      
-      <mat-list-item fxFlex="1 1 auto" class=" mat-nav-item ">
-        
-        <a 
-          matLine
-          class="mat-nav-link pr-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/roomstock"]'
-          > 
-          <span>Roomstock</span>
-        </a>
-
-        <mat-icon 
-          class="mat-nav-link pl-1"
-          routerLinkActive="link-active"
-          [routerLink]='["/roomstock"]'
-          [routerLinkActiveOptions]="{exact:true}"
-        >apps
-        </mat-icon>
-
-      </mat-list-item>
-
-    </mat-nav-list>
-
+      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/roomstock" routerLinkActive="link-active">
+        <span>Roomstock</span>
+        <mat-icon class="px-2">apps</mat-icon>
+      </button>
+    </mat-action-list>
 
     <button class="mat-nav-link" mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu color=primary [hasBackdrop]="true" [backdropClass]="mat-nav-item" class="mat-nav-link mat-nav-item" #menu="matMenu" yPosition="below">
-      <button class="mat-nav-link mat-nav-item" mat-menu-item>
-        <mat-icon class="mat-nav-link mat-nav-item">dialpad</mat-icon>
-        <span class="mat-nav-link mat-nav-item">Redial</span>
+
+    <mat-menu  [class]="GetThemeClass()" #menu="matMenu" xPosition='before' yPosition="below">
+
+      <button class="dark mat-nav-item" mat-menu-item>
+        <mat-icon>cancel</mat-icon>
+        <span>Cansel</span>
       </button>
 
-      <button class="mat-nav-link mat-nav-item" mat-menu-item>
-        <mat-icon class="mat-nav-link mat-nav-item">notifications_off</mat-icon>
-        <span class="mat-nav-link mat-nav-item">Disable alerts</span>
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/" routerLinkActive="link-active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
       </button>
+
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/counter" routerLinkActive="link-active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon>timer</mat-icon>
+        <span>Counter</span>
+      </button>
+
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/onecoptions" routerLinkActive="link-active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon>build</mat-icon>
+        <span>Onecoptions</span>
+      </button>
+
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/roomstock" routerLinkActive="link-active">
+        <mat-icon>apps</mat-icon>
+        <span>Roomstock</span>
+      </button>
+    
     </mat-menu>
 
   </mat-toolbar>

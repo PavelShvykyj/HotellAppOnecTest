@@ -16,6 +16,7 @@ import { RouterEventHendlerService } from './router-event-hendler.service';
 import { PreloadpageComponent } from './preloadpage/preloadpage.component';
 import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -25,6 +26,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
+
 
 /// MATERIAL COMPONENTS ///
 
@@ -56,6 +58,7 @@ import {MatIconModule} from '@angular/material/icon';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    LayoutModule,
     //NgxSpinnerModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([
@@ -69,4 +72,12 @@ import {MatIconModule} from '@angular/material/icon';
   providers: [RouterEventHendlerService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+
+  // constructor(overlayContainer: OverlayContainer) {
+  //   overlayContainer.getContainerElement().classList.add('brown-app-theme');
+  //   overlayContainer.getContainerElement().classList.add('grey-app-theme');
+  //   overlayContainer.getContainerElement().classList.add('contrast-app-theme');
+  //}
+
+}
