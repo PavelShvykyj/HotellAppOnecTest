@@ -102,7 +102,7 @@
 ::ng-deep .grey-theme-nav {
   @include custom-inherit-theme($grey-app-theme);
   $theme_prop: theme_prop($grey-app-theme);
-  $background-color : mat-color(map-get($theme_prop, primary), 900);
+  $background-color : mat-color(map-get($theme_prop, accent), 900);
   $dark-color: mat-color($mat-blue-grey,400);
   $lihgt-color: mat-color($mat-blue-grey,100);
   @include mat-navbar($theme_prop,$background-color,$dark-color,$lihgt-color);

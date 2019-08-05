@@ -1,18 +1,23 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RouterEventHendlerService } from '../router-event-hendler.service';
 import { NavigationStart, NavigationEnd } from '@angular/router';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss']
 })
-export class NavMenuComponent implements OnDestroy {
+export class NavMenuComponent implements OnDestroy, OnInit  {
   isExpanded = false;
   isDataLoading = false;
   
+  _Breakpoints : typeof Breakpoints = Breakpoints;
+  screenState : {[key : string] : boolean } = {"no_show" : true}; 
+  
+  
+
 
   themes = {
     "brown" : true,
@@ -20,8 +25,9 @@ export class NavMenuComponent implements OnDestroy {
     "contrast"  : false,
   }
 
-  private eventSubsciption : Subscription;
-  constructor(private routeventer : RouterEventHendlerService, public breakpointObserver: BreakpointObserver) {
+  private eventSubsciption : Subscription ;
+  
+  constructor(private routeventer : RouterEventHendlerService, public breakpointObserver: BreakpointObserver)  {
       this.eventSubsciption = this.routeventer.eventEmiter.subscribe(event  => {
       if (event instanceof NavigationStart) {
         this.isDataLoading = true;
@@ -31,15 +37,15 @@ export class NavMenuComponent implements OnDestroy {
       }
 
       this.breakpointObserver
-      .observe(['(min-width: 500px)'])
+      .observe([
+                Breakpoints.Large, 
+                Breakpoints.Medium,
+                Breakpoints.Small,
+                Breakpoints.XSmall
+              ])
       .subscribe((state: BreakpointState) => {
-        
-        
-        if (state.matches) {
-          console.log('Viewport is 500px or over!');
-        } else {
-          console.log('Viewport is getting smaller!');
-        }
+        this.screenState = state.breakpoints; 
+        this.screenState["no_show"] = false;
       });
         
     })
@@ -48,6 +54,12 @@ export class NavMenuComponent implements OnDestroy {
  
    ngOnDestroy() {
     this.eventSubsciption.unsubscribe();
+   }
+
+   ngOnInit() {
+   
+    
+
    }
 
   collapse() {

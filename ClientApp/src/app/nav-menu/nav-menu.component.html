@@ -7,33 +7,33 @@
  
     <span class="m-auto"></span> <!-- разделитель создает пространство в флекс контейнере за счет авто марджина -->
 
-    <mat-action-list fxLayout fxLayoutAlign="center center" class=" p-0 h-100 ">
+    <mat-action-list *ngIf="screenState.no_show || !screenState[_Breakpoints.XSmall]" fxLayout fxLayoutAlign="center center" class=" p-0 h-100 ">
 
       <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/" routerLinkActive="link-active"
         [routerLinkActiveOptions]="{exact:true}">
-        <span>Home</span>
+        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">Home</span>
         <mat-icon class="px-2">home</mat-icon>
       </button>
 
       <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/counter" routerLinkActive="link-active"
         [routerLinkActiveOptions]="{exact:true}">
-        <span>Counter</span>
+        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">Counter</span>
         <mat-icon class="px-2">timer</mat-icon>
       </button>
 
       <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/onecoptions" routerLinkActive="link-active"
         [routerLinkActiveOptions]="{exact:true}">
-        <span>Onecoptions</span>
+        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">Onecoptions</span>
         <mat-icon class="px-2">build</mat-icon>
       </button>
 
       <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/roomstock" routerLinkActive="link-active">
-        <span>Roomstock</span>
+        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">Roomstock</span>
         <mat-icon class="px-2">apps</mat-icon>
       </button>
     </mat-action-list>
 
-    <button class="mat-nav-link" mat-icon-button [matMenuTriggerFor]="menu">
+    <button *ngIf="screenState[_Breakpoints.XSmall]" class="mat-nav-link" mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>
 
@@ -72,20 +72,20 @@
   </mat-toolbar>
 
   <div class="d-flex flex-wrap m-1">
-    <button mat-raised-button color="accent"> accent </button>
+    <!-- <button mat-raised-button color="accent"> accent </button>
     <button mat-raised-button color="primary"> primary </button>
-    <button mat-raised-button color="warn"> warn </button>
+    <button mat-raised-button color="warn"> warn </button> -->
     <button mat-raised-button> clear </button>
+    <button mat-raised-button (click)="SetTheme('brown')">brown</button>
+    <button mat-raised-button (click)="SetTheme('grey')"> grey </button>
+    <button mat-raised-button (click)="SetTheme('contrast')"> Contrast </button>
   </div>
 
 </div>
 
 
-<div class="d-flex flex-wrap m-1">
-  <button mat-raised-button (click)="SetTheme('brown')">brown</button>
-  <button mat-raised-button (click)="SetTheme('grey')"> grey </button>
-  <button mat-raised-button (click)="SetTheme('contrast')"> Contrast </button>
-</div>
+<!-- <div class="d-flex flex-wrap m-1">
+</div> -->
 
 
 <preloadpage *ngIf="isDataLoading"></preloadpage>

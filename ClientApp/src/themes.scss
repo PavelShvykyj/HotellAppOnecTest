@@ -14,5 +14,5 @@ $grey-app-theme: mat-light-theme($grey-app-primary, $grey-app-accent, $grey-app-
 
 $contrast-app-primary: mat-palette($mat-grey,900,300,500);
 $contrast-app-accent:  mat-palette($mat-deep-orange);
-$contrast-app-warn:    mat-palette($mat-yellow);
+$contrast-app-warn:    mat-palette($mat-red);
 $contrast-app-theme: mat-light-theme($contrast-app-primary, $contrast-app-accent, $contrast-app-warn);
