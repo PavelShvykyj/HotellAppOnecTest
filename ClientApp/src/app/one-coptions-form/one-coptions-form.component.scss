@@ -84,7 +84,7 @@
   @include custom-inherit-theme($grey-app-theme);
   $theme_prop: theme_prop($grey-app-theme);
   @include mat-nav-panel(map-get($theme_prop, accent), map-get($theme_prop, accent),
-    map-get($theme_prop, warn), 400);
+    map-get($theme_prop, warn), 200);
 }
 
 .contrast-theme-panel {
