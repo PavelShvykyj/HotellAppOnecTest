@@ -26,8 +26,10 @@ export class NavMenuComponent implements OnDestroy, OnInit  {
   }
 
   private eventSubsciption : Subscription ;
+  private screnStateSubsciption : Subscription ;
+
   
-  constructor(private routeventer : RouterEventHendlerService, public breakpointObserver: BreakpointObserver)  {
+  constructor(private routeventer : RouterEventHendlerService, private breakpointObserver: BreakpointObserver)  {
       this.eventSubsciption = this.routeventer.eventEmiter.subscribe(event  => {
       if (event instanceof NavigationStart) {
         this.isDataLoading = true;
@@ -36,7 +38,7 @@ export class NavMenuComponent implements OnDestroy, OnInit  {
         this.isDataLoading = false;
       }
 
-      this.breakpointObserver
+      this.screnStateSubsciption = this.breakpointObserver
       .observe([
                 Breakpoints.Large, 
                 Breakpoints.Medium,
@@ -54,6 +56,7 @@ export class NavMenuComponent implements OnDestroy, OnInit  {
  
    ngOnDestroy() {
     this.eventSubsciption.unsubscribe();
+    this.screnStateSubsciption.unsubscribe();
    }
 
    ngOnInit() {

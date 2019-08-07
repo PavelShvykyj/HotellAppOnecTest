@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-// import { RouterEventHendlerService } from '../router-event-hendler.service';
-// import { Subscription } from 'rxjs';
-// import { Router } from '@angular/router';
+import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
+import { Subscription, Observable, Subject } from 'rxjs';
 
 
 @Component({
@@ -19,18 +18,34 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   
   panelExpanded : boolean = false;
   showMessages : boolean = false;
+  _Breakpoints : typeof Breakpoints = Breakpoints;
+  screenState : {[key : string] : boolean } = {"no_show" : true}; 
+  screnStateSubsciption : Subscription ;
+  litleButtonsLayoutEventer = new Subject<string>();
+  litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
 
-  // private eventSubsciption : Subscription;
-  constructor() {
-    // (private router : Router)
-    // this.eventSubsciption = this.router.events.subscribe(event  => {
-    //   console.log("event in component", event);
-    // });
-   }
+
+  
+  constructor(private breakpointObserver: BreakpointObserver) {
+  
+    this.screnStateSubsciption = this.breakpointObserver
+    .observe([
+              Breakpoints.Large, 
+              Breakpoints.Medium,
+              Breakpoints.Small,
+              Breakpoints.XSmall
+            ])
+    .subscribe((state: BreakpointState) => {
+      this.screenState = state.breakpoints; 
+      this.screenState["no_show"] = false;
+      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
+    });
+  
+  }
 
    ngAfterViewInit() {
     setTimeout(() => {
-      this.panelExpanded = true;
+      this.ChangeExpandedPanel();
       this.showMessages = true;
     }, 10);
   }
@@ -42,8 +57,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
 
   ngOnDestroy() {
-    // console.log("OPTIONS DESTROIDE")
-    // this.eventSubsciption.unsubscribe();
+    this.screnStateSubsciption.unsubscribe(); 
   }
 
 
@@ -61,43 +75,52 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     this.panelExpanded = !this.panelExpanded;
     setTimeout(() => {
       this.showMessages = this.panelExpanded;
+      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
     }, 10);
 
   }
 
   GetLitleButtonsLayout() : string {
-    if(this.panelExpanded) {
+    if(this.panelExpanded || this.screenState[this._Breakpoints.XSmall]) {
+      console.log("row wrap");
       return "row wrap";
     }
     else {
+      console.log("column");
       return "column";
     }
   }
 
   GetPanelFlexOption() {
-    if(this.panelExpanded) {
-      return "1 0 20%";
+    if(this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
+      return "1 0 252px";
+    }
+    else if(!this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
+      return "1 0 64px";
     }
     else {
-      return "1 0 5%";
+      return "";
     }
+
+
   }
 
   GetBodyFlexOption() {
-    if(this.panelExpanded) {
-      return "1 0 80%";
-    }
-    else {
-      return "1 0 95%";
-    }
+    return "1 0 auto";
+    // if(this.panelExpanded) {
+    //   return "1 0 80%";
+    // }
+    // else {
+    //   return "1 0 95%";
+    // }
   }
 
   GetFooterFlexOption() {
     if(this.panelExpanded) {
-      return "1 0 ";
+      return "1 0 auto";
     }
     else {
-      return "5 0 ";
+      return "5 0 auto";
     }
   }
 

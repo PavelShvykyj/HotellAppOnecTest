@@ -11,7 +11,20 @@
 
   .panel {
     background-color: mat-color($accent, $bg-rimary-strenth);
-    max-width: 20%;
+  }
+
+  .panel-v {
+    @extend .panel;
+    min-width: 64px;
+    max-width: 252px;
+
+
+  }
+
+  .panel-h {
+    @extend .panel;
+    min-height: 64px;
+    max-height: 64px;
   }
 
   .panel-item {
@@ -69,6 +82,10 @@
     }
   }
 
+
+  .vertical-litle-button {
+    min-height: fit-content !important;
+}
 
 }
 
