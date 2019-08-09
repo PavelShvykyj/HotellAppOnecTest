@@ -11,20 +11,27 @@
 
   .panel {
     background-color: mat-color($accent, $bg-rimary-strenth);
+    
+  }
+
+  .panel-container {
+    justify-content: start !important;
+  }
+
+  #spacer {
+    margin-top: auto !important;
   }
 
   .panel-v {
     @extend .panel;
     min-width: 64px;
     max-width: 252px;
-
-
   }
 
   .panel-h {
     @extend .panel;
-    min-height: 64px;
-    max-height: 64px;
+    min-height: 52px;
+    max-height: 52px;
   }
 
   .panel-item {
@@ -115,4 +122,30 @@
   height: 85vh !important;
   min-height: 85vh !important;
   max-height: 85vh !important;
+}
+
+
+
+/// используем в блоке сообщений каждое сообщение занимает место по размеру содержимого
+.inline-flex-comp {
+  display: inline-flex !important;
+  height: fit-content !important;
+  height: -moz-fit-content !important;
+  height: -webkit-fit-content !important;
+}
+
+
+
+.panel-little-flex-comp {  
+  max-height: fit-content !important;
+}
+
+.messeges-flex-comp {
+  min-height: 70px;
+}
+
+.panel-flex-element {
+  min-height: 50px !important;
+  max-height: 50px !important;
+  height: 50px !important;
 }

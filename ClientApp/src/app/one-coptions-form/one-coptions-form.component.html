@@ -12,37 +12,38 @@
      <div [fxFlex]="GetPanelFlexOption()" 
           [ngClass]="{'panel-v': !screenState[_Breakpoints.XSmall],
                     'panel-h': screenState[_Breakpoints.XSmall]}"
-          class="panel"
+          class="panel panel-container"
           fxLayout="column"
-          fxLayoutAlign="center center"  
+          fxLayoutAlign="space-around stretch"  
+          
      >
 
           <!-- HEADER (litle butons) -->  
           <mat-action-list 
-          *ngIf="!screenState[_Breakpoints.XSmall]"
-          fxFlex="1 0 1fr"
-          fxFlexFill
-          fxLayout="row"
-          fxLayoutAlign="start start"  
-          class="panel-item inline-flex-comp pt-0">
-          <button mat-list-item fxFlex="1  " class="dark" (click)="ChangeExpandedPanel()">  <mat-icon>reorder</mat-icon> </button>
-
-
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="row"
+               fxLayoutAlign="start start"  
+               class="panel-item panel-little-flex-comp  pt-0">
+               <button mat-list-item fxFlex="1 1 1fr" class="dark panel-flex-element h-100" (click)="ChangeExpandedPanel()">  <mat-icon>reorder</mat-icon> </button>
           </mat-action-list>      
+     
           
+
           <!-- BUTTONS  -->  
           <mat-action-list 
           *ngIf="!screenState[_Breakpoints.XSmall]"
-          fxFlex="10 0 1fr"
-          fxFlexFill
+          fxFlex="1 1 auto"
           fxLayout="column"
           fxLayoutAlign="start center"               
-          [ngClass]="{'inline-flex-comp': panelExpanded}"   
-          class="panel-item inline-flex-comp scrollable pt-0">
+          
+          class="  scrollable pt-0 w-100">
 
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
+
                <!--<button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
                <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
                <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
@@ -52,35 +53,34 @@
 
           <!-- LINKS  -->      
           <mat-nav-list
-          *ngIf="!screenState[_Breakpoints.XSmall]"
-          fxFlex="10 0 1fr"
-          fxFlexFill
-          fxLayout="column"
-          fxLayoutAlign="start center"  
-          [ngClass]="{'inline-flex-comp': panelExpanded}"   
-          class="panel-item inline-flex-comp scrollable pt-0 ">
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
                
-          <h3 mat-subheader>links</h3>
-          <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-          <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-          <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-          <!--<a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-          <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-          <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>-->
+               fxLayout="column"
+               fxLayoutAlign="start center"  
+               class="  scrollable pt-0 w-100">
+               
+               <h3 mat-subheader>links</h3>
+               <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               
+               <!--<a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>-->
 
           </mat-nav-list>   
 
           <!-- MESSAGES  -->  
-          <mat-list 
-          *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
-          fxFlex="10 0 1fr"
-          fxFlexFill
-          fxLayout="column"
-          fxLayoutAlign="start center"      
-          [ngClass]="{'inline-flex-comp': panelExpanded}"   
-          class="panel-item mh-20 inline-flex-comp scrollable pt-0 ">
-                 
-               <mat-list-item fxLayout="column"  class="secondry inline-flex-comp" > 
+          <mat-list id="spacer"
+               
+               *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
+               fxFlex="1 1 auto"
+               fxLayout="column"
+               fxLayoutAlign="start center"      
+               class="panel-item scrollable pt-0 w-100 messeges-flex-comp">
+                    
+               <mat-list-item id="spacer" fxLayout="column"  class="secondry inline-flex-comp " > 
                          <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
                          <span class="p-0 m-0 messege-font">
                               
@@ -89,20 +89,25 @@
                          </span>
                     
                </mat-list-item> 
-               <mat-list-item fxLayout="column" class="warning inline-flex-comp" >
+               <mat-list-item fxLayout="column" class="warning inline-flex-comp " >
                     <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
                     <span  class="p-0 m-0 messege-font">
                          error
                     </span>  
                     
                </mat-list-item>
-               <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > 
+               <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
                     <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
                     <span class="p-0 m-0 messege-font">
                          enother_message 
                     </span>
                </mat-list-item>
-
+               <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
+                    <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
+                    <span class="p-0 m-0 messege-font">
+                         enother_message 
+                    </span>
+               </mat-list-item>
 
                <!--<mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message </mat-list-item>
                <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message messege satrt qwtwtgrewtert rlqgqughru qwrgiquwriu qwtgrqwet4  </mat-list-item>
@@ -114,18 +119,21 @@
 
           </mat-list> 
 
-          <!-- FOOTER (litle butons)  -->  
+         
+          
+                   
+           <!-- FOOTER (litle butons)  -->  
           <mat-action-list 
           [fxLayout]="litleButtonsLayout | async"
           fxLayoutAlign="end end"  
-          fxFlexAlign="stretch"
-          [fxFlex]="GetFooterFlexOption()"
-          class="panel-item pt-0 "
-
+          fxFlexFill
+          fxFlex="1 1 auto"
+          id="footer"
+          class=" panel-little-flex-comp  pt-0 "
           >
-          <button  fxFlex="1 0 " mat-list-item  class="dark" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
-          <button  fxFlex="1 0 " mat-list-item  class="dark" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
-          <button  fxFlex="1 0 " mat-list-item  class="dark" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
+          <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+          <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+          <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
           </mat-action-list>      
      </div>
 

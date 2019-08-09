@@ -24,17 +24,6 @@
     $lightcolor : mat-color($primary,50);
     $darkcolor  : mat-color($accent,900);
 
-
-
-
-    /// используем в блоке сообщений каждое сообщение занимает место по размеру содержимого
-    .inline-flex-comp {
-        display: inline-flex !important;
-        height: fit-content !important;
-        height: -moz-fit-content !important;
-        height: -webkit-fit-content !important;
-    }
-
     .dark  {
         background: $darkcolor;
         color: $lightcolor !important;
