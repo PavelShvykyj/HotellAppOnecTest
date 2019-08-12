@@ -96,6 +96,21 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
 
+  GetThemeClass() : string {
+    let props : Array<string> = Object.getOwnPropertyNames(this.themes);
+    let themeName : string ; 
+    props.forEach(element => {
+      if(this.themes[element] == true) {
+        themeName = element+"-theme-panel";
+      }  
+    });
+
+    
+    return themeName;
+  }
+
+
+
   Test(message) {
     console.log(message);
   }

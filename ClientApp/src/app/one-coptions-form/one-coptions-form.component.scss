@@ -95,25 +95,24 @@
 
 }
 
-.brown-theme-panel {
-  @include custom-inherit-theme($brown-app-theme);
-  $theme_prop: theme_prop($brown-app-theme);
-  @include mat-nav-panel(map-get($theme_prop, accent), map-get($theme_prop, primary),
+::ng-deep .brown-theme-panel {
+    @include custom-inherit-theme($brown-app-theme);
+    $theme_prop: theme_prop($brown-app-theme);
+    @include mat-nav-panel(map-get($theme_prop, accent), map-get($theme_prop, primary),
     map-get($theme_prop, warn),200);
 }
 
-.grey-theme-panel {
-
-  @include custom-inherit-theme($grey-app-theme);
-  $theme_prop: theme_prop($grey-app-theme);
-  @include mat-nav-panel(map-get($theme_prop, accent), map-get($theme_prop, accent),
+::ng-deep .grey-theme-panel {
+    @include custom-inherit-theme($grey-app-theme);
+    $theme_prop: theme_prop($grey-app-theme);
+    @include mat-nav-panel(map-get($theme_prop, accent), map-get($theme_prop, accent),
     map-get($theme_prop, warn), 200);
 }
 
-.contrast-theme-panel {
-  @include custom-inherit-theme($contrast-app-theme);
-  $theme_prop: theme_prop($contrast-app-theme);
-  @include mat-nav-panel(map-get($theme_prop, primary), map-get($theme_prop, primary),
+::ng-deep .contrast-theme-panel {
+    @include custom-inherit-theme($contrast-app-theme);
+    $theme_prop: theme_prop($contrast-app-theme);
+    @include mat-nav-panel(map-get($theme_prop, primary), map-get($theme_prop, primary),
     map-get($theme_prop, warn), 400);
 }
 
@@ -122,8 +121,6 @@
   min-height: 85vh !important;
   max-height: 85vh !important;
 }
-
-
 
 /// используем в блоке сообщений каждое сообщение занимает место по размеру содержимого
 .inline-flex-comp {

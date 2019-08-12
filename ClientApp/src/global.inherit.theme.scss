@@ -21,7 +21,7 @@
     $primary : map-get($theme , primary );
     $warn : map-get($theme , warn );
     $foreground : map-get($theme, foreground);
-    $lightcolor : mat-color($primary,50);
+    $lightcolor : mat-color($primary,50,0.85);
     $darkcolor  : mat-color($accent,900);
 
     .dark  {
@@ -48,7 +48,7 @@
     .secondry {
         background-color: mat-color($accent,500) !important;
         color:  mat-color($accent,100) !important;
-        border-bottom: 1px solid mat-color($primary,400);
+        border-bottom: 1px solid $lightcolor;
         &:hover {
             background: mat-color($accent,500) !important;
             color: $lightcolor !important;

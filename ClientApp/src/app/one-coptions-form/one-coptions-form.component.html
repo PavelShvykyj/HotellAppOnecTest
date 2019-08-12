@@ -136,6 +136,61 @@
           <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
           <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
           <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
+         
+          <!-- КНОПКА открытия меню для планшетной раскладки -->
+          <button 
+          *ngIf="screenState[_Breakpoints.XSmall]"
+          fxFlex="1 0 "
+          mat-list-item
+          class="dark panel-flex-element"
+          [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
+          [matMenuTriggerFor]="menu">
+               <mat-icon>more_vert</mat-icon>
+          </button>
+         
+          <!-- Елементы меню  планшетной раскладки -->
+             <mat-menu  
+               [class]="GetThemeClass()"
+               #menu="matMenu"
+               xPosition='before'
+               yPosition="below">
+             
+           
+           
+           <button class="dark mat-nav-item" mat-menu-item>
+               <mat-icon>cancel</mat-icon>
+               <span>Cansel</span>
+             </button>
+             
+               <!-- КНОПКИ ДЕЙСТВИЯ -->
+               <button  mat-menu-item class="dark mat-nav-item">
+                     <mat-icon mat-list-icon>add</mat-icon>
+                     <span> Добавить </span>
+               </button>                    
+               
+               <button  mat-menu-item class="dark mat-nav-item">
+                     <mat-icon mat-list-icon>edit</mat-icon>
+                     <span> Редактировать </span>
+               </button>
+               
+               <button  mat-menu-item class="dark mat-nav-item">
+                    <mat-icon mat-list-icon>delete</mat-icon>
+                    <span> Удалить </span>
+               </button>
+
+               <!-- ЛИНКИ -->
+               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+
+         
+              
+             
+             </mat-menu>
+         
+         
+     
           </mat-action-list>      
      </div>
 
