@@ -38,7 +38,7 @@
           fxLayout="column"
           fxLayoutAlign="start center"               
           
-          class="  scrollable pt-0 w-100">
+          class="scrollable pt-0 w-100">
 
                <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
                <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
@@ -58,7 +58,7 @@
                
                fxLayout="column"
                fxLayoutAlign="start center"  
-               class="  scrollable pt-0 w-100">
+               class="scrollable pt-0 w-100">
                
                <h3 mat-subheader>links</h3>
                <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
@@ -72,7 +72,7 @@
           </mat-nav-list>   
 
           <!-- MESSAGES  -->  
-          <mat-list id="spacer"
+          <mat-list 
                
                *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
                fxFlex="1 1 auto"
@@ -124,12 +124,14 @@
                    
            <!-- FOOTER (litle butons)  -->  
           <mat-action-list 
+          
           [fxLayout]="litleButtonsLayout | async"
+          
           fxLayoutAlign="end end"  
           fxFlexFill
           fxFlex="1 1 auto"
           id="footer"
-          class=" panel-little-flex-comp  pt-0 "
+          class="panel-little-flex-comp  pt-0"
           >
           <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
           <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
@@ -141,8 +143,8 @@
      <div 
      fxLayout="row"
      fxLayoutAlign="start start"  
-     [fxFlex]="GetBodyFlexOption()"
-     class="body p-1 w-100  scrollable">
+     fxFlex="1 1 auto"
+     class="form-body p-1 w-100  scrollable">
                
           <div fxLayout="column" fxLayoutAlign="center center"  class="w-100"> 
                <div fxLayout="row wrap" class="mt-1 w-100">
