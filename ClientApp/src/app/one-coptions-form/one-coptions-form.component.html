@@ -59,26 +59,28 @@
           <!-- MESSAGES  -->  
           <mat-list 
                *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
+               @disappearmessages
                fxFlex="1 1 auto"
                fxFlexFill
                fxLayout="column"
                fxLayoutAlign="start center"      
-               class="panel-item scrollable pt-0 w-100 messeges-flex-comp">
+               class="panel-item scrollable pt-0 w-100 messeges-flex-comp ">
                     
-               <mat-list-item id="spacer" fxLayout="column"  class="secondry inline-flex-comp " > 
-                         <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
-                         <span class="p-0 m-0 messege-font">
-                              some  messege satrt 
-                              Это длинное сообщение. Поэтому занимаем больше места.
-                         </span>
-               </mat-list-item> 
-               <mat-list-item fxLayout="column" class="warning inline-flex-comp " >
+               <mat-list-item
+                *ngFor="let message of messages"     
+                @disappear
+                (click)="OnPanelMessageClick(message)"
+                [ngClass]="{'warning': message.isError,
+                            'secondry': !message.isError,
+                             'spacer' : messages.lastIndexOf(message) == 0 } "
+                fxLayout="column"
+                class="inline-flex-comp " >
                     <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
                     <span  class="p-0 m-0 messege-font">
-                         error
+                         {{ message.message_content }} {{messages.lastIndexOf(message)}}
                     </span>  
                </mat-list-item>
-               <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
+               <!-- <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
                     <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
                     <span class="p-0 m-0 messege-font">
                          enother_message 
@@ -89,7 +91,7 @@
                     <span class="p-0 m-0 messege-font">
                          enother_message 
                     </span>
-               </mat-list-item>
+               </mat-list-item> -->
           </mat-list> 
 
            <!-- FOOTER (litle butons)  -->  

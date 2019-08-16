@@ -1,12 +1,24 @@
+import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
+import { disappearTrigger } from './one-coptions-form.animate'
 
 
 @Component({
   selector: 'one-coptions-form',
   templateUrl: './one-coptions-form.component.html',
-  styleUrls: ['./one-coptions-form.component.scss']
+  styleUrls: ['./one-coptions-form.component.scss'],
+  animations : [
+    trigger('disappearmessages', [
+      transition('void=>*', [
+        query('@disappear', stagger(200,animateChild()))
+      ])
+
+    ]),
+    disappearTrigger 
+
+  ]
 })
 export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -22,7 +34,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   screnStateSubsciption : Subscription ;
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
   litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
-    
+  messages : Array<{message_content : string, isError : boolean }> = [];  
 
   
   constructor(private breakpointObserver: BreakpointObserver) {
@@ -42,6 +54,9 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
       
     });
   
+    // FAKE
+    this.StarterMessages()
+
   }
 
    ngAfterViewInit() {
@@ -109,6 +124,43 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     return themeName;
   }
 
+  OnPanelMessageClick(message) {
+    console.log(message);
+    this.messages.splice(this.messages.lastIndexOf(message),1);
+  }
+
+  /// FAKE
+
+  StarterMessages() {
+
+    let firstmessage = {
+      message_content : "first user message", 
+      isError : false
+    }
+
+   
+    let message = {
+      message_content : "some user message", 
+      isError : false
+    }
+
+    let longmessage = {
+      message_content : "some user message long long abra kadabra - is power", 
+      isError : false
+    }
+
+    let erromessage = {
+      message_content : "some error message", 
+      isError : true
+    }
+
+
+    this.messages.push(firstmessage);
+    this.messages.push(longmessage);
+    this.messages.push(erromessage);
+    this.messages.push(message);
+
+  }
 
 
   Test(message) {
