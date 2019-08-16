@@ -15,47 +15,37 @@
           class="panel panel-container"
           fxLayout="column"
           fxLayoutAlign="space-around stretch"  
-          
      >
 
           <!-- HEADER (litle butons) -->  
           <mat-action-list 
                *ngIf="!screenState[_Breakpoints.XSmall]"
                fxFlex="1 1 auto"
-               fxFlexFill
+               
                fxLayout="row"
                fxLayoutAlign="start start"  
                class="panel-item panel-little-flex-comp  pt-0">
                <button mat-list-item fxFlex="1 1 1fr" class="dark panel-flex-element h-100" (click)="ChangeExpandedPanel()">  <mat-icon>reorder</mat-icon> </button>
           </mat-action-list>      
-     
-          
-
+ 
           <!-- BUTTONS  -->  
           <mat-action-list 
           *ngIf="!screenState[_Breakpoints.XSmall]"
+          fxFlexFill
           fxFlex="1 1 auto"
           fxLayout="column"
           fxLayoutAlign="start center"               
-          
           class="scrollable pt-0 w-100">
-
                <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
                <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
                <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
-
-               <!--<button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line *ngIf="panelExpanded"> Инфо </span> </button>
-               <button fxFlex="1 0 1fr" mat-list-item class="dark"> <mat-icon mat-list-icon>info</mat-icon> <span mat-line  *ngIf="panelExpanded"> Инфо </span> </button>-->
           </mat-action-list>      
 
           <!-- LINKS  -->      
           <mat-nav-list
                *ngIf="!screenState[_Breakpoints.XSmall]"
                fxFlex="1 1 auto"
-               
+               fxFlexFill
                fxLayout="column"
                fxLayoutAlign="start center"  
                class="scrollable pt-0 w-100">
@@ -64,18 +54,13 @@
                <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
                <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
                <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-               
-               <!--<a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-               <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
-               <a fxFlex="1 0 1fr" mat-list-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>-->
-
           </mat-nav-list>   
 
           <!-- MESSAGES  -->  
           <mat-list 
-               
                *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
                fxFlex="1 1 auto"
+               fxFlexFill
                fxLayout="column"
                fxLayoutAlign="start center"      
                class="panel-item scrollable pt-0 w-100 messeges-flex-comp">
@@ -83,18 +68,15 @@
                <mat-list-item id="spacer" fxLayout="column"  class="secondry inline-flex-comp " > 
                          <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
                          <span class="p-0 m-0 messege-font">
-                              
                               some  messege satrt 
                               Это длинное сообщение. Поэтому занимаем больше места.
                          </span>
-                    
                </mat-list-item> 
                <mat-list-item fxLayout="column" class="warning inline-flex-comp " >
                     <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
                     <span  class="p-0 m-0 messege-font">
                          error
                     </span>  
-                    
                </mat-list-item>
                <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
                     <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
@@ -108,89 +90,64 @@
                          enother_message 
                     </span>
                </mat-list-item>
-
-               <!--<mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message </mat-list-item>
-               <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message messege satrt qwtwtgrewtert rlqgqughru qwrgiquwriu qwtgrqwet4  </mat-list-item>
-               <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message </mat-list-item>
-               <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message </mat-list-item>
-               <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > enother message </mat-list-item>
-               <mat-list-item fxLayout="column" class="secondry inline-flex-comp" > some  messege  </mat-list-item> 
-               <mat-list-item fxLayout="column" class="warning inline-flex-comp" > error end </mat-list-item>-->
-
           </mat-list> 
 
-         
-          
-                   
            <!-- FOOTER (litle butons)  -->  
           <mat-action-list 
-          
           [fxLayout]="litleButtonsLayout | async"
-          
           fxLayoutAlign="end end"  
-          fxFlexFill
           fxFlex="1 1 auto"
           id="footer"
           class="panel-little-flex-comp  pt-0"
           >
-          <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
-          <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
-          <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
-         
-          <!-- КНОПКА открытия меню для планшетной раскладки -->
-          <button 
-          *ngIf="screenState[_Breakpoints.XSmall]"
-          fxFlex="1 0 "
-          mat-list-item
-          class="dark panel-flex-element"
-          [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
-          [matMenuTriggerFor]="menu">
-               <mat-icon>more_vert</mat-icon>
-          </button>
-         
-          <!-- Елементы меню  планшетной раскладки -->
-             <mat-menu  
-               [class]="GetThemeClass()"
-               #menu="matMenu"
-               xPosition='before'
-               yPosition="below">
-             
-           
-           
-           <button class="dark mat-nav-item" mat-menu-item>
-               <mat-icon>cancel</mat-icon>
-               <span>Cansel</span>
-             </button>
-             
-               <!-- КНОПКИ ДЕЙСТВИЯ -->
-               <button  mat-menu-item class="dark mat-nav-item">
-                     <mat-icon mat-list-icon>add</mat-icon>
-                     <span> Добавить </span>
-               </button>                    
-               
-               <button  mat-menu-item class="dark mat-nav-item">
-                     <mat-icon mat-list-icon>edit</mat-icon>
-                     <span> Редактировать </span>
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
+          
+               <!-- КНОПКА открытия меню для планшетной раскладки -->
+               <button 
+               *ngIf="screenState[_Breakpoints.XSmall]"
+               fxFlex="1 0 "
+               mat-list-item
+               class="dark panel-flex-element"
+               [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
+               [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+               </button>
+          
+               <!-- Елементы меню  планшетной раскладки -->
+               <mat-menu  
+                    [class]="GetThemeClass()"
+                    #menu="matMenu"
+                    xPosition='before'
+                    yPosition="below">
+               <button class="dark mat-nav-item" mat-menu-item>
+                    <mat-icon>cancel</mat-icon>
+                    <span>Cansel</span>
                </button>
                
-               <button  mat-menu-item class="dark mat-nav-item">
-                    <mat-icon mat-list-icon>delete</mat-icon>
-                    <span> Удалить </span>
-               </button>
+                    <!-- КНОПКИ ДЕЙСТВИЯ -->
+                    <button  mat-menu-item class="dark mat-nav-item">
+                         <mat-icon mat-list-icon>add</mat-icon>
+                         <span> Добавить </span>
+                    </button>                    
+                    
+                    <button  mat-menu-item class="dark mat-nav-item">
+                         <mat-icon mat-list-icon>edit</mat-icon>
+                         <span> Редактировать </span>
+                    </button>
+                    
+                    <button  mat-menu-item class="dark mat-nav-item">
+                         <mat-icon mat-list-icon>delete</mat-icon>
+                         <span> Удалить </span>
+                    </button>
 
-               <!-- ЛИНКИ -->
-               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-               <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-
-         
-              
-             
-             </mat-menu>
-         
-         
-     
+                    <!-- ЛИНКИ -->
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+               </mat-menu>
           </mat-action-list>      
      </div>
 

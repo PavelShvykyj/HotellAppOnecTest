@@ -22,7 +22,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   screnStateSubsciption : Subscription ;
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
   litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
-  
+    
 
   
   constructor(private breakpointObserver: BreakpointObserver) {
