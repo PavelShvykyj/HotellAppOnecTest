@@ -46,18 +46,15 @@
   }
 
   .dark {
-    outline: none !important;
     background: $darkcolor;
     color: $lightcolor !important;
 
     &:hover {
-        outline: none !important;  
         background: $darkcolor !important;
         color: $activecolor !important;
     }
 
     &:focus {
-        outline: none !important;
         background: $darkcolor !important;
         color: $activecolor !important;
     }
@@ -158,5 +155,5 @@
   }
   :hover {
     outline: none !important;
-  } 
-}
+  }
+} 

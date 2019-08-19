@@ -11,6 +11,16 @@
 @include angular-material-theme($grey-app-theme); 
 
 
+button {
+    outline: none !important;
+    &:focus {
+        outline: none !important;  
+      }
+      :hover {
+        outline: none !important;
+      }
+}
+
 .p-0 {
     padding: 0px !important;
 }

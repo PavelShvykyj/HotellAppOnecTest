@@ -1,22 +1,28 @@
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
+//import { NgxSpinnerModule } from "ngx-spinner";
 
+
+
+//// INTERNAL (OWN CREATED elements)
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { RoomstockComponent } from './roomstock/roomstock.component';
-//import { NgxSpinnerModule } from "ngx-spinner";
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { RouterEventHendlerService } from './router-event-hendler.service';
 import { PreloadpageComponent } from './preloadpage/preloadpage.component';
 import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { LayoutModule } from '@angular/cdk/layout';
+import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
+
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -40,7 +46,7 @@ import {MatIconModule} from '@angular/material/icon';
     FetchDataComponent,
     RoomstockComponent,
     OneCOptionsFormComponent,
-    
+    PanelFormComponent,
     PreloadpageComponent
     
   ],
@@ -67,6 +73,7 @@ import {MatIconModule} from '@angular/material/icon';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'roomstock', component: RoomstockComponent },
       { path: 'onecoptions', component: OneCOptionsFormComponent },
+      { path: 'shablon', component: PanelFormComponent },
     ])
   ],
   providers: [RouterEventHendlerService],

@@ -27,13 +27,6 @@
         <mat-icon class="px-2">build</mat-icon>
       </button>
 
-      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/shablon" routerLinkActive="link-active"
-        [routerLinkActiveOptions]="{exact:true}">
-        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">shablon</span>
-        <mat-icon class="px-2">build</mat-icon>
-      </button>
-
-
       <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/roomstock" routerLinkActive="link-active">
         <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">Roomstock</span>
         <mat-icon class="px-2">apps</mat-icon>
@@ -46,36 +39,30 @@
 
     <mat-menu  [class]="GetThemeClass()" #menu="matMenu" xPosition='before' yPosition="below">
 
-      <button class="dark mat-nav-item no-outline" mat-menu-item>
+      <button class="dark mat-nav-item" mat-menu-item>
         <mat-icon>cancel</mat-icon>
         <span>Cansel</span>
       </button>
 
-      <button class="dark mat-nav-item no-outline" mat-menu-item routerLink="/" routerLinkActive="link-active"
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/" routerLinkActive="link-active"
         [routerLinkActiveOptions]="{exact:true}">
         <mat-icon>home</mat-icon>
         <span>Home</span>
       </button>
 
-      <button class="dark mat-nav-item no-outline"  mat-menu-item routerLink="/counter" routerLinkActive="link-active"
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/counter" routerLinkActive="link-active"
         [routerLinkActiveOptions]="{exact:true}">
         <mat-icon>timer</mat-icon>
         <span>Counter</span>
       </button>
 
-      <button class="dark mat-nav-item no-outline" mat-menu-item routerLink="/onecoptions" routerLinkActive="link-active"
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/onecoptions" routerLinkActive="link-active"
         [routerLinkActiveOptions]="{exact:true}">
         <mat-icon>build</mat-icon>
         <span>Onecoptions</span>
       </button>
 
-      <button class="dark mat-nav-item no-outline" mat-menu-item routerLink="/shablon" routerLinkActive="link-active"
-        [routerLinkActiveOptions]="{exact:true}">
-        <mat-icon>build</mat-icon>
-        <span>shablon</span>
-      </button>
-
-      <button class="dark mat-nav-item no-outline" mat-menu-item routerLink="/roomstock" routerLinkActive="link-active">
+      <button class="dark mat-nav-item" mat-menu-item routerLink="/roomstock" routerLinkActive="link-active">
         <mat-icon>apps</mat-icon>
         <span>Roomstock</span>
       </button>
