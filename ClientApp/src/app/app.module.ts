@@ -21,6 +21,7 @@ import { RoomstockComponent } from './roomstock/roomstock.component';
 import { RouterEventHendlerService } from './router-event-hendler.service';
 import { PreloadpageComponent } from './preloadpage/preloadpage.component';
 import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
+import { AppOptionsFormComponent } from './app-options-form/app-options-form.component';
 import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
 import { OptionsService } from './options.service'
 
@@ -48,7 +49,8 @@ import { from } from 'rxjs';
     RoomstockComponent,
     OneCOptionsFormComponent,
     PanelFormComponent,
-    PreloadpageComponent
+    PreloadpageComponent,
+    AppOptionsFormComponent
     
   ],
   imports: [
@@ -73,6 +75,7 @@ import { from } from 'rxjs';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'roomstock', component: RoomstockComponent },
+      { path: 'appoptions', component: AppOptionsFormComponent },
       { path: 'onecoptions', component: OneCOptionsFormComponent },
       { path: 'shablon', component: PanelFormComponent },
     ])
@@ -83,10 +86,6 @@ import { from } from 'rxjs';
 })
 export class AppModule { 
 
-  // constructor(overlayContainer: OverlayContainer) {
-  //   overlayContainer.getContainerElement().classList.add('brown-app-theme');
-  //   overlayContainer.getContainerElement().classList.add('grey-app-theme');
-  //   overlayContainer.getContainerElement().classList.add('contrast-app-theme');
-  //}
+  
 
 }

@@ -2,14 +2,14 @@ import { animate, trigger, transition, query, stagger, animateChild } from '@ang
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
-import { disappearTrigger } from './one-coptions-form.animate'
+import { disappearTrigger } from './app-options-form.animate'
 import { OptionsService } from '../options.service'
 
 
 @Component({
-  selector: 'one-coptions-form',
-  templateUrl: './one-coptions-form.component.html',
-  styleUrls: ['./one-coptions-form.component.scss'],
+  selector: 'app-options-form',
+  templateUrl: './app-options-form.component.html',
+  styleUrls: ['./app-options-form.component.scss'],
   animations : [
     trigger('disappearmessages', [
       transition('void=>*', [
@@ -21,7 +21,7 @@ import { OptionsService } from '../options.service'
 
   ]
 })
-export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   themes = {
     "brown" : false,
@@ -143,15 +143,12 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   StarterMessages() {
 
     let startmessage = {
-      message_content : "На этой странице настраиваются параметры подключения к серверу 1С", 
+      message_content : "На этой странице можно установить параметры приложения. Такие как цветовая гамма.", 
       isError : false
     }
 
-   
-    
-
     this.messages.push(startmessage);
-    
+
   }
 
 

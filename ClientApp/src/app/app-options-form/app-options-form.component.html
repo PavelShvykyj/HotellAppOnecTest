@@ -36,9 +36,9 @@
           fxLayout="column"
           fxLayoutAlign="start center"               
           class="scrollable pt-0 w-100">
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Отмена </span> </button>                    
-               <!-- <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button> -->
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
           </mat-action-list>      
 
           <!-- LINKS  -->      
@@ -224,7 +224,7 @@
      class="form-body p-1 w-100  scrollable">
                
           <div fxLayout="column" fxLayoutAlign="center center"  class="w-100"> 
-               <!-- <div fxLayout="row wrap" class="mt-1 w-100">
+               <div fxLayout="row wrap" class="mt-1 w-100">
                     <button  mat-raised-button color="accent"  > accent </button>
                     <button  mat-raised-button color="primary" > primary </button>
                     <button  mat-raised-button color="warn" > warn </button>
@@ -234,7 +234,10 @@
                     <button  mat-raised-button (click)="SetTheme('brown')">brown</button> 
                     <button  mat-raised-button  (click)="SetTheme('grey')"> grey </button>
                     <button  mat-raised-button  (click)="SetTheme('contrast')"> contrast </button>
-               </div> -->
+               </div>
+               <!-- <div fxLayout="row " fxLayoutAlign="center center" class="w-100 p-1">
+                    <grid-shablon  class="mt-1 w-100 p-0"  [themes]="themes"> </grid-shablon>     
+               </div>      -->
           </div>        
      </div>
 </div>

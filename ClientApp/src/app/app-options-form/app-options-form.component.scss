@@ -8,13 +8,6 @@
   $activecolor: mat-color($accent, 50, 1);
   $darkcolor: mat-color($accent, 900);
      
-  .link-active {
-    color: $darkcolor !important;
-    opacity: 1 !important;
-    font-size: 120%;
-    font-weight: bolder;
-  }
-
 
   .panel {
     background-color: mat-color($accent, $bg-rimary-strenth);

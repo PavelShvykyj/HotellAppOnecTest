@@ -16,7 +16,7 @@ export interface  IProxyParametr
 export class OptionsService {
 
   private eventer = new BehaviorSubject({themes : {
-    "brown" : false,
+    "brown" : true,
     "grey"  : false,
     "contrast"  : false
   }});
