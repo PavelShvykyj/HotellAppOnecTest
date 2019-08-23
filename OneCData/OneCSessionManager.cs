@@ -17,7 +17,6 @@ namespace TestCOneConnection.OneCData
         private readonly RestClient _client;
         private IOneCDataLogger _logger;
         private Timer _timer;
-        private byte _pingcount; /// счетчик удачных запросов пинг для емуляции плохого ответа на каждый 10 ый
         private IOneCSessionStatus _sessionstatus;
 
         private int _restrequesttimeout;
@@ -32,7 +31,7 @@ namespace TestCOneConnection.OneCData
         {
             _restrequesttimeout = options.Value.REQUEST_TIMEOUT;
             _maxbadresponsecount = options.Value.MAX_BADREQUEST_COUNT;
-            _pingcount = 0;
+            
             _logger = logger;
 
             _timer = new Timer(options.Value.PING_FREQUENCY)
@@ -124,7 +123,7 @@ namespace TestCOneConnection.OneCData
                 Resource = "ping",
                 Timeout  = _restrequesttimeout
             };
-            request.AddHeader("IBSession", "stop");
+            request.AddHeader("IBSession", "finish");
             IMessage message = _logger.StartMessage("StopSession", new { });
             IRestResponse response = await _client.ExecuteTaskAsync(request);
             ExecuteStopSession(response, new RestRequestAsyncHandle(), message);
@@ -139,6 +138,9 @@ namespace TestCOneConnection.OneCData
         {
             _sessionstatus.LastResponseStatus = response.StatusCode;
             _sessionstatus.OneCSesionId = "";
+            message.additionalsparams = new { requeststatus = response.StatusCode, error = response.ErrorMessage, contenet = response.Content };
+            _logger.FinishMessage(message);
+            _client.CookieContainer = new CookieContainer();
 
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.OK)
             {
@@ -146,15 +148,12 @@ namespace TestCOneConnection.OneCData
                 if (_sessionstatus.BadResponseCount > _maxbadresponsecount)
                 {
                     StopPing();
-                    return;
                 }
             }
+            else {
+                _sessionstatus.BadResponseCount = 0;
+            }
 
-            _sessionstatus.BadResponseCount = 0;
-
-            message.additionalsparams = new { requeststatus = response.StatusCode };
-            _logger.FinishMessage(message);
-            _client.CookieContainer = new CookieContainer();
         }
 
         private async void Ping()
@@ -164,7 +163,7 @@ namespace TestCOneConnection.OneCData
                 Resource = "ping",
                 Timeout  = _restrequesttimeout
             };
-            request.AddHeader("counter", _pingcount.ToString());
+            
             IMessage message = _logger.StartMessage("ping", new { });
             //Client.ExecuteAsync(request, (r, rh) => ExecutePing(r, rh, message), Method.GET);
             IRestResponse response = await _client.ExecuteTaskAsync(request);
@@ -173,10 +172,10 @@ namespace TestCOneConnection.OneCData
 
         private void ExecutePing(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
         {
-            message.additionalsparams = new { requeststatus = response.StatusCode };
+            message.additionalsparams = new { requeststatus = response.StatusCode, error = response.ErrorMessage, contenet = response.Content };
             _sessionstatus.LastResponseStatus = response.StatusCode;
             _logger.FinishMessage(message);
-            _pingcount += 1;
+            
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.OK)
             {
                 _sessionstatus.BadResponseCount += 1;
@@ -208,7 +207,7 @@ namespace TestCOneConnection.OneCData
 
         private void StopPing()
         {
-            _pingcount = 0;
+            
             _timer.Enabled = false;
             _timer.Stop();
             _sessionstatus.PingTimerStarted = false;

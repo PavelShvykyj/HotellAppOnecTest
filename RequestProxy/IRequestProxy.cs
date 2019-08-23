@@ -28,6 +28,8 @@ namespace TestCOneConnection.RequestProxy
         Task StartOneCSession();
         Task StopOneCSession();
         Task<IProxyResponse> GetRoomStock(IProxyParametr Parametr);
+        Task<IProxyResponse> SimpleProxyGet(IProxyParametr Parametr);
+        Task<IProxyResponse> SimpleProxyPost(IProxyParametr Parametr);
         string GetOptions();
         void SetOptions(IOneCOptions newoptions);
     }

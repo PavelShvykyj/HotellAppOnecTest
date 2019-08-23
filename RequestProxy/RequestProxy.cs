@@ -12,6 +12,10 @@ namespace TestCOneConnection.RequestProxy
 
         // delegates
         private Func<IProxyParametr, Task<IProxyResponse>> GetRoomStockDelegate;
+        private Func<IProxyParametr, Task<IProxyResponse>> SimpeProxyGetDelegate;
+        private Func<IProxyParametr, Task<IProxyResponse>> SimpeProxyPostDelegate;
+
+
 
         public ProxyServise(IOneCDataProvider OneCDataProvider) 
         {
@@ -21,7 +25,9 @@ namespace TestCOneConnection.RequestProxy
 
         private void InitDelegates()
         {
-            GetRoomStockDelegate += _OneCDataProvider.APIManager.GetRoomStock;
+            GetRoomStockDelegate     += _OneCDataProvider.APIManager.GetRoomStock;
+            SimpeProxyGetDelegate += _OneCDataProvider.APIManager.SimpleProxyGet;
+            SimpeProxyPostDelegate += _OneCDataProvider.APIManager.SimpleProxyPost;
         }
 
         public List<IMessage> GetOneCSessionLog()
@@ -58,6 +64,16 @@ namespace TestCOneConnection.RequestProxy
         public async  Task<IProxyResponse> GetRoomStock(IProxyParametr Parametr)
         {
             return await GetRoomStockDelegate(Parametr);
+        }
+
+        public async Task<IProxyResponse> SimpleProxyGet(IProxyParametr Parametr)
+        {
+            return await SimpeProxyGetDelegate(Parametr);
+        }
+
+        public async Task<IProxyResponse> SimpleProxyPost(IProxyParametr Parametr)
+        {
+            return await SimpeProxyPostDelegate(Parametr);
         }
 
     }

@@ -3,5 +3,5 @@ export interface ILoggmessage {
      finish : Date,
      duration : number 
      content : string
-     additionalsparams?  : object
+     additionalsparams?  : {[key : string ] : any}
 }

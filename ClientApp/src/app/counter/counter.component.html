@@ -69,6 +69,7 @@
               <th> Start </th>
               <th> Type</th>
               <th> Duration </th>
+              <th> Status </th>
             </tr>
           </thead>
           <tbody *ngIf="log.length != 0">
@@ -76,6 +77,7 @@
               <td> {{message.start |  date: 'mediumTime'}} </td>
               <td> {{message.content  }}</td>
               <td> {{message.duration  }}</td>
+              <td> {{message.additionalsparams.requeststatus }} {{message.additionalsparams.error}} {{message.additionalsparams.contenet}}</td>
             </tr>
           </tbody>
         </table>

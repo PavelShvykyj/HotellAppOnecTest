@@ -44,5 +44,40 @@ namespace TestCOneConnection.OneCData
             return response;
         }
 
+        public async Task<IProxyResponse> SimpleProxyGet(IProxyParametr parametr)
+        {
+            var cancellationTokenSource = new CancellationTokenSource();
+            var request = new RestRequest();
+            request.Resource = parametr.Parametr.GetValueOrDefault("OneCURL");  
+
+            IRestResponse restresponse = await _client.Client.ExecuteTaskAsync(request, cancellationTokenSource.Token, Method.GET);
+
+            IProxyResponse response = new ProxyResponse()
+            {
+                Response = restresponse,
+                FormatedAswer = restresponse.Content
+            };
+
+            return response;
+        }
+
+        public async Task<IProxyResponse> SimpleProxyPost(IProxyParametr parametr)
+        {
+            var cancellationTokenSource = new CancellationTokenSource();
+            var request = new RestRequest();
+            request.Resource = parametr.Parametr.GetValueOrDefault("OneCURL");
+            request.AddJsonBody(parametr.Parametr.GetValueOrDefault("OneCBody"));
+
+            IRestResponse restresponse = await _client.Client.ExecuteTaskAsync(request, cancellationTokenSource.Token, Method.POST);
+
+            IProxyResponse response = new ProxyResponse()
+            {
+                Response = restresponse,
+                FormatedAswer = restresponse.Content
+            };
+
+            return response;
+        }
+
     }
 }

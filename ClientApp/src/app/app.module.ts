@@ -22,7 +22,7 @@ import { RouterEventHendlerService } from './router-event-hendler.service';
 import { PreloadpageComponent } from './preloadpage/preloadpage.component';
 import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
 import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
-
+import { OptionsService } from './options.service'
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -32,6 +32,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
+import { from } from 'rxjs';
 
 
 /// MATERIAL COMPONENTS ///
@@ -76,7 +77,8 @@ import {MatIconModule} from '@angular/material/icon';
       { path: 'shablon', component: PanelFormComponent },
     ])
   ],
-  providers: [RouterEventHendlerService],
+  providers: [RouterEventHendlerService,
+              OptionsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

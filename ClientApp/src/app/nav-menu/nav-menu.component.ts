@@ -1,3 +1,4 @@
+import { OptionsService } from './../options.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RouterEventHendlerService } from '../router-event-hendler.service';
@@ -20,7 +21,7 @@ export class NavMenuComponent implements OnDestroy, OnInit  {
 
 
   themes = {
-    "brown" : true,
+    "brown" : false,
     "grey"  : false,
     "contrast"  : false,
   }
@@ -29,14 +30,22 @@ export class NavMenuComponent implements OnDestroy, OnInit  {
   private screnStateSubsciption : Subscription ;
 
   
-  constructor(private routeventer : RouterEventHendlerService, private breakpointObserver: BreakpointObserver)  {
-      this.eventSubsciption = this.routeventer.eventEmiter.subscribe(event  => {
+  constructor(private routeventer : RouterEventHendlerService, private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService )  {
+      
+     OptionsService.GetOptions();
+     OptionsService.handler.subscribe(res => {
+      this.themes = res.themes
+      });
+    
+     this.eventSubsciption = this.routeventer.eventEmiter.subscribe(event  => {
       if (event instanceof NavigationStart) {
         this.isDataLoading = true;
       }
       else if(event instanceof NavigationEnd) {
         this.isDataLoading = false;
       }
+
+
 
       this.screnStateSubsciption = this.breakpointObserver
       .observe([

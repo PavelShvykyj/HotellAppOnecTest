@@ -111,6 +111,56 @@ namespace TestCOneConnection.Controllers
         }
 
 
+        [HttpPost("proxy")]
+        public async Task<IActionResult> SimpleProxyPost([FromBody] ProxyParametrDTO proxyParametr)
+        {
+
+
+            IProxyParametr parametr = new ProxyParametr()
+            {
+                Request = HttpContext.Request,
+            };
+            parametr.Parametr.Add("OneCURL", proxyParametr.URL);
+            parametr.Parametr.Add("OneCBody", proxyParametr.Body);
+
+            string redirectMetod = proxyParametr.Metod;
+            if (redirectMetod == "POST")
+            {
+                IProxyResponse response = await _proxy.SimpleProxyPost(parametr);
+                if (response.Response.IsSuccessful)
+                {
+                    return Ok(response.FormatedAswer);
+                }
+                else
+                {
+                    return BadRequest(response.Response.ErrorMessage);
+                }
+
+            }
+            else if (redirectMetod == "GET")
+            {
+                IProxyResponse response = await _proxy.SimpleProxyGet(parametr);
+                if (response.Response.IsSuccessful)
+                {
+                    return Ok(response.FormatedAswer);
+                }
+                else
+                {
+                    return BadRequest(response.Response.ErrorMessage);
+                }
+
+
+            }
+            else {
+                return BadRequest("metod not supported");
+            }
+
+
+
+
+            
+
+        }
 
 
 

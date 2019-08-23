@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { disappearTrigger } from './one-coptions-form.animate'
+import { OptionsService } from '../options.service'
 
 
 @Component({
@@ -23,22 +24,28 @@ import { disappearTrigger } from './one-coptions-form.animate'
 export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   themes = {
-    "brown" : true,
+    "brown" : false,
     "grey"  : false,
-    "contrast" : false
+    "contrast"  : false,
   }
   
   panelExpanded : boolean = false;
   _Breakpoints : typeof Breakpoints = Breakpoints;
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
+  themesStateSubsciption : Subscription ;
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
   litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
   messages : Array<{message_content : string, isError : boolean }> = [];  
 
   
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
     
+    this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
+      this.themes = res.themes
+      });
+
+
     this.screnStateSubsciption = this.breakpointObserver
     .observe([
               Breakpoints.Large, 
@@ -71,6 +78,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnDestroy() {
     this.screnStateSubsciption.unsubscribe(); 
+    this.themesStateSubsciption.unsubscribe(); 
   }
 
 
@@ -81,6 +89,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     });
 
     this.themes[theme] = true;
+    this.OptionsService.SetOptions({themes : this.themes});
 
   }
 
