@@ -219,12 +219,91 @@
      <!-- BODY  -->
      <div 
      fxLayout="row"
-     fxLayoutAlign="start start"  
+     fxLayoutAlign="center center"  
      fxFlex="1 1 auto"
      class="form-body p-1 w-100  scrollable">
+             
+     <mat-card  >
+          <mat-card-header >
+            <div mat-card-avatar class="header-image"></div>  <!-- header-image background-image: url('путь к картинке заголовка'); background-size: cover; -->
                
-          <div fxLayout="column" fxLayoutAlign="center center"  class="w-100"> 
-               <!-- <div fxLayout="row wrap" class="mt-1 w-100">
+            <mat-card-title>Настройки подключения к сервису 1С</mat-card-title>
+            <mat-card-subtitle>Обязательны для работы с 1С</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content >
+               <form fxLayout="row">
+                    <mat-divider ></mat-divider>
+                    <ul fxFlex class="list-group list-group-flush">
+                         <small class="list-group-item ">Параметры для входа </small>
+                         <li class="list-group-item "> 
+                              <mat-form-field  color='accent' class="w-100">  
+                                   <input type="url" matInput placeholder="Base URL"> 
+                                   <mat-hint>Адрес http сервиса  </mat-hint> 
+                                   <mat-icon matSuffix>mode_edit</mat-icon>
+                              </mat-form-field>   
+                              
+                         </li>
+               
+                         <li class="list-group-item "> 
+                              <mat-form-field  color='accent' class="w-100">  
+                                   <input  matInput placeholder="Login"> 
+                                   <mat-hint>Имя пользователя 1С</mat-hint> 
+                                   <mat-icon matSuffix>mode_edit</mat-icon>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                              <mat-form-field  color='accent' class="w-100">  
+                                   <input type="password" matInput placeholder="Password"> 
+                                   <mat-hint>Пароль пользователя 1С</mat-hint> 
+                                   <mat-icon matSuffix>visibility_off</mat-icon>
+                              </mat-form-field>   
+                         </li>
+                    </ul>
+
+                    
+                    <mat-divider ></mat-divider>     
+                    <ul fxFlex class="list-group list-group-flush">
+                         <small class="list-group-item ">Параметры запросов </small>     
+                         <li  class="list-group-item"> 
+                              <mat-form-field  color='accent' class="w-100">  
+                                   <input type="number" matInput placeholder="Request timeout"> 
+                                   <mat-hint>Время ожидания ответа от 1С (ms)</mat-hint> 
+                                   <mat-icon matSuffix>filter_1</mat-icon>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                              <mat-form-field type="number"  color='accent' class="w-100">  
+                                   <input  matInput placeholder="Max bad request count"> 
+                                   <mat-hint>Допустимое количество "плохих" ответов 1С подряд</mat-hint> 
+                                   <mat-icon matSuffix>filter_1</mat-icon>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                               <mat-form-field  color='accent' class="w-100">  
+                                   <input type="number" matInput placeholder="Ping frequency"> 
+                                   <mat-hint>Частота фонового пинга для поддержания сессии (ms)</mat-hint> 
+                                   <mat-icon matSuffix>filter_1</mat-icon>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                              <mat-checkbox fxFlex> Использовать лог</mat-checkbox>
+                         </li>     
+                    </ul>
+               </form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button class="secondry" mat-raised-button>Сохранить</button>
+            <button class="secondry" mat-raised-button>Отмена</button>
+          </mat-card-actions>
+        </mat-card>
+
+          <!--<div fxLayout="column" fxLayoutAlign="center center"  class="w-100"> 
+                <div fxLayout="row wrap" class="mt-1 w-100">
                     <button  mat-raised-button color="accent"  > accent </button>
                     <button  mat-raised-button color="primary" > primary </button>
                     <button  mat-raised-button color="warn" > warn </button>
@@ -234,8 +313,8 @@
                     <button  mat-raised-button (click)="SetTheme('brown')">brown</button> 
                     <button  mat-raised-button  (click)="SetTheme('grey')"> grey </button>
                     <button  mat-raised-button  (click)="SetTheme('contrast')"> contrast </button>
-               </div> -->
-          </div>        
+               </div> 
+          </div>-->        
      </div>
 </div>
 

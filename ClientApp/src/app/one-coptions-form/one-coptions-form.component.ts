@@ -1,9 +1,14 @@
+import { IOneCSessionStatus } from './../counter/OneCSessionStatus';
 import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { disappearTrigger } from './one-coptions-form.animate'
 import { OptionsService } from '../options.service'
+import { ActivatedRoute } from '@angular/router';
+import { IOneCOptions } from './IOneCOptions';
+
+
 
 
 @Component({
@@ -37,9 +42,11 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
   litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
   messages : Array<{message_content : string, isError : boolean }> = [];  
-
+  options : IOneCOptions;
   
-  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
+  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService, private route: ActivatedRoute) {
+    
+    this.options = this.route.snapshot.data.onecoptions;
     
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
       this.themes = res.themes
@@ -72,6 +79,9 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
+    console.log(this.options);
+
+
   }
 
 

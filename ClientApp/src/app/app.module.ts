@@ -1,12 +1,13 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule ,ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
+
 //import { NgxSpinnerModule } from "ngx-spinner";
 
 
@@ -23,7 +24,8 @@ import { PreloadpageComponent } from './preloadpage/preloadpage.component';
 import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
 import { AppOptionsFormComponent } from './app-options-form/app-options-form.component';
 import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
-import { OptionsService } from './options.service'
+import { OptionsService } from './options.service';
+import { OneCOptionsResolver } from './one-coptions-form/one-coptions-form.resolver';
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -33,7 +35,13 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
-import { from } from 'rxjs';
+import {MatCardModule} from '@angular/material/card'
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { format } from 'url';
+
+
+      
 
 
 /// MATERIAL COMPONENTS ///
@@ -62,11 +70,15 @@ import { from } from 'rxjs';
     MatButtonModule,
     MatListModule,
     MatIconModule,
+    MatCardModule,
+    MatInputModule,
+    MatFormFieldModule,
     /// MATERIAL COMPONENTS ///
     FlexLayoutModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     LayoutModule,
     //NgxSpinnerModule,
     BrowserAnimationsModule,
@@ -76,12 +88,14 @@ import { from } from 'rxjs';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'roomstock', component: RoomstockComponent },
       { path: 'appoptions', component: AppOptionsFormComponent },
-      { path: 'onecoptions', component: OneCOptionsFormComponent },
+      { path: 'onecoptions', component: OneCOptionsFormComponent, resolve : {onecoptions : OneCOptionsResolver} },
       { path: 'shablon', component: PanelFormComponent },
     ])
   ],
   providers: [RouterEventHendlerService,
-              OptionsService],
+              OptionsService,
+              OneCOptionsResolver
+              ],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

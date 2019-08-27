@@ -87,12 +87,7 @@ namespace TestCOneConnection.Controllers
         }
 
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        
 
         [HttpGet("roomstock/{id}")]
         public async Task<IActionResult> GetRoomStock(string Id)
@@ -180,6 +175,13 @@ namespace TestCOneConnection.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        // GET api/<controller>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
         }
     }
 }

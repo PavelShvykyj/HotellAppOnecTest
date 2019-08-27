@@ -1,6 +1,7 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { IOneCOptions } from './one-coptions-form/IOneCOptions';
 
 export interface  IProxyParametr
 {
@@ -89,5 +90,36 @@ export class OptionsService {
                  err => {console.log(err)});
 
   }
+
+  GetOneCOptions() : Observable<string> {
+
+    let connection = this.BASE_URL + "/Values/onecoptions";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'text'
+    })
+  }
+
+  SetOneCOptions(options : IOneCOptions) {
+    let connection = this.BASE_URL + "/Values/onecoptions";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    return this.http.post(connection,JSON.stringify(options) ,{
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'text'
+    })
+
+  }
+
 
 }
