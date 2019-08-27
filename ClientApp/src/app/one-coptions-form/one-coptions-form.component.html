@@ -36,7 +36,7 @@
           fxLayout="column"
           fxLayoutAlign="start center"               
           class="scrollable pt-0 w-100">
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Отмена </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="Cansel()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Отмена </span> </button>                    
                <!-- <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
                <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button> -->
           </mat-action-list>      
@@ -222,8 +222,9 @@
      fxLayoutAlign="center center"  
      fxFlex="1 1 auto"
      class="form-body p-1 w-100  scrollable">
-             
-     <mat-card  >
+      
+     
+     <mat-card   class="body-card">
           <mat-card-header >
             <div mat-card-avatar class="header-image"></div>  <!-- header-image background-image: url('путь к картинке заголовка'); background-size: cover; -->
                
@@ -232,32 +233,35 @@
           </mat-card-header>
           
           <mat-card-content >
-               <form fxLayout="row">
+               <form fxLayout="row" [formGroup]="form">
                     <mat-divider ></mat-divider>
                     <ul fxFlex class="list-group list-group-flush">
-                         <small class="list-group-item ">Параметры для входа </small>
+                         <h6 class="list-group-item ">Параметры для входа </h6>
                          <li class="list-group-item "> 
-                              <mat-form-field  color='accent' class="w-100">  
-                                   <input type="url" matInput placeholder="Base URL"> 
+                              <mat-form-field color='accent' class="w-100">  
+                                   <input required [formControl]="BASE_URL" type="url"  matInput placeholder="Base URL"> 
                                    <mat-hint>Адрес http сервиса  </mat-hint> 
                                    <mat-icon matSuffix>mode_edit</mat-icon>
+                                   <mat-error >{{ getErrorMessage( BASE_URL ) }}</mat-error>
                               </mat-form-field>   
                               
                          </li>
                
                          <li class="list-group-item "> 
                               <mat-form-field  color='accent' class="w-100">  
-                                   <input  matInput placeholder="Login"> 
+                                   <input required [formControl]="LOGIN" matInput placeholder="Login"> 
                                    <mat-hint>Имя пользователя 1С</mat-hint> 
                                    <mat-icon matSuffix>mode_edit</mat-icon>
+                                   <mat-error >{{ getErrorMessage( LOGIN ) }}</mat-error>
                               </mat-form-field>   
                          </li>
                          
                          <li class="list-group-item"> 
                               <mat-form-field  color='accent' class="w-100">  
-                                   <input type="password" matInput placeholder="Password"> 
+                                   <input required [formControl]="PASSWORD" type="password" matInput placeholder="Password"> 
                                    <mat-hint>Пароль пользователя 1С</mat-hint> 
                                    <mat-icon matSuffix>visibility_off</mat-icon>
+                                   <mat-error >{{ getErrorMessage( PASSWORD ) }}</mat-error>
                               </mat-form-field>   
                          </li>
                     </ul>
@@ -265,56 +269,46 @@
                     
                     <mat-divider ></mat-divider>     
                     <ul fxFlex class="list-group list-group-flush">
-                         <small class="list-group-item ">Параметры запросов </small>     
+                         <h6 class="list-group-item ">Параметры запросов </h6>     
                          <li  class="list-group-item"> 
                               <mat-form-field  color='accent' class="w-100">  
-                                   <input type="number" matInput placeholder="Request timeout"> 
+                                   <input required [formControl]="REQUEST_TIMEOUT" type="number" matInput placeholder="Request timeout"> 
                                    <mat-hint>Время ожидания ответа от 1С (ms)</mat-hint> 
                                    <mat-icon matSuffix>filter_1</mat-icon>
+                                   <mat-error >{{ getErrorMessage( REQUEST_TIMEOUT ) }}</mat-error>
                               </mat-form-field>   
                          </li>
                          
                          <li class="list-group-item"> 
-                              <mat-form-field type="number"  color='accent' class="w-100">  
-                                   <input  matInput placeholder="Max bad request count"> 
+                              <mat-form-field color='accent' class="w-100">  
+                                   <input required [formControl]="MAX_BADREQUEST_COUNT"  type="number" matInput placeholder="Max bad request count"> 
                                    <mat-hint>Допустимое количество "плохих" ответов 1С подряд</mat-hint> 
                                    <mat-icon matSuffix>filter_1</mat-icon>
+                                   <mat-error >{{ getErrorMessage( MAX_BADREQUEST_COUNT ) }}</mat-error>
                               </mat-form-field>   
                          </li>
                          
                          <li class="list-group-item"> 
                                <mat-form-field  color='accent' class="w-100">  
-                                   <input type="number" matInput placeholder="Ping frequency"> 
+                                   <input required [formControl]="PING_FREQUENCY" type="number" matInput placeholder="Ping frequency"> 
                                    <mat-hint>Частота фонового пинга для поддержания сессии (ms)</mat-hint> 
                                    <mat-icon matSuffix>filter_1</mat-icon>
+                                   <mat-error >{{ getErrorMessage( PING_FREQUENCY ) }}</mat-error>
                               </mat-form-field>   
                          </li>
                          
                          <li class="list-group-item"> 
-                              <mat-checkbox fxFlex> Использовать лог</mat-checkbox>
+                              <mat-checkbox  [formControl]="USE_LOG"  fxFlex> Использовать лог</mat-checkbox>
                          </li>     
                     </ul>
                </form>
           </mat-card-content>
           <mat-card-actions>
-            <button class="secondry" mat-raised-button>Сохранить</button>
-            <button class="secondry" mat-raised-button>Отмена</button>
+            <button class="secondry" mat-raised-button (click)="Save()">Сохранить</button>
+            <button class="secondry" mat-raised-button (click)="Cansel()">Отмена</button>
           </mat-card-actions>
-        </mat-card>
-
-          <!--<div fxLayout="column" fxLayoutAlign="center center"  class="w-100"> 
-                <div fxLayout="row wrap" class="mt-1 w-100">
-                    <button  mat-raised-button color="accent"  > accent </button>
-                    <button  mat-raised-button color="primary" > primary </button>
-                    <button  mat-raised-button color="warn" > warn </button>
-                    <button  mat-raised-button  > clear </button>
-               </div>
-               <div fxLayout="row wrap" class="w-100" >
-                    <button  mat-raised-button (click)="SetTheme('brown')">brown</button> 
-                    <button  mat-raised-button  (click)="SetTheme('grey')"> grey </button>
-                    <button  mat-raised-button  (click)="SetTheme('contrast')"> contrast </button>
-               </div> 
-          </div>-->        
+     </mat-card>
+     
      </div>
 </div>
 

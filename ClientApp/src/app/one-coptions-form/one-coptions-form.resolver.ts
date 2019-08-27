@@ -2,8 +2,8 @@ import { OptionsService } from './../options.service';
 import { Injectable } from '@angular/core';
 
 import { Resolve } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable , of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { IOneCOptions } from './IOneCOptions';
 
 
@@ -18,19 +18,21 @@ export class OneCOptionsResolver implements Resolve<Observable<IOneCOptions>> {
     return {
         BASE_URL : "",
         LOGIN : "",
-        MAX_BADREQUEST_COUNT : 0,
+        MAX_BADREQUEST_COUNT : 5,
         PASSWORD : "", 
-        PING_FREQUENCY : 0, 
-        REQUEST_TIMEOUT : 0, 
-        USE_LOG : false
-    }
-
+        PING_FREQUENCY : 10000, 
+        REQUEST_TIMEOUT : 1000, 
+        USE_LOG : true
+        };
   }
 
   resolve() {
-    return this._optionsService.GetOneCOptions()
-                                .pipe(map(res =>((JSON.parse(res) as IOneCOptions)),
-                                          this.EmptyOptions()
-    ))
-  }
-}
+    let resoult = this._optionsService
+    .GetOneCOptions()
+    .pipe(
+      catchError(err =>of(JSON.stringify(this.EmptyOptions()))),
+      map(res =>((JSON.parse(res) as IOneCOptions)))
+      );
+ 
+    return resoult }
+} 

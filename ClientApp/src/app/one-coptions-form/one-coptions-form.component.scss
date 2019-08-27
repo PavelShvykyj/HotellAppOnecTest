@@ -171,3 +171,8 @@
 .link-active {
   font-style: italic !important;  
 }
+
+::ng-deep .body-card {
+  font-size: 120% !important;
+  
+}
