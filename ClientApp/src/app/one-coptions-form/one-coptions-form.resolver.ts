@@ -34,5 +34,6 @@ export class OneCOptionsResolver implements Resolve<Observable<IOneCOptions>> {
       map(res =>((JSON.parse(res) as IOneCOptions)))
       );
  
-    return resoult }
+    return resoult 
+  }
 } 

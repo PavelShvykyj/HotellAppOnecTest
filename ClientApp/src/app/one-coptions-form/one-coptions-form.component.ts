@@ -60,8 +60,6 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
       'USE_LOG' : new FormControl(this.options.USE_LOG)
     })
 
-    
-
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
       this.themes = res.themes
       });
@@ -184,14 +182,57 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   // ОБРАБОТЧИКИ СОБЫТИЙ ФОРМЫ
   Cansel() {
-
+    this.OptionsService
+    .GetOneCOptions()
+    .toPromise()
+    .then(res =>
+      {
+        this.form.setValue((JSON.parse(res) as IOneCOptions));
+        this.messages
+        .push({message_content : "Настройки успешно считаны", isError : false});
+      })
+    .catch(err =>
+      {
+        console.log(err);
+        this.messages
+        .push({message_content : "При получении настроек произошли ошибки", isError : true});
+      });
   } 
 
   Save() {
+    if(! this.form.valid) {
+      this.messages
+      .push({message_content : "Данные заполнены не верно. Сохранение невозможно", isError : true});
+
+      return;
+    }
     
+    
+    this.OptionsService
+    .SetOneCOptions(this.form.value)
+    .toPromise()
+    .then(res =>
+      {
+        this.messages
+        .push({message_content : "Настройки успешно сохранены", isError : false});
+      })
+    .catch(err =>
+      {
+        console.log(err);
+        this.messages
+        .push({message_content : "При сохранении настроек произошли ошибки", isError : true});
+      });
+
   } 
 
+  AddMessage(content : string ,isError : boolean) {
+    let message = {message_content : content, isError : isError};
+    this.messages.push(message);
+  }
 
+  ClearMesaages() {
+    this.messages = [];
+  }
   //  FORM GET SET
 
   get BASE_URL() {

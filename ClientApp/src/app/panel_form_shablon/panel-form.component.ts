@@ -58,7 +58,7 @@ export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
       
     });
   
-    // FAKE
+    
     this.StarterMessages()
 
   }
@@ -134,42 +134,22 @@ export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.messages.splice(this.messages.lastIndexOf(message),1);
   }
 
-  /// FAKE
+  
 
   StarterMessages() {
 
-    let firstmessage = {
-      message_content : "first user message", 
+    let startmessage = {
+      message_content : "Написать сюда сообщение описание страницы.", 
       isError : false
     }
 
-   
-    let message = {
-      message_content : "some user message", 
-      isError : false
-    }
-
-    let longmessage = {
-      message_content : "some user message long long abra kadabra - is power", 
-      isError : false
-    }
-
-    let erromessage = {
-      message_content : "some error message", 
-      isError : true
-    }
-
-
-    this.messages.push(firstmessage);
-    this.messages.push(longmessage);
-    this.messages.push(erromessage);
-    this.messages.push(message);
-
+    this.messages.push(startmessage);
+ 
   }
 
 
-  Test(message) {
-    console.log(message);
+  ClearMesaages() {
+    this.messages = [];
   }
 }
 
