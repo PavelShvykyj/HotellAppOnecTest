@@ -22,10 +22,12 @@ import { RoomstockComponent } from './roomstock/roomstock.component';
 import { RouterEventHendlerService } from './router-event-hendler.service';
 import { PreloadpageComponent } from './preloadpage/preloadpage.component';
 import { OneCOptionsFormComponent } from './one-coptions-form/one-coptions-form.component';
+import { OneCSessionsFormComponent } from './one-csessions-form/one-csessions-form.component';
 import { AppOptionsFormComponent } from './app-options-form/app-options-form.component';
 import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
 import { OptionsService } from './options.service';
 import { OneCOptionsResolver } from './one-coptions-form/one-coptions-form.resolver';
+
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -38,7 +40,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card'
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { format } from 'url';
+import {MatTableModule} from '@angular/material/table';
 
 
       
@@ -56,10 +58,10 @@ import { format } from 'url';
     FetchDataComponent,
     RoomstockComponent,
     OneCOptionsFormComponent,
+    OneCSessionsFormComponent,
+    AppOptionsFormComponent,
     PanelFormComponent,
     PreloadpageComponent,
-    AppOptionsFormComponent
-    
   ],
   imports: [
     /// MATERIAL COMPONENTS ///
@@ -73,6 +75,7 @@ import { format } from 'url';
     MatCardModule,
     MatInputModule,
     MatFormFieldModule,
+    MatTableModule,
     /// MATERIAL COMPONENTS ///
     FlexLayoutModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -84,7 +87,7 @@ import { format } from 'url';
     BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
+      { path: 'counter', component: OneCSessionsFormComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'roomstock', component: RoomstockComponent },
       { path: 'appoptions', component: AppOptionsFormComponent },

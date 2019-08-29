@@ -121,5 +121,17 @@ export class OptionsService {
 
   }
 
+  GetSessionLog() {
+    let connection = this.BASE_URL + "/Values";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    })
+  }
 
 }

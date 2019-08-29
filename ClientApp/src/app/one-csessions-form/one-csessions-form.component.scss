@@ -156,8 +156,13 @@
   :hover {
     outline: none !important;
   }
-  
-  .link-active {
-    font-style: italic !important;  
-  }
-} 
+}
+
+.link-active {
+  font-style: italic !important;  
+}
+
+.table-container {
+  max-height: 100%;
+  overflow: auto !important;
+}

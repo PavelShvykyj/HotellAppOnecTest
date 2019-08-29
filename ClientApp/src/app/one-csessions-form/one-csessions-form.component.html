@@ -1,0 +1,300 @@
+
+<!-- CONTAINER  -->
+<div [fxLayout]="screenState[_Breakpoints.XSmall] ? 'column-reverse' : 'row'"
+     class="main-block" 
+     fxLayoutAlign="start stretch"
+     [ngClass]="{'brown-theme-panel': themes['brown'],
+     'grey-theme-panel': themes['grey'],
+     'contrast-theme-panel': themes['contrast']}"
+     >
+
+     <!-- PANEL  -->
+     <div [fxFlex]="GetPanelFlexOption()" 
+          [ngClass]="{'panel-v': !screenState[_Breakpoints.XSmall],
+                    'panel-h': screenState[_Breakpoints.XSmall]}"
+          class="panel panel-container"
+          fxLayout="column"
+          fxLayoutAlign="space-around stretch"  
+     >
+
+          <!-- HEADER (litle butons) -->  
+          <mat-action-list 
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               
+               fxLayout="row"
+               fxLayoutAlign="start start"  
+               class="panel-item panel-little-flex-comp  pt-0">
+               <button mat-list-item fxFlex="1 1 1fr" class="dark panel-flex-element h-100" (click)="ChangeExpandedPanel()">  <mat-icon>reorder</mat-icon> </button>
+          </mat-action-list>      
+ 
+          <!-- BUTTONS  -->  
+          <mat-action-list 
+          *ngIf="!screenState[_Breakpoints.XSmall]"
+          fxFlexFill
+          fxFlex="1 1 auto"
+          fxLayout="column"
+          fxLayoutAlign="start center"               
+          class="scrollable pt-0 w-100">
+          <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="ClearMesaages()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить сообщения </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
+          </mat-action-list>      
+
+          <!-- LINKS  -->      
+          <mat-nav-list
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="column"
+               fxLayoutAlign="start center"  
+               class="scrollable pt-0 w-100">
+               
+               <h3 mat-subheader>Перейти</h3>
+               <a   fxFlex="1 1 1fr"
+                    mat-list-item
+                    class="primary panel-flex-element"
+                    routerLink="/appoptions" 
+                    routerLinkActive="link-active"
+                    [routerLinkActiveOptions]="{exact:true}"
+               > 
+                    <mat-icon mat-list-icon>settings_applications</mat-icon> 
+                    <span mat-line  *ngIf="panelExpanded"> Настройки</span>
+                    <span mat-line  *ngIf="panelExpanded"> приложения.  </span>
+               </a>
+               <a   fxFlex="1 1 1fr" 
+                    mat-list-item
+                    class="primary panel-flex-element"
+                    routerLink="/onecoptions" 
+                    routerLinkActive="link-active"
+                    [routerLinkActiveOptions]="{exact:true}"
+               >
+                    <mat-icon mat-list-icon>build</mat-icon>
+                    <span mat-line  *ngIf="panelExpanded"> Настройки   </span>
+                    <span mat-line  *ngIf="panelExpanded"> подключения к 1С  </span>
+               </a>
+
+               <a   fxFlex="1 1 1fr" 
+                    mat-list-item
+                    class="primary panel-flex-element"
+                    routerLink="/counter" 
+                    routerLinkActive="link-active"
+                    [routerLinkActiveOptions]="{exact:true}"
+               >
+                    <mat-icon mat-list-icon>av_timer</mat-icon>
+                    <span mat-line  *ngIf="panelExpanded"> Состояние </span>
+                    <span mat-line  *ngIf="panelExpanded"> подключения к 1С  </span>
+               </a>
+          
+          
+          </mat-nav-list>   
+
+          <!-- MESSAGES  -->  
+          <mat-list 
+               *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
+               @disappearmessages
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="column"
+               fxLayoutAlign="start center"      
+               class="panel-item scrollable pt-0 w-100 messeges-flex-comp ">
+                    
+               <mat-list-item
+                *ngFor="let message of messages"     
+                @disappear
+                
+                [ngClass]="{'warning': message.isError,
+                            'secondry': !message.isError,
+                             'spacer' : messages.lastIndexOf(message) == 0 } "
+                fxLayout="column"
+                class="inline-flex-comp " >
+                    <button (click)="OnPanelMessageClick(message)" mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
+                    <span  class="p-0 m-0 messege-font">
+                         {{ message.message_content }} 
+                    </span>  
+               </mat-list-item>
+               <!-- <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
+                    <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
+                    <span class="p-0 m-0 messege-font">
+                         enother_message 
+                    </span>
+               </mat-list-item>
+               <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
+                    <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
+                    <span class="p-0 m-0 messege-font">
+                         enother_message 
+                    </span>
+               </mat-list-item> -->
+          </mat-list> 
+
+           <!-- FOOTER (litle butons)  -->  
+          <mat-action-list 
+          [fxLayout]="litleButtonsLayout | async"
+          fxLayoutAlign="end end"  
+          fxFlex="1 1 auto"
+          id="footer"
+          class="panel-little-flex-comp  pt-0"
+          >
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+               <button [matMenuTriggerFor]="printmenu" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
+               <!-- Елементы printmenu -->
+                    <mat-menu  
+                         [class]="GetThemeClass()"
+                         #printmenu="matMenu"
+                         xPosition='after'
+                         yPosition="below">
+                         <button class="dark mat-nav-item" mat-menu-item>
+                              <mat-icon>cancel</mat-icon>
+                              <span>Cansel</span>
+                         </button>
+
+                         <button
+                         mat-menu-item
+                         class="primary"
+                          > 
+                             <span mat-line  > Печатные формы  </span>
+                             <span mat-line  > не назначены.  </span>
+                        </button>
+    
+                    </mat-menu>
+
+          
+               <!-- КНОПКА открытия меню для планшетной раскладки -->
+               <button 
+               *ngIf="screenState[_Breakpoints.XSmall]"
+               fxFlex="1 0 "
+               mat-list-item
+               class="dark panel-flex-element"
+               [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
+               [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+               </button>
+          
+               <!-- Елементы меню  планшетной раскладки -->
+               <mat-menu  
+                    [class]="GetThemeClass()"
+                    #menu="matMenu"
+                    xPosition='before'
+                    yPosition="below">
+               <button class="dark mat-nav-item no-outline" mat-menu-item>
+                    <mat-icon>cancel</mat-icon>
+                    <span>Cansel</span>
+               </button>
+               
+                    <!-- КНОПКИ ДЕЙСТВИЯ -->
+                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                         <mat-icon mat-list-icon>add</mat-icon>
+                         <span> Добавить </span>
+                    </button>                    
+                    
+                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                         <mat-icon mat-list-icon>edit</mat-icon>
+                         <span> Редактировать </span>
+                    </button>
+                    
+                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                         <mat-icon mat-list-icon>delete</mat-icon>
+                         <span> Удалить </span>
+                    </button>
+
+                    <!-- ЛИНКИ -->
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+               </mat-menu>
+          </mat-action-list>      
+     </div>
+
+     <!-- BODY  -->
+     <div 
+     fxLayout="row"
+     fxLayoutAlign="start start"  
+     fxFlex="1 1 auto"
+     class="form-body p-1 w-100  scrollable">
+               
+          
+     <!-- <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="start">
+               <th mat-header-cell *matHeaderCellDef>Start</th>
+               <td mat-cell *matCellDef="let element"> {{element.start   }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="duration">
+               <th mat-header-cell *matHeaderCellDef>Duration</th>
+               <td mat-cell *matCellDef="let element"> {{element.duration}} </td>
+          </ng-container>
+     
+          <ng-container matColumnDef="status">
+               <th mat-header-cell *matHeaderCellDef>Status</th>
+               <td mat-cell *matCellDef="let element"> {{element.additionalsparams.requeststatus}} </td>
+          </ng-container>
+     
+          <ng-container matColumnDef="error">
+               <th mat-header-cell *matHeaderCellDef>Error</th>
+               <td mat-cell *matCellDef="let element"> {{element.additionalsparams.error}} </td>
+          </ng-container>
+     
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+     </table> -->
+
+     <ul fxFlex="1 1 20%" class="list-group p-2">
+               <li class="list-group-item"> Текущая активная сессия </li>
+               <li class="list-group-item"> LastResponseStatus : {{sessionstatus.LastResponseStatus}} </li>
+               <li class="list-group-item"> BadResponseCount : {{sessionstatus.BadResponseCount}}</li>
+               <li class="list-group-item"> PingTimerStarted : {{sessionstatus.PingTimerStarted}}</li>
+               <li class="list-group-item"> Session ID : {{sessionstatus.OneCSesionId}}</li>
+               <preloadpage class="list-group-item" [spindiametr]=25 *ngIf="requeststarted"></preloadpage>
+               <button class="list-group-item secondry" mat-raised-button (click)="fakeclick()"> refresh</button>
+     </ul>
+
+     
+     <div class="table-container" fxFlex="1 1 80%">
+     <mat-table class="p-2 mt-2 mr-2 "  [dataSource]="dataSource">
+              
+               <ng-container matColumnDef="start">
+                    <mat-header-cell *matHeaderCellDef>Start</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.start |  date: 'mediumTime'}} </mat-cell>
+               </ng-container>
+     
+               <ng-container matColumnDef="content">
+                         <mat-header-cell mat-header-cell *matHeaderCellDef>Content</mat-header-cell>
+                         <mat-cell *matCellDef="let element"> {{element.content}} </mat-cell>
+               </ng-container>
+     
+               <ng-container matColumnDef="duration">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Duration</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
+               </ng-container>
+          
+               <ng-container matColumnDef="status">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.requeststatus}} </mat-cell>
+               </ng-container>
+          
+               <ng-container matColumnDef="error">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Error</mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.error}} </mat-cell>
+               </ng-container>
+          
+               <ng-container matColumnDef="errorcontent">
+                         <mat-header-cell mat-header-cell *matHeaderCellDef>Error content</mat-header-cell>
+                         <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.contenet}} </mat-cell>
+               </ng-container>
+     
+               
+               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+               <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+     
+     </mat-table>
+     </div>
+     
+     
+     </div>
+</div>
+
+
