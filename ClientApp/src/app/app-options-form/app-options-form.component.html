@@ -36,9 +36,7 @@
           fxLayout="column"
           fxLayoutAlign="start center"               
           class="scrollable pt-0 w-100">
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="ClearMesaages()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить сообщения </span> </button>                    
           </mat-action-list>      
 
           <!-- LINKS  -->      
@@ -110,7 +108,7 @@
                 class="inline-flex-comp " >
                     <button (click)="OnPanelMessageClick(message)" mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
                     <span  class="p-0 m-0 messege-font">
-                         {{ message.message_content }} {{messages.lastIndexOf(message)}}
+                         {{ message.message_content }} 
                     </span>  
                </mat-list-item>
                <!-- <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
@@ -135,10 +133,31 @@
           id="footer"
           class="panel-little-flex-comp  pt-0"
           >
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
-          
+          <button routerLink="/" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+          <button (click)="RefreshAll()" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}" > <mat-icon>refresh</mat-icon> </button>
+          <button [matMenuTriggerFor]="printmenu" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
+          <!-- Елементы printmenu -->
+               <mat-menu  
+                    [class]="GetThemeClass()"
+                    #printmenu="matMenu"
+                    xPosition='after'
+                    yPosition="below">
+                    <button class="dark mat-nav-item" mat-menu-item>
+                         <mat-icon>cancel</mat-icon>
+                         <span>Cansel</span>
+                    </button>
+
+                    <button
+                    mat-menu-item
+                    class="primary"
+                     > 
+                        <span mat-line  > Печатные формы  </span>
+                        <span mat-line  > не назначены.  </span>
+                   </button>
+
+               </mat-menu>
+
+     
                <!-- КНОПКА открытия меню для планшетной раскладки -->
                <button 
                *ngIf="screenState[_Breakpoints.XSmall]"

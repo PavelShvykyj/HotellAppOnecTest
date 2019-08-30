@@ -8,7 +8,11 @@ export class SessionLogSourse implements DataSource<ILoggmessage> {
 
     private logSubject = new BehaviorSubject<ILoggmessage[]>([]);
     private loadingSubject = new BehaviorSubject<boolean>(false);
+    private messagesSubject = new BehaviorSubject<{message_content : string, isError : boolean }>({message_content : 'data sourse is ready', isError : false });
+    public messages$ = this.messagesSubject.asObservable();
     public loading$ = this.loadingSubject.asObservable();
+
+
 
     constructor(private otionservice : OptionsService) {}
 
@@ -16,10 +20,15 @@ export class SessionLogSourse implements DataSource<ILoggmessage> {
         this.loadingSubject.next(true);
         this.otionservice.GetSessionLog()
         .pipe( 
-            catchError(() => of("")),
+            catchError((err) => { 
+                this.messagesSubject.next({message_content : 'Ошибки при получении лога', isError : true })
+                return of("")} ),
             finalize(() => this.loadingSubject.next(false))
         )
-        .subscribe(res => this.logSubject.next((JSON.parse(res) as Array<ILoggmessage>)));
+        .subscribe(res => {
+            this.messagesSubject.next({message_content : 'Лог получен успешно', isError : false })
+            return this.logSubject.next((JSON.parse(res) as Array<ILoggmessage>));
+        });
     }
 
 

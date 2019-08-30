@@ -7,6 +7,7 @@ import { OptionsService } from '../options.service'
 import { ILoggmessage } from '../../loggmessage';
 import { IOneCSessionStatus } from './OneCSessionStatus';
 import { SessionLogSourse } from './one-csession-logsourse'
+import { catchError, finalize } from 'rxjs/operators';
 
 
 @Component({
@@ -37,17 +38,22 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
+  messagesSubsciption : Subscription ;
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
   litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
+  
+  
+  sessionStatusUpdatingEventer = new BehaviorSubject<boolean>(false);
+  sessionStatusUpdating$ = this.sessionStatusUpdatingEventer.asObservable();
   messages : Array<{message_content : string, isError : boolean }> = [];  
 
    
   sessionstatus : IOneCSessionStatus = this.EmptyOneCSessionStatus()
   options;
-  requeststarted : boolean = false;
+  
 
   /// table options
-  displayedColumns: string[] = ['start', 'content',   'duration', 'status', 'error', 'errorcontent'];
+  displayedColumns: string[] = ['start', 'content', 'duration', 'status', 'error', 'errorcontent'];
   dataSource :  SessionLogSourse;
   
   constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
@@ -82,13 +88,15 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
 
 
   ngOnInit() {
+   
     this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
     this.dataSource = new SessionLogSourse(this.OptionsService);
-    this.dataSource.GetLog();
-
+    this.messagesSubsciption = this.dataSource.messages$.subscribe(message => this.messages.push(message));
+    this.RefreshAll();
   }
 
   ngOnDestroy() {
+    this.messagesSubsciption.unsubscribe();
     this.screnStateSubsciption.unsubscribe();
     this.themesStateSubsciption.unsubscribe();  
   }
@@ -171,9 +179,59 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
 
   }
 
-  fakeclick() {
-    this.requeststarted = !this.requeststarted;
+  RefreshLog() {
+    this.dataSource.GetLog();
   }
+
+
+  GetOneCSesiionStatus() {
+
+    this.sessionstatus = this.EmptyOneCSessionStatus();
+    this.sessionStatusUpdatingEventer.next(true);
+    
+    this.OptionsService.GetOneCSesiionStatus()
+      .pipe(
+        catchError((err)=>{
+          console.log(err);
+          this.messages.push({message_content: "Ошибка при обновлении сессии.",isError : true})
+          return JSON.stringify(this.EmptyOneCSessionStatus())}),
+        finalize(() => {this.sessionStatusUpdatingEventer.next(false);}))
+      .subscribe(res => 
+        {
+          this.messages.push({message_content: "Состояние сессии обновлено.",isError : false})
+          this.sessionstatus = JSON.parse(res);});
+  }
+
+  RefreshAll() {
+    this.GetOneCSesiionStatus();
+    this.dataSource.GetLog();
+  }
+ 
+  StartOneCSesiion() {
+    this.sessionStatusUpdatingEventer.next(true);
+    this.OptionsService.StartOneCSesiion()
+      .pipe(finalize(() =>{
+        this.RefreshAll();
+        this.sessionStatusUpdatingEventer.next(false)}))
+        .toPromise()
+          .then(() =>this.messages.push({message_content: "Прошел запрос на соединение с 1С.",isError : false}))
+          .catch(err => this.messages.push({message_content: "Ошибка при запросе на соединение с 1С.",isError : true}));
+  }
+
+  StopOneCSesiion() {
+    this.sessionStatusUpdatingEventer.next(true);
+    this.OptionsService.StopOneCSesiion()
+    .pipe(finalize(() =>{
+      this.RefreshAll();
+      this.sessionStatusUpdatingEventer.next(false)}))
+      .toPromise()
+        .then(() =>this.messages.push({message_content: "Прошел запрос на разрыв 1С.",isError : false}))
+          .catch(err => this.messages.push({message_content: "Ошибка при запросе на соединение с 1С.",isError : true}));
+    
+    this.RefreshAll();
+  }
+
+
 }
 
 

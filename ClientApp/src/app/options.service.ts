@@ -134,4 +134,47 @@ export class OptionsService {
     })
   }
 
+  GetOneCSesiionStatus() {
+    let connection = this.BASE_URL + "/Values/onecsessionstatus";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    }); 
+
+  }
+
+  StartOneCSesiion() {
+    let connection = this.BASE_URL + "/Values/startonecsession";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    });
+  }
+
+  StopOneCSesiion() {
+    let connection = this.BASE_URL + "/Values/stoponecsession";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    });
+
+  }
+
+
+
+
 }

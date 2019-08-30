@@ -134,11 +134,9 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   OnPanelMessageClick(message) {
-    console.log(message);
     this.messages.splice(this.messages.lastIndexOf(message),1);
   }
 
-  /// FAKE
 
   StarterMessages() {
 
@@ -152,8 +150,12 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
 
-  Test(message) {
-    console.log(message);
+  ClearMesaages() {
+    this.messages = [];
+  }
+  
+  RefreshAll() {
+    
   }
 }
 

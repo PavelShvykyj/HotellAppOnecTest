@@ -36,10 +36,9 @@
           fxLayout="column"
           fxLayoutAlign="start center"               
           class="scrollable pt-0 w-100">
-          <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="ClearMesaages()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить сообщения </span> </button>                    
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
-               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="ClearMesaages()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить сообщения </span> </button>                    
+               <button  (click)="StopOneCSesiion()" fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>lock</mat-icon> <span mat-line *ngIf="panelExpanded"> Остановить сессии </span> </button>                    
+               <button (click)="StartOneCSesiion()" fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>lock_open</mat-icon> <span mat-line *ngIf="panelExpanded"> Запустить сессии  </span> </button>
           </mat-action-list>      
 
           <!-- LINKS  -->      
@@ -136,8 +135,8 @@
           id="footer"
           class="panel-little-flex-comp  pt-0"
           >
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+               <button routerLink="/" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+               <button (click)="RefreshAll()" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}" > <mat-icon>refresh</mat-icon> </button>
                <button [matMenuTriggerFor]="printmenu" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
                <!-- Елементы printmenu -->
                     <mat-menu  
@@ -184,26 +183,51 @@
                </button>
                
                     <!-- КНОПКИ ДЕЙСТВИЯ -->
-                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                    <button (click)="StopOneCSesiion()" mat-menu-item class="dark mat-nav-item no-outline">
                          <mat-icon mat-list-icon>add</mat-icon>
-                         <span> Добавить </span>
+                         <span> Остановить сессии </span>
                     </button>                    
                     
-                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                    <button (click)="StartOneCSesiion()" mat-menu-item class="dark mat-nav-item no-outline">
                          <mat-icon mat-list-icon>edit</mat-icon>
-                         <span> Редактировать </span>
+                         <span> Запустить сессии </span>
                     </button>
                     
-                    <button  mat-menu-item class="dark mat-nav-item no-outline">
-                         <mat-icon mat-list-icon>delete</mat-icon>
-                         <span> Удалить </span>
-                    </button>
 
                     <!-- ЛИНКИ -->
-                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
-                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button
+                    mat-menu-item
+                    class="primary"
+                    routerLink="/appoptions" 
+                    routerLinkActive="link-active"
+                    [routerLinkActiveOptions]="{exact:true}"
+                     > 
+                        <mat-icon mat-list-icon>settings_applications</mat-icon>
+                        <span mat-line  > Настройки  </span>
+                        <span mat-line  > приложения.  </span>
+                   </button>
+                   <button
+                    mat-menu-item
+                    class="primary"
+                    routerLink="/onecoptions" 
+                    routerLinkActive="link-active"
+                    [routerLinkActiveOptions]="{exact:true}"
+                    >
+                         <mat-icon mat-list-icon>build</mat-icon>
+                         <span mat-line  > Настройки  </span>
+                         <span mat-line  > подключения к 1С.  </span>
+                   </button>
+                   <button
+                   mat-menu-item
+                   class="primary"
+                   routerLink="/counter" 
+                   routerLinkActive="link-active"
+                   [routerLinkActiveOptions]="{exact:true}"
+                  > 
+                        <mat-icon mat-list-icon>av_timer</mat-icon>
+                        <span mat-line  > Состояние  </span>
+                        <span mat-line  > подключения к 1С.   </span>
+                   </button>
                </mat-menu>
           </mat-action-list>      
      </div>
@@ -215,83 +239,91 @@
      fxFlex="1 1 auto"
      class="form-body p-1 w-100  scrollable">
                
-          
-     <!-- <table mat-table [dataSource]="dataSource">
-          <ng-container matColumnDef="start">
-               <th mat-header-cell *matHeaderCellDef>Start</th>
-               <td mat-cell *matCellDef="let element"> {{element.start   }} </td>
-          </ng-container>
+     <mat-card fxFlex="1 1 20%" class="m-2">
+          <mat-card-header>
+               <mat-card-title>Текущая активная сессия</mat-card-title>
+          </mat-card-header>
 
-          <ng-container matColumnDef="duration">
-               <th mat-header-cell *matHeaderCellDef>Duration</th>
-               <td mat-cell *matCellDef="let element"> {{element.duration}} </td>
-          </ng-container>
-     
-          <ng-container matColumnDef="status">
-               <th mat-header-cell *matHeaderCellDef>Status</th>
-               <td mat-cell *matCellDef="let element"> {{element.additionalsparams.requeststatus}} </td>
-          </ng-container>
-     
-          <ng-container matColumnDef="error">
-               <th mat-header-cell *matHeaderCellDef>Error</th>
-               <td mat-cell *matCellDef="let element"> {{element.additionalsparams.error}} </td>
-          </ng-container>
-     
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <mat-card-content>
+               <ul  class="list-group">
+                    <li class="list-group-item"> LastResponseStatus : {{sessionstatus.LastResponseStatus}} </li>
+                    <li class="list-group-item"> BadResponseCount : {{sessionstatus.BadResponseCount}}</li>
+                    <li class="list-group-item"> PingTimerStarted : {{sessionstatus.PingTimerStarted}}</li>
+                    <li class="list-group-item"> Session ID : {{sessionstatus.OneCSesionId}}</li>
+               </ul>
+          </mat-card-content>
 
-     </table> -->
+          <mat-card-footer>
+               <preloadpage class="w-100 h-100" [spindiametr]=25 *ngIf="sessionStatusUpdating$ | async"></preloadpage>
+          </mat-card-footer>     
 
-     <ul fxFlex="1 1 20%" class="list-group p-2">
-               <li class="list-group-item"> Текущая активная сессия </li>
-               <li class="list-group-item"> LastResponseStatus : {{sessionstatus.LastResponseStatus}} </li>
-               <li class="list-group-item"> BadResponseCount : {{sessionstatus.BadResponseCount}}</li>
-               <li class="list-group-item"> PingTimerStarted : {{sessionstatus.PingTimerStarted}}</li>
-               <li class="list-group-item"> Session ID : {{sessionstatus.OneCSesionId}}</li>
-               <preloadpage class="list-group-item" [spindiametr]=25 *ngIf="requeststarted"></preloadpage>
-               <button class="list-group-item secondry" mat-raised-button (click)="fakeclick()"> refresh</button>
-     </ul>
+          <mat-card-actions>
+               <button fxFlex [disabled]="requeststarted" class="secondry" mat-raised-button (click)="GetOneCSesiionStatus()"> Обновить </button>
+          </mat-card-actions>
 
-     
-     <div class="table-container" fxFlex="1 1 80%">
-     <mat-table class="p-2 mt-2 mr-2 "  [dataSource]="dataSource">
-              
-               <ng-container matColumnDef="start">
-                    <mat-header-cell *matHeaderCellDef>Start</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.start |  date: 'mediumTime'}} </mat-cell>
-               </ng-container>
-     
-               <ng-container matColumnDef="content">
-                         <mat-header-cell mat-header-cell *matHeaderCellDef>Content</mat-header-cell>
-                         <mat-cell *matCellDef="let element"> {{element.content}} </mat-cell>
-               </ng-container>
-     
-               <ng-container matColumnDef="duration">
-                    <mat-header-cell mat-header-cell *matHeaderCellDef>Duration</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
-               </ng-container>
-          
-               <ng-container matColumnDef="status">
-                    <mat-header-cell mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-                    <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.requeststatus}} </mat-cell>
-               </ng-container>
-          
-               <ng-container matColumnDef="error">
-                    <mat-header-cell mat-header-cell *matHeaderCellDef>Error</mat-header-cell>
-                    <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.error}} </mat-cell>
-               </ng-container>
-          
-               <ng-container matColumnDef="errorcontent">
-                         <mat-header-cell mat-header-cell *matHeaderCellDef>Error content</mat-header-cell>
-                         <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.contenet}} </mat-cell>
-               </ng-container>
-     
+     </mat-card>
+
+
+     <mat-card fxFlex="1 1 80%" class="m-2">
+          <mat-card-header>
+               <mat-card-title>Лог сессий 1С</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content >
+               <div class="table-container">
+                    <mat-table   [dataSource]="dataSource">
+                         <ng-container matColumnDef="start">
+                              <mat-header-cell *matHeaderCellDef>Start</mat-header-cell>
+                              <mat-cell *matCellDef="let element"> {{element.start |  date: 'mediumTime'}} </mat-cell>
+                         </ng-container>
                
-               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-               <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                         <ng-container matColumnDef="content">
+                                   <mat-header-cell mat-header-cell *matHeaderCellDef>Content</mat-header-cell>
+                                   <mat-cell *matCellDef="let element"> {{element.content}} </mat-cell>
+                         </ng-container>
+               
+                         <ng-container matColumnDef="duration">
+                              <mat-header-cell mat-header-cell *matHeaderCellDef>Duration</mat-header-cell>
+                              <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
+                         </ng-container>
+                    
+                         <ng-container matColumnDef="status">
+                              <mat-header-cell mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                              <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.requeststatus}} </mat-cell>
+                         </ng-container>
+                    
+                         <ng-container matColumnDef="error">
+                              <mat-header-cell mat-header-cell *matHeaderCellDef>Error</mat-header-cell>
+                              <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.error}} </mat-cell>
+                         </ng-container>
+                    
+                         <ng-container matColumnDef="errorcontent">
+                                   <mat-header-cell mat-header-cell *matHeaderCellDef>Error content</mat-header-cell>
+                                   <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.contenet}} </mat-cell>
+                         </ng-container>
+               
+                         
+                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+               </div>
+          </mat-card-content>
+
+          <mat-card-footer>
+               <preloadpage class="w-100 h-100" [spindiametr]=25 *ngIf="dataSource.loading$ | async"></preloadpage>
+          </mat-card-footer>     
+
+          <mat-card-actions>
+               <button fxFlex  class="secondry" mat-raised-button (click)="RefreshLog()"> Обновить </button>
+          </mat-card-actions>
+
+     </mat-card>
+
+
+
      
-     </mat-table>
-     </div>
+     
+    
      
      
      </div>
