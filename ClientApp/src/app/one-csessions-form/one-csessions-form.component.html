@@ -129,7 +129,7 @@
 
            <!-- FOOTER (litle butons)  -->  
           <mat-action-list 
-          [fxLayout]="litleButtonsLayout | async"
+          [fxLayout]="litleButtonsLayout$ | async"
           fxLayoutAlign="end end"  
           fxFlex="1 1 auto"
           id="footer"
@@ -234,12 +234,12 @@
 
      <!-- BODY  -->
      <div 
-     fxLayout="row"
-     fxLayoutAlign="start start"  
+     [fxLayout]="(BodyLayout$ | async).BodyLayout"
+     [fxLayoutAlign]="(BodyLayout$ | async).BodyAlign"
      fxFlex="1 1 auto"
      class="form-body p-1 w-100  scrollable">
                
-     <mat-card fxFlex="1 1 20%" class="m-2">
+     <mat-card fxFlex="1 1 " class="m-2">
           <mat-card-header>
                <mat-card-title>Текущая активная сессия</mat-card-title>
           </mat-card-header>
@@ -264,7 +264,7 @@
      </mat-card>
 
 
-     <mat-card fxFlex="1 1 80%" class="m-2">
+     <mat-card fxFlex="4 1 " class="m-2">
           <mat-card-header>
                <mat-card-title>Лог сессий 1С</mat-card-title>
           </mat-card-header>

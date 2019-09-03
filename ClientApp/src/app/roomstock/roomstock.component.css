@@ -1,0 +1,30 @@
+.day-container {
+    margin-top: 20px; 
+    border-collapse: collapse;
+}
+
+.day-big-element {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-collapse: collapse;
+    
+}
+
+.first-day-small-element {
+    border-left: 1px solid black;
+}
+
+.day-small-element {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    overflow: visible !important;
+    position: relative;
+}
+
+.hour-point {
+    /* transform: translate(66px, -5px); */
+    position: absolute;
+    left: 100%;
+    top: 0%;
+}

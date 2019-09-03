@@ -27,6 +27,8 @@ import { AppOptionsFormComponent } from './app-options-form/app-options-form.com
 import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
 import { OptionsService } from './options.service';
 import { OneCOptionsResolver } from './one-coptions-form/one-coptions-form.resolver';
+import { ReceptionFormComponent } from './reception_form/reception-form.component';
+
 
 
 /// MATERIAL COMPONENTS ///
@@ -41,8 +43,9 @@ import {MatCardModule} from '@angular/material/card'
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTableModule} from '@angular/material/table';
-
-
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatGridListModule} from '@angular/material/grid-list';
+import { ReceptionSubperiodComponent } from './reception-subperiod/reception-subperiod.component';
       
 
 
@@ -62,6 +65,8 @@ import {MatTableModule} from '@angular/material/table';
     AppOptionsFormComponent,
     PanelFormComponent,
     PreloadpageComponent,
+    ReceptionFormComponent,
+    ReceptionSubperiodComponent
   ],
   imports: [
     /// MATERIAL COMPONENTS ///
@@ -76,6 +81,8 @@ import {MatTableModule} from '@angular/material/table';
     MatInputModule,
     MatFormFieldModule,
     MatTableModule,
+    MatBadgeModule,
+    MatGridListModule,
     /// MATERIAL COMPONENTS ///
     FlexLayoutModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -89,7 +96,7 @@ import {MatTableModule} from '@angular/material/table';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: OneCSessionsFormComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'roomstock', component: RoomstockComponent },
+      { path: 'roomstock', component: ReceptionFormComponent },
       { path: 'appoptions', component: AppOptionsFormComponent },
       { path: 'onecoptions', component: OneCOptionsFormComponent, resolve : {onecoptions : OneCOptionsResolver} },
       { path: 'shablon', component: PanelFormComponent },

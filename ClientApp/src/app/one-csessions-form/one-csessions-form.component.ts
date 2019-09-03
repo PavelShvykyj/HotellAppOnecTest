@@ -10,6 +10,12 @@ import { SessionLogSourse } from './one-csession-logsourse'
 import { catchError, finalize } from 'rxjs/operators';
 
 
+interface IBodyFlexStatus  {
+  BodyLayout : string,
+  BodyAlign : string
+}
+
+
 @Component({
   selector: 'one-csessions-form',
   templateUrl: './one-csessions-form.component.html',
@@ -40,7 +46,10 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
   themesStateSubsciption : Subscription ;
   messagesSubsciption : Subscription ;
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
-  litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
+  litleButtonsLayout$ : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
+  
+  BodyLayoutEventer = new BehaviorSubject<IBodyFlexStatus>({BodyLayout : "row", BodyAlign : "start start"});
+  BodyLayout$ : Observable<IBodyFlexStatus> = this.BodyLayoutEventer.asObservable();
   
   
   sessionStatusUpdatingEventer = new BehaviorSubject<boolean>(false);
@@ -74,7 +83,21 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       
       this.screenState = state.breakpoints; 
       this.screenState["no_show"] = false;
-      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
+      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
+      
+      let BodyFlexStatus : IBodyFlexStatus;
+
+      if(this.screenState[this._Breakpoints.XSmall] || this.screenState[this._Breakpoints.Small]) {
+        BodyFlexStatus = {BodyLayout : "column", BodyAlign : "start stretch"}; 
+        this.displayedColumns = ['start', 'content',  'status' ];
+        
+      }
+      else {
+        BodyFlexStatus = {BodyLayout : "row", BodyAlign : "start start"}; 
+        this.displayedColumns = ['start', 'content', 'duration', 'status', 'error', 'errorcontent'];
+      }
+      
+      this.BodyLayoutEventer.next(BodyFlexStatus);
       
     });
   
@@ -149,7 +172,7 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   OnPanelMessageClick(message) {
-    console.log(message);
+    
     this.messages.splice(this.messages.lastIndexOf(message),1);
   }
 

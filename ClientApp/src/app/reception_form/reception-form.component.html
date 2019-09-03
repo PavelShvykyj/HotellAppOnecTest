@@ -1,0 +1,212 @@
+
+<!-- CONTAINER  -->
+<div [fxLayout]="screenState[_Breakpoints.XSmall] ? 'column-reverse' : 'row'"
+     class="main-block" 
+     fxLayoutAlign="start stretch"
+     [ngClass]="{'brown-theme-panel': themes['brown'],
+     'grey-theme-panel': themes['grey'],
+     'contrast-theme-panel': themes['contrast']}"
+     >
+
+     <!-- PANEL  -->
+     <div [fxFlex]="GetPanelFlexOption()" 
+          [ngClass]="{'panel-v': !screenState[_Breakpoints.XSmall],
+                    'panel-h': screenState[_Breakpoints.XSmall]}"
+          class="panel panel-container"
+          fxLayout="column"
+          fxLayoutAlign="space-around stretch"  
+     >
+
+          <!-- HEADER (litle butons) -->  
+          <mat-action-list 
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               
+               fxLayout="row"
+               fxLayoutAlign="start start"  
+               class="panel-item panel-little-flex-comp  pt-0">
+               <button mat-list-item fxFlex="1 1 1fr" class="dark panel-flex-element h-100" (click)="ChangeExpandedPanel()">  <mat-icon>reorder</mat-icon> </button>
+          </mat-action-list>      
+ 
+          <!-- BUTTONS  -->  
+          <mat-action-list 
+          *ngIf="!screenState[_Breakpoints.XSmall]"
+          fxFlexFill
+          fxFlex="1 1 auto"
+          fxLayout="column"
+          fxLayoutAlign="start center"               
+          class="scrollable pt-0 w-100">
+          <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="ClearMesaages()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить сообщения </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>add</mat-icon> <span mat-line *ngIf="panelExpanded"> Добавить </span> </button>                    
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>edit</mat-icon> <span mat-line *ngIf="panelExpanded"> Редактировать </span> </button>
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element"> <mat-icon mat-list-icon>delete</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить </span> </button>
+          </mat-action-list>      
+
+          <!-- LINKS  -->      
+          <mat-nav-list
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="column"
+               fxLayoutAlign="start center"  
+               class="scrollable pt-0 w-100">
+               
+               <h3 mat-subheader>links</h3>
+               <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+               <a fxFlex="1 1 1fr" mat-list-item class="primary panel-flex-element"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  *ngIf="panelExpanded"> Перейти  </span></a>
+          </mat-nav-list>   
+
+          <!-- MESSAGES  -->  
+          <mat-list 
+               *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
+               @disappearmessages
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="column"
+               fxLayoutAlign="start center"      
+               class="panel-item scrollable pt-0 w-100 messeges-flex-comp ">
+                    
+               <mat-list-item
+                *ngFor="let message of messages"     
+                @disappear
+                
+                [ngClass]="{'warning': message.isError,
+                            'secondry': !message.isError,
+                             'spacer' : messages.lastIndexOf(message) == 0 } "
+                fxLayout="column"
+                class="inline-flex-comp " >
+                    <button (click)="OnPanelMessageClick(message)" mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
+                    <span  class="p-0 m-0 messege-font">
+                         {{ message.message_content }} 
+                    </span>  
+               </mat-list-item>
+               <!-- <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
+                    <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
+                    <span class="p-0 m-0 messege-font">
+                         enother_message 
+                    </span>
+               </mat-list-item>
+               <mat-list-item  fxLayout="column" class="secondry inline-flex-comp " > 
+                    <button mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>
+                    <span class="p-0 m-0 messege-font">
+                         enother_message 
+                    </span>
+               </mat-list-item> -->
+          </mat-list> 
+
+           <!-- FOOTER (litle butons)  -->  
+          <mat-action-list 
+          [fxLayout]="litleButtonsLayout | async"
+          fxLayoutAlign="end end"  
+          fxFlex="1 1 auto"
+          id="footer"
+          class="panel-little-flex-comp  pt-0"
+          >
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+               <button [matMenuTriggerFor]="printmenu" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>print</mat-icon> </button>
+               <!-- Елементы printmenu -->
+                    <mat-menu  
+                         [class]="GetThemeClass()"
+                         #printmenu="matMenu"
+                         xPosition='after'
+                         yPosition="below">
+                         <button class="dark mat-nav-item" mat-menu-item>
+                              <mat-icon>cancel</mat-icon>
+                              <span>Cansel</span>
+                         </button>
+
+                         <button
+                         mat-menu-item
+                         class="primary"
+                          > 
+                             <span mat-line  > Печатные формы  </span>
+                             <span mat-line  > не назначены.  </span>
+                        </button>
+    
+                    </mat-menu>
+
+          
+               <!-- КНОПКА открытия меню для планшетной раскладки -->
+               <button 
+               *ngIf="screenState[_Breakpoints.XSmall]"
+               fxFlex="1 0 "
+               mat-list-item
+               class="dark panel-flex-element"
+               [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
+               [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+               </button>
+          
+               <!-- Елементы меню  планшетной раскладки -->
+               <mat-menu  
+                    [class]="GetThemeClass()"
+                    #menu="matMenu"
+                    xPosition='before'
+                    yPosition="below">
+               <button class="dark mat-nav-item no-outline" mat-menu-item>
+                    <mat-icon>cancel</mat-icon>
+                    <span>Cansel</span>
+               </button>
+               
+                    <!-- КНОПКИ ДЕЙСТВИЯ -->
+                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                         <mat-icon mat-list-icon>add</mat-icon>
+                         <span> Добавить </span>
+                    </button>                    
+                    
+                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                         <mat-icon mat-list-icon>edit</mat-icon>
+                         <span> Редактировать </span>
+                    </button>
+                    
+                    <button  mat-menu-item class="dark mat-nav-item no-outline">
+                         <mat-icon mat-list-icon>delete</mat-icon>
+                         <span> Удалить </span>
+                    </button>
+
+                    <!-- ЛИНКИ -->
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+                    <button mat-menu-item class="primary"> <mat-icon mat-list-icon>send</mat-icon> <span mat-line  > Перейти  </span></button>
+               </mat-menu>
+          </mat-action-list>      
+     </div>
+
+     <!-- BODY  -->
+     <div 
+     fxLayout="column"
+     fxLayoutAlign="start start"  
+     fxFlex="1 1 auto"
+     class="form-body p-1 w-100  scrollable">
+           
+
+          <mat-grid-list 
+          class="w-100 h-100"
+          [cols]="GridData.options.cols"
+          rowHeight="fit"
+          gutterSize="0px"
+          >
+
+               <mat-grid-tile 
+                    *ngFor="let element of GridData.elements"
+                    class="grid-element"
+                    [colspan]="element.gridoptions.colspan"
+                    [rowspan]="element.gridoptions.rowspan"
+                    >
+                    <span *ngIf="element.elementtype == GridElementtype.Header">{{element.dataoptions.data.title }} </span>
+                    <span *ngIf="element.elementtype == GridElementtype.Period">{{element.dataoptions.data.title }} {{ element.dataoptions.data.subtitle }} </span>
+                    <reception-subperiod *ngIf="element.elementtype == GridElementtype.SubPeriod" fxFlex class="pt-1  h-100 secondry overflow-visible"></reception-subperiod>
+                    <span *ngIf="element.elementtype == GridElementtype.Box">{{element.dataoptions.data.title }} </span>
+                    <span *ngIf="element.elementtype == GridElementtype.BoxIntime">  </span>
+               </mat-grid-tile> 
+          </mat-grid-list>
+
+
+
+     </div>
+</div>
+
+
