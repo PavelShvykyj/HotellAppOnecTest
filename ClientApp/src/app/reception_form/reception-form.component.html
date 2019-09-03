@@ -184,9 +184,9 @@
            
 
           <mat-grid-list 
-          class="w-100 h-100"
+          class=" reception-grid"
           [cols]="GridData.options.cols"
-          rowHeight="fit"
+          [rowHeight]="GridData.options.rowHeight"
           gutterSize="0px"
           >
 
@@ -196,11 +196,14 @@
                     [colspan]="element.gridoptions.colspan"
                     [rowspan]="element.gridoptions.rowspan"
                     >
+                    
+                    <span *ngIf="element.elementtype == GridElementtype.InfoPanel"> GREED PANEL  </span>
                     <span *ngIf="element.elementtype == GridElementtype.Header">{{element.dataoptions.data.title }} </span>
                     <span *ngIf="element.elementtype == GridElementtype.Period">{{element.dataoptions.data.title }} {{ element.dataoptions.data.subtitle }} </span>
                     <reception-subperiod *ngIf="element.elementtype == GridElementtype.SubPeriod" fxFlex class="pt-1  h-100 secondry overflow-visible"></reception-subperiod>
                     <span *ngIf="element.elementtype == GridElementtype.Box">{{element.dataoptions.data.title }} </span>
-                    <span *ngIf="element.elementtype == GridElementtype.BoxIntime">  </span>
+                    <span *ngIf="element.elementtype == GridElementtype.BoxIntime"> {{element.dataoptions.data.status }} </span>
+                    
                </mat-grid-tile> 
           </mat-grid-list>
 

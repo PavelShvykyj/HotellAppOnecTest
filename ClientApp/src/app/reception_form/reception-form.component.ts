@@ -11,7 +11,8 @@ enum GridElementType {
   SubPeriod,
   Box,
   BoxIntime,
-  Header
+  Header,
+  InfoPanel
 }
 
 enum BoxIntimeStatus {
@@ -129,11 +130,20 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
               Breakpoints.XSmall
             ])
     .subscribe((state: BreakpointState) => {
-      
-      this.screenState = state.breakpoints; 
+      let NewscreenState = state.breakpoints; 
+      let ReformatNeed = false;
+      NewscreenState["no_show"] = false;
+      if (NewscreenState != this.screenState) {
+        ReformatNeed = true;
+      }
+
+      this.screenState = NewscreenState;
       this.screenState["no_show"] = false;
       this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
-      this.Reformat();
+      if (ReformatNeed) {
+        this.ReformatRoomstockGreed();
+      }
+      
 
     });
   
@@ -145,12 +155,9 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
    ngAfterViewInit() {
   }
 
-
   ngOnInit() {
     this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
   }
-
-
 
   ngOnDestroy() {
     this.screnStateSubsciption.unsubscribe();
@@ -213,8 +220,6 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     this.messages.splice(this.messages.lastIndexOf(message),1);
   }
 
-  
-
   StarterMessages() {
 
     let startmessage = {
@@ -226,15 +231,14 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
  
   }
 
-
   ClearMesaages() {
     this.messages = [];
   }
 
-  Reformat(){    
-    
+  ReformatRoomstockGreed() {    
     if(this.screenState[this._Breakpoints.Small] || this.screenState[this._Breakpoints.XSmall]) {
       this.SmallFormat();
+      return;
     }
       
     this.Format();
@@ -244,7 +248,6 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     this.GridData = this.GetGridObjectExampleSmall();   
   }
 
-  
   Format() {
     this.GridData = this.GetGridObjectExample();   
   }
@@ -252,7 +255,7 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
 
   /// FAKE
   GetGridObjectExampleSmall(): IGridObjectData {
-    let options : IGridOptions  = { cols: 21, rowHeight: "40px" };
+    let options : IGridOptions  = { cols: 21, rowHeight: "20px" };
     let res: IGridObjectData = {
       options: options,
       elements : []
@@ -328,12 +331,19 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
 
   /// FAKE
   GetGridObjectExample(): IGridObjectData {
-    let options : IGridOptions  = { cols: 105, rowHeight: "10px" };
+    let options : IGridOptions  = { cols: 105, rowHeight: "fit" };
     let res: IGridObjectData = {
       options: options,
       elements : []
     };
 
+    let infopanel : IGridElementObject = {
+      gridoptions: { rowspan: 3, colspan: 105 },
+      dataoptions: { data: { title: "" } },
+      elementtype : GridElementType.InfoPanel
+    }
+
+    res.elements.push(infopanel);
 
     let header : IGridElementObject = {
       gridoptions: { rowspan: 4, colspan: 12 },
@@ -430,7 +440,13 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
 
-    
+    let footerpanel : IGridElementObject = {
+      gridoptions: { rowspan: 1, colspan: 105 },
+      dataoptions: { data: { title: "" } },
+      elementtype : GridElementType.InfoPanel
+    }
+
+    res.elements.push(footerpanel);
     
     
     return res;
