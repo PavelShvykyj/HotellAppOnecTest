@@ -1,9 +1,12 @@
 import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
-import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Subscription, Observable, Subject, BehaviorSubject, from } from 'rxjs';
 import { disappearTrigger } from './app-options-form.animate'
 import { OptionsService } from '../options.service'
+import { AngularFirestore } from '@angular/fire/firestore';
+import { map, first } from 'rxjs/operators';
+
 
 
 @Component({
@@ -39,7 +42,7 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
   messages : Array<{message_content : string, isError : boolean }> = [];  
 
   
-  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
+  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService, private fdb : AngularFirestore ) {
     
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
       this.themes = res.themes
@@ -154,9 +157,31 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
     this.messages = [];
   }
   
-  RefreshAll() {
-    
+  
+  TestFB() {
+    let start : number =  Date.now();
+
+    this.fdb.collection('courses',ref => ref.where('seqNo','>=',1).where('seqNo','<=',4).orderBy('seqNo').orderBy('lessonsCount'))
+            .snapshotChanges()
+            .pipe(
+              map(snaps => {
+                return snaps.map(snap => {
+                  let fulldata : any = snap.payload.doc.data();
+                  return {id : snap.payload.doc.id, 
+                          title : fulldata.titles.description,
+                          s : fulldata.seqNo,
+                          l : fulldata.lessonsCount}
+                })
+              }), first())
+            .subscribe(val =>{
+              console.log('duration', start - Date.now() );  
+              console.log(val)
+            } );
+
   }
+  
+
+
 }
 
 

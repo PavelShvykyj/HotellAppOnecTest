@@ -7,6 +7,8 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
+import { AngularFireModule } from '@angular/fire';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 //import { NgxSpinnerModule } from "ngx-spinner";
 
@@ -46,6 +48,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { ReceptionSubperiodComponent } from './reception-subperiod/reception-subperiod.component';
+import { environment } from 'src/environments/environment';
       
 
 
@@ -90,6 +93,9 @@ import { ReceptionSubperiodComponent } from './reception-subperiod/reception-sub
     FormsModule,
     ReactiveFormsModule,
     LayoutModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+
     //NgxSpinnerModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([

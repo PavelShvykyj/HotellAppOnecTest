@@ -12,7 +12,9 @@ enum GridElementType {
   Box,
   BoxIntime,
   Header,
-  InfoPanel
+  HeaderPanel,
+  FooterPanel,
+  Empty
 }
 
 enum BoxIntimeStatus {
@@ -331,6 +333,18 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
 
   /// FAKE
   GetGridObjectExample(): IGridObjectData {
+    let empty : IGridElementObject  = {
+      gridoptions: { rowspan: 2, colspan: 1 },
+      dataoptions: {
+        data: {
+          title: "",
+          subtitle: "",
+          periodlenth: 0
+        }
+      },
+      elementtype : GridElementType.Empty
+    }
+ 
     let options : IGridOptions  = { cols: 105, rowHeight: "fit" };
     let res: IGridObjectData = {
       options: options,
@@ -340,13 +354,13 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     let infopanel : IGridElementObject = {
       gridoptions: { rowspan: 3, colspan: 105 },
       dataoptions: { data: { title: "" } },
-      elementtype : GridElementType.InfoPanel
+      elementtype : GridElementType.HeaderPanel
     }
 
     res.elements.push(infopanel);
 
     let header : IGridElementObject = {
-      gridoptions: { rowspan: 4, colspan: 12 },
+      gridoptions: { rowspan: 4, colspan: 11 },
       dataoptions: { data: { title: "HOTEL" } },
       elementtype : GridElementType.Header
     }
@@ -369,7 +383,7 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
       };
     
     res.elements.push(MainPeriod);  
-
+    res.elements.push(empty);
 
     for (let index = 1; index < 32; index++) {
       let element : IGridElementObject  = {
@@ -387,9 +401,10 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
       res.elements.push(element);
     }
 
-    
+    res.elements.push(empty);
+
     let elementbox = {
-      gridoptions: { rowspan: 2, colspan: 105 },
+      gridoptions: { rowspan: 2, colspan: 104 },
       dataoptions: {
         data: {
           title: "Flore 1",
@@ -400,12 +415,12 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
       elementtype : GridElementType.Box
     }
     res.elements.push(elementbox);
-
+    res.elements.push(empty);
 
     for (let index = 1; index < 15; index++) {
       let elementbox = {
         
-          gridoptions: { rowspan: 2, colspan: 12 },
+          gridoptions: { rowspan: 2, colspan: 11 },
           dataoptions: {
             data: {
               title: "room " + index,
@@ -437,13 +452,14 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
         }
         res.elements.push(elementboxintime)
       }
+      res.elements.push(empty);
     }
-
+    
 
     let footerpanel : IGridElementObject = {
       gridoptions: { rowspan: 1, colspan: 105 },
       dataoptions: { data: { title: "" } },
-      elementtype : GridElementType.InfoPanel
+      elementtype : GridElementType.FooterPanel
     }
 
     res.elements.push(footerpanel);
