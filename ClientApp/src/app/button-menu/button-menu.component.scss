@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+@import '../../themes.scss';
+@import '../../global.inherit.theme.scss';
+
+
+.inherit-theme {
+    background-color: inherit;
+    color: inherit !important;
+
+    &:hover {
+      background: inherit !important;
+      color: inherit !important;
+    }
+}

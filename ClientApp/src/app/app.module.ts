@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AngularFireModule } from '@angular/fire';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
-
+import { environment } from 'src/environments/environment';
 //import { NgxSpinnerModule } from "ngx-spinner";
 
 
@@ -30,8 +30,8 @@ import { PanelFormComponent } from './panel_form_shablon/panel-form.component';
 import { OptionsService } from './options.service';
 import { OneCOptionsResolver } from './one-coptions-form/one-coptions-form.resolver';
 import { ReceptionFormComponent } from './reception_form/reception-form.component';
-
-
+import { ReceptionSubperiodComponent } from './reception-subperiod/reception-subperiod.component';
+import { DateRangeSelectorComponent } from './date-range-selector/date-range-selector.component';
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -47,9 +47,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTableModule} from '@angular/material/table';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatGridListModule} from '@angular/material/grid-list';
-import { ReceptionSubperiodComponent } from './reception-subperiod/reception-subperiod.component';
-import { environment } from 'src/environments/environment';
-      
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ButtonMenuComponent } from './button-menu/button-menu.component';      
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 /// MATERIAL COMPONENTS ///
@@ -69,7 +69,9 @@ import { environment } from 'src/environments/environment';
     PanelFormComponent,
     PreloadpageComponent,
     ReceptionFormComponent,
-    ReceptionSubperiodComponent
+    ReceptionSubperiodComponent,
+    DateRangeSelectorComponent,
+    ButtonMenuComponent
   ],
   imports: [
     /// MATERIAL COMPONENTS ///
@@ -86,6 +88,8 @@ import { environment } from 'src/environments/environment';
     MatTableModule,
     MatBadgeModule,
     MatGridListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     /// MATERIAL COMPONENTS ///
     FlexLayoutModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -101,7 +105,7 @@ import { environment } from 'src/environments/environment';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: OneCSessionsFormComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'fetch-data', component: DateRangeSelectorComponent },
       { path: 'roomstock', component: ReceptionFormComponent },
       { path: 'appoptions', component: AppOptionsFormComponent },
       { path: 'onecoptions', component: OneCOptionsFormComponent, resolve : {onecoptions : OneCOptionsResolver} },
@@ -110,7 +114,8 @@ import { environment } from 'src/environments/environment';
   ],
   providers: [RouterEventHendlerService,
               OptionsService,
-              OneCOptionsResolver
+              OneCOptionsResolver,
+              MatDatepickerModule
               ],
   bootstrap: [AppComponent]
 })

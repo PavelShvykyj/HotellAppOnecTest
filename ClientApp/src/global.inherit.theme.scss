@@ -1,5 +1,7 @@
 @import '~@angular/material/theming';
 
+@import './themes.scss';
+
 
 @function theme_prop($theme) {
     $prop : (
@@ -23,47 +25,57 @@
     $foreground : map-get($theme, foreground);
     $lightcolor : mat-color($primary,50,0.85);
     $darkcolor  : mat-color($accent,900);
+    $activecolor: mat-color($accent, 50, 1); 
 
-    .dark  {
+    .dark {
+        outline: none !important;
         background: $darkcolor;
         color: $lightcolor !important;
+    
         &:hover {
-            background: mat-color($accent,500) !important;
-          }
+            outline: none !important;  
+            background: $darkcolor !important;
+            color: $activecolor !important;
+        }
+    
         &:focus {
-           color: $lightcolor !important; 
-           background: mat-color($accent,700) !important;
-        }  
-    }
+            outline: none !important;
+            background: $darkcolor !important;
+            color: $activecolor !important;
+        }
+      }
     
     .primary {
-        background-color: mat-color($primary,100);
+        background-color: mat-color($accent, 200);
         color: $darkcolor !important;
+    
         &:hover {
-            background: mat-color($accent,500) !important;
-            color: $lightcolor !important;
-          }
+          background: mat-color($accent, 500) !important;
+          color: $lightcolor !important;
+        }
     }
     
     .secondry {
-        background-color: mat-color($accent,500) !important;
-        color:  mat-color($accent,100) !important;
-        border-bottom: 1px solid $lightcolor;
+        background-color: mat-color($accent, 700) !important;
+        color: mat-color($accent, 100) !important;
+        border-bottom: 1px solid mat-color($primary, 400);
+    
         &:hover {
-            background: mat-color($accent,500) !important;
-            color: $lightcolor !important;
-          }
+          background: mat-color($accent, 600) !important;
+          color: $lightcolor !important;
+        }
     }
       
     .warning {
-        background-color: mat-color($warn,500) !important;
-        color:  $lightcolor !important;
-        border-bottom: 1px solid mat-color($primary,400);
+        background-color: mat-color($warn, 500) !important;
+        color: $lightcolor !important;
+        border-bottom: 1px solid mat-color($primary, 400);
+    
         &:hover {
-            background: mat-color($warn,900) !important;
-            color: $lightcolor !important;
-          }
-    }
+          background: mat-color($warn, 900) !important;
+          color: $lightcolor !important;
+        }
+      }
     
     .vertical-litle-button {
         height: 1fr !important;
@@ -96,3 +108,22 @@
     @include inherit_theme($app-theme);   
 }
 
+@mixin custom-inherit-theme($app-theme) {
+    @include angular-material-theme($app-theme);  
+    @include inherit_theme($app-theme);   
+}
+
+::ng-deep .brown {
+    @include custom-inherit-theme($brown-app-theme);
+    $theme_prop: theme_prop($brown-app-theme);
+}
+
+::ng-deep .grey {
+    @include custom-inherit-theme($grey-app-theme);
+    $theme_prop: theme_prop($grey-app-theme);
+}  
+
+::ng-deep .contrast {
+    @include custom-inherit-theme($contrast-app-theme);
+    $theme_prop: theme_prop($contrast-app-theme);
+}

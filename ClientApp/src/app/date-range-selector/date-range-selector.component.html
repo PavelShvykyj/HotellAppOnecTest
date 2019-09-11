@@ -1,0 +1,26 @@
+<div class="date-range-container " fxLayout="row" fxLayoutAlign="center center">
+     <button-menu fxFlex [menucontent]="menucontetnt_fast_rewind" (actioneventer)="OnMenuActionRewind($event)"></button-menu>
+     <button fxFlex mat-raised-button> <mat-icon>arrow_back_ios</mat-icon> </button>   
+     
+     <div fxFlex class="h-100 px-2">
+     <mat-form-field fxFlex>
+            <input matInput [matDatepicker]="rangestart">
+            <mat-datepicker-toggle matSuffix [for]="rangestart"></mat-datepicker-toggle>
+            <mat-datepicker #rangestart></mat-datepicker>
+     </mat-form-field>
+    </div>
+
+    <div fxFlex class="h-100 px-2">
+    <mat-form-field fxFlex class="h-100 px-2">
+            <input matInput [matDatepicker]="rangeend">
+            <mat-datepicker-toggle matSuffix [for]="rangeend"></mat-datepicker-toggle>
+            <mat-datepicker #rangeend></mat-datepicker>
+     </mat-form-field>
+    </div> 
+
+
+     <button fxFlex mat-raised-button> <mat-icon>arrow_forward_ios</mat-icon> </button>   
+     <button-menu fxFlex [menucontent]="menucontetnt_fast_forward" (actioneventer)="OnMenuActionForward($event)"></button-menu>
+                   
+</div>
+

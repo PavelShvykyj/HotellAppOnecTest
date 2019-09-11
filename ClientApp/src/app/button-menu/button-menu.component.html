@@ -1,0 +1,45 @@
+    <!-- КНОПКА открытия меню для планшетной раскладки -->
+    <div [class]="GetThemeClass()" >
+
+        
+    <!-- class binding не работает напрямую с mat-raised-button директивой руинит формат кнопки поетому биндим родителя а в кнопке наследуем-->    
+    <div [class]="menucontent.menubutton.className">
+        <button  
+            class="inherit-theme w-100"
+            [matMenuTriggerFor]="menu"
+            mat-raised-button
+            >
+            <mat-icon>{{ menucontent.menubutton.iconeName }}</mat-icon>
+        </button>
+    </div>
+    <!-- Елементы меню  планшетной раскладки -->
+    <mat-menu 
+        [class]="GetThemeClass()"  
+        #menu="matMenu"
+        xPosition='before'
+        yPosition="below"
+                        >
+        
+        <button class="dark mat-nav-item no-outline" mat-menu-item>
+            <mat-icon>cancel</mat-icon>
+            <span>Cansel</span>
+        </button>
+
+        <!-- КНОПКИ ДЕЙСТВИЯ -->
+        <button *ngFor="let action of menucontent.actions" mat-menu-item class="dark mat-nav-item no-outline"
+            (click)="OnActionButtonClick(action.name)">
+            <mat-icon mat-list-icon> {{action.iconeName}} </mat-icon>
+            <span> {{action.name}}  </span>
+        </button>
+
+
+        <!-- ЛИНКИ -->
+        <button *ngFor="let linkItem of menucontent.links"
+            mat-menu-item class="primary"
+            
+            >
+            <mat-icon mat-list-icon>{{linkItem.iconeName}}</mat-icon>
+            <span mat-line> {{linkItem.name}} </span>
+        </button>
+    </mat-menu>
+</div>
