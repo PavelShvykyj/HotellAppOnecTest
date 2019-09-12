@@ -4,6 +4,7 @@ import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/l
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { disappearTrigger } from './reception-form.animate'
 import { OptionsService } from '../options.service'
+import { IRange } from '../date-range-selector/date-range-selector.component';
 
 
 enum GridElementType {
@@ -154,7 +155,7 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
 
   }
 
-   ngAfterViewInit() {
+  ngAfterViewInit() {
   }
 
   ngOnInit() {
@@ -468,6 +469,10 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     return res;
   }
 
+  OnRangeChange(range : IRange) {
+    console.log(range.start);
+    console.log(range.end);
+  }
 
 }
 

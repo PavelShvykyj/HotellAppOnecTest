@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AngularFireModule } from '@angular/fire';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
+import { AngularFirestoreModule} from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 //import { NgxSpinnerModule } from "ngx-spinner";
 
@@ -49,7 +49,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ButtonMenuComponent } from './button-menu/button-menu.component';      
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 /// MATERIAL COMPONENTS ///
@@ -115,7 +115,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   providers: [RouterEventHendlerService,
               OptionsService,
               OneCOptionsResolver,
-              MatDatepickerModule
+              MatDatepickerModule,
+              {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
               ],
   bootstrap: [AppComponent]
 })

@@ -197,7 +197,14 @@
                     [rowspan]="element.gridoptions.rowspan"
                     >
                     
-                    <span *ngIf="element.elementtype == GridElementtype.HeaderPanel"> HEADER PANEL  </span>
+                    <div fxLayout="row" fxLayoutAlign="start center" *ngIf="element.elementtype == GridElementtype.HeaderPanel"> 
+                         <date-range-selector fxFlex [AutoEmit]="true" (RangeChange) = "OnRangeChange($event)"></date-range-selector>
+                         <button class="ml-2" color="accent" fxFlex mat-button button>Action 1 </button>
+                         <button color="accent" fxFlex mat-button>Action 2 </button>
+                         <button color="accent" fxFlex mat-button>Action 3 </button>
+                         <button color="warn" fxFlex mat-button>Action 4 </button>
+                         <span fxFlex class="m-auto"></span>
+                    </div>
                     <span *ngIf="element.elementtype == GridElementtype.FooterPanel"> FOOTER PANEL  </span>
                     <span *ngIf="element.elementtype == GridElementtype.Header">{{element.dataoptions.data.title }} </span>
                     <span *ngIf="element.elementtype == GridElementtype.Period">{{element.dataoptions.data.title }} {{ element.dataoptions.data.subtitle }} </span>
