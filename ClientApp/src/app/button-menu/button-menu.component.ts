@@ -29,8 +29,8 @@ export class ButtonMenuComponent implements OnInit, OnDestroy {
 
   themesStateSubsciption : Subscription ;
 
-  constructor(private OptionsService : OptionsService) { 
-    this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
+  constructor(private Options : OptionsService) { 
+    this.themesStateSubsciption = Options.handler.subscribe(res => {
       this.themes = res.themes });
   }
 

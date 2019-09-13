@@ -29,6 +29,28 @@ export class OptionsService {
   
   constructor(private http: HttpClient) { }
 
+  get primary() : string {
+    let res : string = "primary";
+    if  (this.eventer.value.themes["brown"] || this.eventer.value.themes["grey"]) 
+      res =  "accent";
+    return res;
+  }
+
+  get accent() : string {
+    let res : string = "accent";
+    
+    if  (this.eventer.value.themes["contrast"]) 
+      res =  "primary";
+    
+    return res;
+  }
+
+  get warn() : string {
+    return "warn"
+  }
+
+
+
   GetOptions() {
     let connection = this.BASE_URL + "/Values/proxy";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');

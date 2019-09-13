@@ -177,46 +177,27 @@
 
      <!-- BODY  -->
      <div 
-     fxLayout="column"
+     fxLayout="row"
      fxLayoutAlign="start start"  
      fxFlex="1 1 auto"
      class="form-body p-1 w-100  scrollable">
-           
-
-          <mat-grid-list 
-          class=" reception-grid"
-          [cols]="GridData.options.cols"
-          [rowHeight]="GridData.options.rowHeight"
-          gutterSize="0px"
-          >
-
-               <mat-grid-tile 
-                    *ngFor="let element of GridData.elements"
-                    class="grid-element"
-                    [colspan]="element.gridoptions.colspan"
-                    [rowspan]="element.gridoptions.rowspan"
-                    >
-                    
-                    <div fxLayout="row" fxLayoutAlign="start center" *ngIf="element.elementtype == GridElementtype.HeaderPanel"> 
-                         <date-range-selector fxFlex [AutoEmit]="true" (RangeChange) = "OnRangeChange($event)"></date-range-selector>
-                         <button class="ml-2" [color]="Options.accent" fxFlex mat-button button>Action 1 </button>
-                         <button [color]="Options.accent" fxFlex mat-button>Action 2 </button>
-                         <button [color]="Options.accent" fxFlex mat-button>Action 3 </button>
-                         <button color="warn" fxFlex mat-button>Action 4 </button>
-                         <span fxFlex class="m-auto"></span>
-                    </div>
-                    <span *ngIf="element.elementtype == GridElementtype.FooterPanel"> FOOTER PANEL  </span>
-                    <span *ngIf="element.elementtype == GridElementtype.Header">{{element.dataoptions.data.title }} </span>
-                    <span *ngIf="element.elementtype == GridElementtype.Period">{{element.dataoptions.data.title }} {{ element.dataoptions.data.subtitle }} </span>
-                    <reception-subperiod *ngIf="element.elementtype == GridElementtype.SubPeriod" fxFlex class="pt-1  h-100 light overflow-visible"></reception-subperiod>
-                    <span *ngIf="element.elementtype == GridElementtype.Box">{{element.dataoptions.data.title }} </span>
-                    <span *ngIf="element.elementtype == GridElementtype.BoxIntime"> {{element.dataoptions.data.status }} </span>
-                    <span *ngIf="element.elementtype == GridElementtype.Empty">  </span>
-               </mat-grid-tile> 
-          </mat-grid-list>
-
-
-
+               
+          <div fxLayout="column" fxLayoutAlign="center center"  class="w-100"> 
+               <div fxLayout="row wrap" class="mt-1 w-100">
+                    <button  mat-raised-button color="accent"  > accent </button>
+                    <button  mat-raised-button color="primary" > primary </button>
+                    <button  mat-raised-button color="warn" > warn </button>
+                    <button  mat-raised-button  > clear </button>
+               </div>
+               <div fxLayout="row wrap" class="w-100" >
+                    <button  mat-raised-button (click)="SetTheme('brown')">brown</button> 
+                    <button  mat-raised-button  (click)="SetTheme('grey')"> grey </button>
+                    <button  mat-raised-button  (click)="SetTheme('contrast')"> contrast </button>
+               </div>
+               <!-- <div fxLayout="row " fxLayoutAlign="center center" class="w-100 p-1">
+                    <grid-shablon  class="mt-1 w-100 p-0"  [themes]="themes"> </grid-shablon>     
+               </div>      -->
+          </div>        
      </div>
 </div>
 

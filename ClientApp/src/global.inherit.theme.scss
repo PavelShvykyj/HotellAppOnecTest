@@ -27,6 +27,27 @@
     $darkcolor  : mat-color($accent,900);
     $activecolor: mat-color($accent, 50, 1); 
 
+
+    .light {
+
+        outline: none !important;
+        background: $activecolor;
+        color: $darkcolor !important;
+    
+        &:hover {
+            outline: none !important;  
+            background-color: mat-color($accent, 400) !important;
+            color: $activecolor !important;
+        }
+    
+        &:focus {
+            outline: none !important;  
+            background-color: mat-color($accent, 400) !important;
+            color: $activecolor !important;
+        }
+    }
+
+
     .dark {
         outline: none !important;
         background: $darkcolor;
@@ -108,22 +129,110 @@
     @include inherit_theme($app-theme);   
 }
 
-@mixin custom-inherit-theme($app-theme) {
-    @include angular-material-theme($app-theme);  
-    @include inherit_theme($app-theme);   
-}
+@mixin mix-themes($accent, $primary, $warn, $bg-rimary-strenth) {
+    $lightcolor: mat-color($accent, 50, .8);
+    $activecolor: mat-color($accent, 50, 1);
+    $darkcolor: mat-color($accent, 900);
+       
+    .link-active {
+      color: $darkcolor !important;
+      opacity: 1 !important;
+      font-size: 120%;
+      font-weight: bolder;
+    }
+  
+    .light {
+
+        outline: none !important;
+        background: $activecolor;
+        color: $darkcolor !important;
+    
+        &:hover {
+            outline: none !important;  
+            background-color: mat-color($accent, 400) !important;
+            color: $activecolor !important;
+        }
+    
+        &:focus {
+            outline: none !important;  
+            background-color: mat-color($accent, 400) !important;
+            color: $activecolor !important;
+        }
+    }
+
+
+    .dark {
+      outline: none !important;
+      background: $darkcolor;
+      color: $lightcolor !important;
+  
+      &:hover {
+          outline: none !important;  
+          background: $darkcolor !important;
+          color: $activecolor !important;
+      }
+  
+      &:focus {
+          outline: none !important;
+          background: $darkcolor !important;
+          color: $activecolor !important;
+      }
+    }
+  
+    .primary {
+      outline: none !important;
+      background-color: mat-color($accent, $bg-rimary-strenth);
+      color: $darkcolor !important;
+  
+      &:hover {
+        background: mat-color($accent, 500) !important;
+        color: $lightcolor !important;
+      }
+    }
+  
+    .secondry {
+      outline: none !important;
+      background-color: mat-color($accent, 700) !important;
+      color: mat-color($accent, 100) !important;
+      border-bottom: 1px solid mat-color($primary, 400);
+  
+      &:hover {
+        background: mat-color($accent, 600) !important;
+        color: $lightcolor !important;
+      }
+    }
+  
+    .warning {
+      outline: none !important;
+      background-color: mat-color($warn, 500) !important;
+      color: $lightcolor !important;
+      border-bottom: 1px solid mat-color($primary, 400);
+  
+      &:hover {
+        background: mat-color($warn, 900) !important;
+        color: $lightcolor !important;
+      }
+    }
+  
+  }
 
 ::ng-deep .brown {
     @include custom-inherit-theme($brown-app-theme);
     $theme_prop: theme_prop($brown-app-theme);
+    @include mix-themes(map-get($theme_prop, accent), map-get($theme_prop, primary),
+    map-get($theme_prop, warn),200);
 }
 
 ::ng-deep .grey {
     @include custom-inherit-theme($grey-app-theme);
     $theme_prop: theme_prop($grey-app-theme);
+    @include mix-themes(map-get($theme_prop, accent), map-get($theme_prop, accent),
+    map-get($theme_prop, warn), 200);
 }  
 
 ::ng-deep .contrast {
     @include custom-inherit-theme($contrast-app-theme);
     $theme_prop: theme_prop($contrast-app-theme);
+    @include mix-themes(map-get($theme_prop, primary), map-get($theme_prop, primary),
+    map-get($theme_prop, warn), 400);
 }

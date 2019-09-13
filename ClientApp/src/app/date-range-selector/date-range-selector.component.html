@@ -1,23 +1,23 @@
 <div class="date-range-container " fxLayout="row" fxLayoutAlign="center center">
      <button-menu fxFlex  [menucontent]="menucontetnt_fast_rewind" (actioneventer)="OnMenuActionRewind($event)"></button-menu>
 
-     <button  color="accent" fxFlex mat-button (click)="ChangeRange(rangestartref,-1)"> <mat-icon>arrow_back_ios</mat-icon> </button>   
-     <mat-form-field fxFlex class="h-100 px-2" color="warn">
+     <button  [color]="Options.accent" fxFlex mat-button (click)="ChangeRange(rangestartref,-1)"> <mat-icon>arrow_back_ios</mat-icon> </button>   
+     <mat-form-field fxFlex class="h-100 px-2" [color]="Options.primary">
             <input (dateChange)="DateChangeEvent($event,rangestartref,rangeendref)" [(ngModel)]="_rangestart" #rangestartref="ngModel"  required matInput [matDatepicker]="rangestart" placeholder="Начало периода">
             <mat-datepicker-toggle matSuffix [for]="rangestart"></mat-datepicker-toggle>
-            <mat-datepicker #rangestart></mat-datepicker>
+            <mat-datepicker  color="warn" #rangestart></mat-datepicker>
      </mat-form-field>
-     <button  color="accent" fxFlex mat-button (click)="ChangeRange(rangestartref,1)"> <mat-icon>arrow_forward_ios</mat-icon> </button>   
+     <button  [color]="Options.accent" fxFlex mat-button (click)="ChangeRange(rangestartref,1)"> <mat-icon>arrow_forward_ios</mat-icon> </button>   
 
-     <button color="accent" *ngIf="!AutoEmit" fxFlex mat-raised-button (click)="EmitChangeRange()"> <mat-icon>update</mat-icon> </button>   
+     <button [color]="Options.accent" *ngIf="!AutoEmit" fxFlex mat-raised-button (click)="EmitChangeRange()"> <mat-icon>update</mat-icon> </button>   
 
-     <button  color="accent" fxFlex mat-button (click)="ChangeRange(rangeendref,-1)"> <mat-icon>arrow_back_ios</mat-icon> </button>   
-     <mat-form-field fxFlex class="h-100 px-2" color="warn">
+     <button   [color]="Options.accent" fxFlex mat-button (click)="ChangeRange(rangeendref,-1)"> <mat-icon>arrow_back_ios</mat-icon> </button>   
+     <mat-form-field fxFlex class="h-100 px-2" [color]="Options.primary">
             <input (dateChange)="DateChangeEvent($event,rangestartref,rangeendref)" [(ngModel)]="_rangeend" #rangeendref="ngModel" required matInput [matDatepicker]="rangeend" placeholder="Конец периода">
             <mat-datepicker-toggle matSuffix [for]="rangeend"></mat-datepicker-toggle>
-            <mat-datepicker #rangeend></mat-datepicker>
+            <mat-datepicker color="warn" #rangeend></mat-datepicker>
      </mat-form-field>
-     <button  color="accent" fxFlex mat-button (click)="ChangeRange(rangeendref,1)"> <mat-icon>arrow_forward_ios</mat-icon> </button>   
+     <button  [color]="Options.accent" fxFlex mat-button (click)="ChangeRange(rangeendref,1)"> <mat-icon>arrow_forward_ios</mat-icon> </button>   
    
      <button-menu fxFlex [menucontent]="menucontetnt_fast_forward" (actioneventer)="OnMenuActionForward($event)"></button-menu>
 </div>

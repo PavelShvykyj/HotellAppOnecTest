@@ -17,7 +17,13 @@ export interface IMenuMessage {
 export interface IMenuButton {
     className : string,
     iconeName : string
+}
 
+export interface IPanelContent {
+    actions : IMenuActions[],
+    links : IMenuLinks[],
+    print : IMenuActions[],
+    messages? : IMenuMessage[] 
 }
 
 export interface IMenuContent {

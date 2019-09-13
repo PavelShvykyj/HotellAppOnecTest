@@ -1,5 +1,5 @@
 import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { disappearTrigger } from './reception-form.animate'
@@ -120,32 +120,30 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
 
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
-    this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
+  constructor(private breakpointObserver: BreakpointObserver, private Options : OptionsService) {
+    this.themesStateSubsciption = Options.handler.subscribe(res => {
       this.themes = res.themes
       });
 
     this.screnStateSubsciption = this.breakpointObserver
     .observe([
-              Breakpoints.Large, 
-              Breakpoints.Medium,
               Breakpoints.Small,
               Breakpoints.XSmall
             ])
     .subscribe((state: BreakpointState) => {
+      console.log('event');
       let NewscreenState = state.breakpoints; 
-      let ReformatNeed = false;
       NewscreenState["no_show"] = false;
-      if (NewscreenState != this.screenState) {
-        ReformatNeed = true;
+      if (this.screenState[this._Breakpoints.Small] != NewscreenState[this._Breakpoints.Small] || this.screenState[this._Breakpoints.XSmall] != NewscreenState[this._Breakpoints.XSmall]) {
+        
+        console.log('resize');
+        this.screenState = NewscreenState;
+        this.screenState["no_show"] = false;
+        this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
+        this.ReformatRoomstockGreed();
+        
       }
 
-      this.screenState = NewscreenState;
-      this.screenState["no_show"] = false;
-      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
-      if (ReformatNeed) {
-        this.ReformatRoomstockGreed();
-      }
       
 
     });
@@ -154,6 +152,17 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     this.StarterMessages()
 
   }
+
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event) {
+  
+    
+    
+
+  //   let currWidth = event.target.innerWidth;
+    
+  // }
+
 
   ngAfterViewInit() {
   }
@@ -466,6 +475,16 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     res.elements.push(footerpanel);
     
     
+    return res;
+  }
+
+  GetEmtyGridObject() : IGridObjectData {
+    let options : IGridOptions  = { cols: 105, rowHeight: "fit" };
+    let res: IGridObjectData = {
+      options: options,
+      elements : []
+    };
+
     return res;
   }
 

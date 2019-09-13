@@ -25,21 +25,25 @@
             <span>Cansel</span>
         </button>
 
+
+
         <!-- КНОПКИ ДЕЙСТВИЯ -->
-        <button *ngFor="let action of menucontent.actions" mat-menu-item class="dark mat-nav-item no-outline"
+        
+        <button *ngFor="let action of menucontent.actions" mat-menu-item  class="dark mat-nav-item no-outline"
             (click)="OnActionButtonClick(action.name)">
             <mat-icon mat-list-icon> {{action.iconeName}} </mat-icon>
             <span> {{action.name}}  </span>
         </button>
 
-
         <!-- ЛИНКИ -->
         <button *ngFor="let linkItem of menucontent.links"
             mat-menu-item class="primary"
-            
+            [routerLink]="linkItem.link"
             >
             <mat-icon mat-list-icon>{{linkItem.iconeName}}</mat-icon>
             <span mat-line> {{linkItem.name}} </span>
         </button>
+
+
     </mat-menu>
 </div>

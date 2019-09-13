@@ -1,0 +1,142 @@
+
+
+     <!-- PANEL  -->
+     <div [fxFlex]="GetPanelFlexOption()" 
+          [ngClass]="{'panel-v': !screenState[_Breakpoints.XSmall],
+                    'panel-h': screenState[_Breakpoints.XSmall]}"
+          class="panel panel-container"
+          fxLayout="column"
+          fxLayoutAlign="space-around stretch"  
+     >
+
+          <!-- HEADER (litle butons) -->  
+          <mat-action-list 
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               
+               fxLayout="row"
+               fxLayoutAlign="start start"  
+               class="panel-item panel-little-flex-comp  pt-0">
+               <button mat-list-item fxFlex="1 1 1fr" class="dark panel-flex-element h-100" (click)="ChangeExpandedPanel()">  <mat-icon>reorder</mat-icon> </button>
+          </mat-action-list>      
+ 
+          <!-- BUTTONS  -->  
+          <mat-action-list 
+          *ngIf="!screenState[_Breakpoints.XSmall]"
+          fxFlexFill
+          fxFlex="1 1 auto"
+          fxLayout="column"
+          fxLayoutAlign="start center"               
+          class="scrollable pt-0 w-100">
+               <button fxFlex="1 1 1fr" mat-list-item class="dark panel-flex-element" (click)="ClearMesaages()"> <mat-icon mat-list-icon>cancel</mat-icon> <span mat-line *ngIf="panelExpanded"> Удалить сообщения </span> </button>                    
+               <button *ngFor="let action of panelcontent.actions"
+                       fxFlex="1 1 1fr"
+                       mat-list-item
+                       class="dark panel-flex-element"
+                       (click)="OnActionButtonClick(action.name)"
+
+
+                       > 
+               
+                         <mat-icon mat-list-icon>{{action.iconeName}}</mat-icon>
+                         <span mat-line *ngIf="panelExpanded"> {{action.name}} </span>
+               </button>                    
+          </mat-action-list>      
+
+          <!-- LINKS  -->      
+          <mat-nav-list
+               *ngIf="!screenState[_Breakpoints.XSmall]"
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="column"
+               fxLayoutAlign="start center"  
+               class="scrollable pt-0 w-100">
+               
+               <h3 mat-subheader>links</h3>
+               <a 
+                  *ngFor="let linkItem of panelcontent.links"  
+                  fxFlex="1 1 1fr"
+                  mat-list-item
+                  [routerLink]="linkItem.link"
+                  routerLinkActive="link-active"
+                  [routerLinkActiveOptions]="{exact:true}"
+                  class="primary panel-flex-element"> 
+                    <mat-icon mat-list-icon>{{linkItem.iconeName}}</mat-icon> 
+                    <span mat-line  *ngIf="panelExpanded">  {{linkItem.name}}  </span>
+               </a>
+          
+          
+          
+          </mat-nav-list>   
+
+          <!-- MESSAGES  -->  
+          <mat-list 
+               *ngIf="panelExpanded && !screenState[_Breakpoints.XSmall]"  
+               @disappearmessages
+               fxFlex="1 1 auto"
+               fxFlexFill
+               fxLayout="column"
+               fxLayoutAlign="start center"      
+               class="panel-item scrollable pt-0 w-100 messeges-flex-comp ">
+                    
+               <mat-list-item
+                *ngFor="let message of messages"     
+                @disappear
+                
+                [ngClass]="{'warning': message.isError,
+                            'secondry': !message.isError,
+                             'spacer' : messages.lastIndexOf(message) == 0 } "
+                fxLayout="column"
+                class="inline-flex-comp " >
+                    <button (click)="OnPanelMessageClick(message)" mat-icon-button class="p-0 m-0 "><mat-icon   class="p-0 m-0">cancel</mat-icon></button>      
+                    <span  class="p-0 m-0 messege-font">
+                         {{ message.message_content }} 
+                    </span>  
+               </mat-list-item>
+
+          </mat-list> 
+
+           <!-- FOOTER (litle butons)  -->  
+          <mat-action-list 
+          [fxLayout]="litleButtonsLayout | async"
+          fxLayoutAlign="end end"  
+          fxFlex="1 1 auto"
+          id="footer"
+          class="panel-little-flex-comp  pt-0"
+          >
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+               
+               <button-menu 
+               [menucontent]="{menubutton : menubutton : {className : dark, iconeName : 'print' }, actions : panelcontent.print , }  "
+                    (actioneventer)="OnPrintMenuAction($event)"
+                    fxFlex="1 0 "
+                    mat-list-item
+                    class="dark panel-flex-element"
+                    [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
+                    > 
+                    <mat-icon>print</mat-icon>
+               </button-menu>
+               
+
+          
+               <!-- КНОПКА открытия меню для планшетной раскладки -->
+               <button-menu 
+               *ngIf="screenState[_Breakpoints.XSmall]"
+               [menucontent]="{menubutton : {className : dark, iconeName : 'more_vert' }, actions : panelcontent.actions, links : panelcontent.links}  "
+               (actioneventer)="OnActionButtonClick($event)"
+               fxFlex="1 0 "
+               mat-list-item
+               class="dark panel-flex-element"
+               [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"
+               [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+               </button-menu>
+          
+
+          </mat-action-list>      
+     </div>
+
+
+
+

@@ -19,15 +19,21 @@
 }
 
 .last-small-element {
-    border-right: 0.2px solid papayawhip;
+    border-right: 1px solid papayawhip !important;
 }
 
+
+// .day-small-element {
+//     overflow: visible !important;
+//     position: relative;
+    
+// }
 
 .day-small-element {
-    overflow: visible !important;
-    position: relative;
-    
+
+    text-align: center;   
 }
+
 
 .font-hour-point {
    font-size: 80% !important;
@@ -44,11 +50,13 @@
     color: inherit;
     z-index: 100;
     position: absolute;
-    left: 70%;
+    left: 75%;
     top: 0px;
 }
 
 .mark-divider {
+    overflow: visible !important;
+    z-index: 100; 
     max-height: 15%;
     height: 15%;
 }

@@ -3,6 +3,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { IMenuContent } from '../IMenuContetnt';
 import { NgModel } from '@angular/forms';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import { OptionsService } from '../options.service';
 
 export interface IRange {
   start : Date,
@@ -40,7 +41,11 @@ export class DateRangeSelectorComponent implements OnInit {
       iconeName : "fast_forward"
     },
 
-    links : []
+    links : [
+      {name : "home",
+      iconeName : "home",
+      link : "/" }
+    ]
 
   }
 
@@ -80,7 +85,7 @@ export class DateRangeSelectorComponent implements OnInit {
   @Input('AutoEmit')
   AutoEmit : boolean = false;
 
-  constructor() { }
+  constructor(private Options : OptionsService) { }
 
   ngOnInit() {
   }

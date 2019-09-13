@@ -60,26 +60,6 @@
     }
   }
 
-
-  .light {
-
-    outline: none !important;
-    background: $lightcolor;
-    color: $darkcolor !important;
-
-    &:hover {
-        outline: none !important;  
-        background-color: mat-color($accent, 400) !important;
-        color: $activecolor !important;
-    }
-
-    &:focus {
-        outline: none !important;  
-        background-color: mat-color($accent, 400) !important;
-        color: $activecolor !important;
-    }
-}
-
   .primary {
     background-color: mat-color($accent, $bg-rimary-strenth);
     color: $darkcolor !important;
@@ -112,22 +92,6 @@
     }
   }
 
-  .grid-element {
-    //border: 0.5px solid $lightcolor !important;
-    border: none;
-    background-color: white;
-    font: small lighter !important;
-    overflow: visible !important;
-  } 
-
-  .reception-grid {
-    padding: 5%;
-    height: 100%;   
-    width: 100%;
-    max-height: 100%;
-    
-
-  }
 
   .vertical-litle-button {
     min-height: fit-content !important;
@@ -196,12 +160,4 @@
   .link-active {
     font-style: italic !important;  
   }
-
- 
-  .overflow-visible {
-    overflow: visible !important;
-  }
-
-  
-
 } 
