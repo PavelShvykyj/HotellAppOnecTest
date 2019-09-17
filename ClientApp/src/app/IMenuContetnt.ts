@@ -1,10 +1,10 @@
 export interface IMenuActions {
-    name : string,
+    name : string[],
     iconeName : string
 }
 
 export interface IMenuLinks {
-    name : string,
+    name : string[],
     iconeName : string,
     link : string
 }

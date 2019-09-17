@@ -1,13 +1,15 @@
-import { IOneCSessionStatus } from './../counter/OneCSessionStatus';
-import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+
+
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
-import { disappearTrigger } from './one-coptions-form.animate'
+
 import { OptionsService } from '../options.service'
 import { ActivatedRoute } from '@angular/router';
 import { IOneCOptions } from './IOneCOptions';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
+import { IPanelContent } from '../IMenuContetnt';
 
 
 
@@ -16,16 +18,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   selector: 'one-coptions-form',
   templateUrl: './one-coptions-form.component.html',
   styleUrls: ['./one-coptions-form.component.scss'],
-  animations : [
-    trigger('disappearmessages', [
-      transition('void=>*', [
-        query('@disappear', stagger(200,animateChild()))
-      ])
 
-    ]),
-    disappearTrigger 
-
-  ]
 })
 export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -35,16 +28,47 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     "contrast"  : false,
   }
   
-  panelExpanded : boolean = false;
+ 
   _Breakpoints : typeof Breakpoints = Breakpoints;
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
-  litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
-  litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
-  messages : Array<{message_content : string, isError : boolean }> = [];  
+  
   options : IOneCOptions;
   form : FormGroup;
+
+  @ViewChild(PanelFormComponent, {static : false})
+  panelform : PanelFormComponent  
+
+  panelcontent : IPanelContent = {
+    actions : [],
+    links : [ 
+      {
+        name : ["Настройки","приложения"],
+        iconeName : "settings_applications",
+        link : "/appoptions"
+      },
+
+      {
+        name : ["Настройки 1C"],
+        iconeName : "build",
+        link : "/onecoptions"
+      },
+
+      {
+        name : ["Состояние", "подключения к 1С"],
+        iconeName : "av_timer",
+        link : "/counter"
+      }
+     ],
+    print : [      
+      {
+        name : ["Печатные формы", " не назначены."],
+        iconeName : "cancel",
+      }
+     ]
+    }
+
 
   constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService, private route: ActivatedRoute) {
     
@@ -67,8 +91,6 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     this.screnStateSubsciption = this.breakpointObserver
     .observe([
-              Breakpoints.Large, 
-              Breakpoints.Medium,
               Breakpoints.Small,
               Breakpoints.XSmall
             ])
@@ -76,24 +98,21 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
       
       this.screenState = state.breakpoints; 
       this.screenState["no_show"] = false;
-      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
+      
       
     });
   
     
-    this.StarterMessages()
+    
 
   }
 
    ngAfterViewInit() {
+    this.StarterMessages()
   }
 
 
   ngOnInit() {
-    this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
-    console.log(this.options);
-
-
   }
 
 
@@ -103,44 +122,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     this.themesStateSubsciption.unsubscribe(); 
   }
 
-
-  SetTheme(theme : string) {
-    let props : Array<string> = Object.getOwnPropertyNames(this.themes);
-    props.forEach(element => {
-      this.themes[element] = false;
-    });
-
-    this.themes[theme] = true;
-    this.OptionsService.SetOptions({themes : this.themes});
-
-  }
-
-  ChangeExpandedPanel() {
-    this.panelExpanded = !this.panelExpanded;
-    this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
-  }
-
-  GetLitleButtonsLayout() : string {
-    if(this.panelExpanded || this.screenState[this._Breakpoints.XSmall]) {
-      return "row wrap";
-    } 
-    else {
-      return "column";
-    }
-  }
-
-  GetPanelFlexOption() {
-    if(this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
-      return "1 0 252px";
-    }
-    else if(!this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
-      return "1 0 64px";
-    }
-    else {
-      return "";
-    }
-  }
-
+ 
 
   GetThemeClass() : string {
     let props : Array<string> = Object.getOwnPropertyNames(this.themes);
@@ -154,16 +136,8 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     return themeName;
   }
 
-  OnPanelMessageClick(message) {
-    this.messages.splice(this.messages.lastIndexOf(message),1);
-  }
-
   StarterMessages() {
-    let startmessage = {
-      message_content : "На этой странице настраиваются параметры подключения к серверу 1С", 
-      isError : false
-    }
-    this.messages.push(startmessage);
+    this.ShowMessage("На этой странице настраиваются параметры подключения к серверу 1С", false);
   }
 
   getErrorMessage(control : FormControl ) : string {
@@ -188,21 +162,18 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     .then(res =>
       {
         this.form.setValue((JSON.parse(res) as IOneCOptions));
-        this.messages
-        .push({message_content : "Настройки успешно считаны", isError : false});
+        this.ShowMessage("Настройки успешно считаны", false);
       })
     .catch(err =>
       {
         console.log(err);
-        this.messages
-        .push({message_content : "При получении настроек произошли ошибки", isError : true});
+        this.ShowMessage("При получении настроек произошли ошибки", true);
       });
   } 
 
   Save() {
     if(! this.form.valid) {
-      this.messages
-      .push({message_content : "Данные заполнены не верно. Сохранение невозможно", isError : true});
+      this.ShowMessage("Данные заполнены не верно. Сохранение невозможно", true);
 
       return;
     }
@@ -213,26 +184,27 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     .toPromise()
     .then(res =>
       {
-        this.messages
-        .push({message_content : "Настройки успешно сохранены", isError : false});
+        this.ShowMessage("Настройки успешно сохранены", false);
       })
     .catch(err =>
       {
         console.log(err);
-        this.messages
-        .push({message_content : "При сохранении настроек произошли ошибки", isError : true});
+        this.ShowMessage("При сохранении настроек произошли ошибки", true);
       });
 
   } 
-
-  AddMessage(content : string ,isError : boolean) {
-    let message = {message_content : content, isError : isError};
-    this.messages.push(message);
+ 
+ 
+  ShowMessage(content : string , isError : boolean) {
+    this.panelform.messages.push({message_content : content, isError :  isError} )
   }
 
-  ClearMesaages() {
-    this.messages = [];
+
+  OnPanelAction(action : string ) {
+    console.log(action);
   }
+
+ 
   //  FORM GET SET
 
   get BASE_URL() {

@@ -1,10 +1,12 @@
-import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
+
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
-import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
-import { disappearTrigger } from './reception-form.animate'
+import { Subscription, Observable,  BehaviorSubject } from 'rxjs';
+
 import { OptionsService } from '../options.service'
 import { IRange } from '../date-range-selector/date-range-selector.component';
+import { IPanelContent } from '../IMenuContetnt';
+import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
 
 
 enum GridElementType {
@@ -87,16 +89,7 @@ interface IGridObjectData {
   selector: 'reception-form',
   templateUrl: './reception-form.component.html',
   styleUrls: ['./reception-form.component.scss'],
-  animations : [
-    trigger('disappearmessages', [
-      transition('void=>*', [
-        query('@disappear', stagger(200,animateChild()))
-      ])
-
-    ]),
-    disappearTrigger 
-
-  ]
+  
 })
 export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -106,19 +99,59 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     "contrast" : false
   }
   
-  panelExpanded : boolean = false;
+  
   _Breakpoints : typeof Breakpoints = Breakpoints;
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
-  litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
-  litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
-  messages : Array<{message_content : string, isError : boolean }> = [];  
 
   GridData: IGridObjectData = this.GetGridObjectExample();
   GridElementtype : typeof GridElementType = GridElementType;
 
+  panelcontent : IPanelContent = {
+    actions : [
+      {
+        name : ["Добавить"],
+        iconeName : "add",
+      },
+      {
+        name : ["Редактировать"],
+        iconeName : "edit",
+      },
+      {
+        name : ["Удалить"],
+        iconeName : "delete",
+      },
+    ],
+    links : [ 
+      {
+        name : ["Перейти"],
+        iconeName : "send",
+        link : "/"
+      },
 
+      {
+        name : ["Перейти"],
+        iconeName : "send",
+        link : "/"
+      },
+
+      {
+        name : ["Перейти"],
+        iconeName : "send",
+        link : "/"
+      }
+     ],
+    print : [      
+      {
+        name : ["Печатные формы", " не назначены."],
+        iconeName : "cancel",
+      }
+     ]
+    }
+  
+  @ViewChild(PanelFormComponent, {static : false})
+  panelform : PanelFormComponent  
 
   constructor(private breakpointObserver: BreakpointObserver, private Options : OptionsService) {
     this.themesStateSubsciption = Options.handler.subscribe(res => {
@@ -139,80 +172,30 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
         console.log('resize');
         this.screenState = NewscreenState;
         this.screenState["no_show"] = false;
-        this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
         this.ReformatRoomstockGreed();
         
       }
-
-      
-
     });
-  
-    
-    this.StarterMessages()
-
   }
 
   // @HostListener('window:resize', ['$event'])
   // onResize(event) {
-  
-    
-    
-
   //   let currWidth = event.target.innerWidth;
-    
   // }
 
 
   ngAfterViewInit() {
+    this.StarterMessages()
   }
 
   ngOnInit() {
-    this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
+
   }
 
   ngOnDestroy() {
     this.screnStateSubsciption.unsubscribe();
     this.themesStateSubsciption.unsubscribe();  
   }
-
-
-  SetTheme(theme : string) {
-    let props : Array<string> = Object.getOwnPropertyNames(this.themes);
-    props.forEach(element => {
-      this.themes[element] = false;
-    });
-
-    this.themes[theme] = true;
-
-  }
-
-  ChangeExpandedPanel() {
-    this.panelExpanded = !this.panelExpanded;
-    this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
-  }
-
-  GetLitleButtonsLayout() : string {
-    if(this.panelExpanded || this.screenState[this._Breakpoints.XSmall]) {
-      return "row wrap";
-    } 
-    else {
-      return "column";
-    }
-  }
-
-  GetPanelFlexOption() {
-    if(this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
-      return "1 0 252px";
-    }
-    else if(!this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
-      return "1 0 64px";
-    }
-    else {
-      return "";
-    }
-  }
-
 
   GetThemeClass() : string {
     let props : Array<string> = Object.getOwnPropertyNames(this.themes);
@@ -222,30 +205,14 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
         themeName = element+"-theme-panel";
       }  
     });
-
-    
     return themeName;
   }
 
-  OnPanelMessageClick(message) {
-    console.log(message);
-    this.messages.splice(this.messages.lastIndexOf(message),1);
-  }
 
   StarterMessages() {
-
-    let startmessage = {
-      message_content : "Основаня форма рецепции. Здесь можно поселить и выселить гостей", 
-      isError : false
-    }
-
-    this.messages.push(startmessage);
- 
+    this.ShowMessage("Основаня форма рецепции. Здесь можно поселить и выселить гостей",false);
   }
 
-  ClearMesaages() {
-    this.messages = [];
-  }
 
   ReformatRoomstockGreed() {    
     if(this.screenState[this._Breakpoints.Small] || this.screenState[this._Breakpoints.XSmall]) {
@@ -491,6 +458,14 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
   OnRangeChange(range : IRange) {
     console.log(range.start);
     console.log(range.end);
+  }
+
+  ShowMessage(content : string , isError : boolean) {
+    this.panelform.messages.push({message_content : content, isError :  isError} )
+  }
+
+  OnPanelAction(action : string ) {
+    console.log(action);
   }
 
 }

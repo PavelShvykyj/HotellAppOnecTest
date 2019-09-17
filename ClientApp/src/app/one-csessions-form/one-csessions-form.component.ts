@@ -1,13 +1,13 @@
-import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import {  IPanelContent } from './../IMenuContetnt';
+
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
-import { Subscription, Observable, Subject, BehaviorSubject, from } from 'rxjs';
-import { disappearTrigger } from './one-csessions-form.animate'
+import { Subscription, Observable,  BehaviorSubject } from 'rxjs';
 import { OptionsService } from '../options.service'
-import { ILoggmessage } from '../../loggmessage';
-import { IOneCSessionStatus } from './OneCSessionStatus';
+import { IOneCSessionStatus } from './IOneCSessionStatus';
 import { SessionLogSourse } from './one-csession-logsourse'
 import { catchError, finalize } from 'rxjs/operators';
+import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
 
 
 interface IBodyFlexStatus  {
@@ -20,16 +20,6 @@ interface IBodyFlexStatus  {
   selector: 'one-csessions-form',
   templateUrl: './one-csessions-form.component.html',
   styleUrls: ['./one-csessions-form.component.scss'],
-  animations : [
-    trigger('disappearmessages', [
-      transition('void=>*', [
-        query('@disappear', stagger(200,animateChild()))
-      ])
-
-    ]),
-    disappearTrigger 
-
-  ]
 })
 export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -38,33 +28,73 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
     "grey"  : false,
     "contrast" : false
   }
+
   
-  panelExpanded : boolean = false;
+  panelcontent : IPanelContent = {
+    actions : [
+      {
+        name : ["Остановить сессии"],
+        iconeName : "lock",
+      },
+
+      {
+        name : ["Запустить сессии"],
+        iconeName : "lock_open",
+      },
+    ],
+    links : [ 
+      {
+        name : ["Настройки","приложения"],
+        iconeName : "settings_applications",
+        link : "/appoptions"
+      },
+
+      {
+        name : ["Настройки 1C"],
+        iconeName : "build",
+        link : "/onecoptions"
+      },
+
+      {
+        name : ["Состояние", "подключения к 1С"],
+        iconeName : "av_timer",
+        link : "/counter"
+      }
+     ],
+    print : [      
+      {
+        name : ["Печатные формы", " не назначены."],
+        iconeName : "cancel",
+      }
+     ]
+    }
+
+
+  
   _Breakpoints : typeof Breakpoints = Breakpoints;
+  
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
   messagesSubsciption : Subscription ;
-  litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
-  litleButtonsLayout$ : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
   
   BodyLayoutEventer = new BehaviorSubject<IBodyFlexStatus>({BodyLayout : "row", BodyAlign : "start start"});
   BodyLayout$ : Observable<IBodyFlexStatus> = this.BodyLayoutEventer.asObservable();
   
-  
   sessionStatusUpdatingEventer = new BehaviorSubject<boolean>(false);
   sessionStatusUpdating$ = this.sessionStatusUpdatingEventer.asObservable();
-  messages : Array<{message_content : string, isError : boolean }> = [];  
-
-   
+  
   sessionstatus : IOneCSessionStatus = this.EmptyOneCSessionStatus()
   options;
   
-
   /// table options
   displayedColumns: string[] = ['start', 'content', 'duration', 'status', 'error', 'errorcontent'];
   dataSource :  SessionLogSourse;
-  
+
+  @ViewChild(PanelFormComponent, {static : false})
+  panelform : PanelFormComponent  
+
+
   constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
       this.themes = res.themes
@@ -74,8 +104,6 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
 
     this.screnStateSubsciption = this.breakpointObserver
     .observe([
-              Breakpoints.Large, 
-              Breakpoints.Medium,
               Breakpoints.Small,
               Breakpoints.XSmall
             ])
@@ -83,7 +111,7 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       
       this.screenState = state.breakpoints; 
       this.screenState["no_show"] = false;
-      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
+      
       
       let BodyFlexStatus : IBodyFlexStatus;
 
@@ -102,19 +130,20 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
     });
   
     
-    this.StarterMessages()
+    
 
   }
 
    ngAfterViewInit() {
+    this.StarterMessages();
   }
 
 
   ngOnInit() {
    
-    this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
+    
     this.dataSource = new SessionLogSourse(this.OptionsService);
-    this.messagesSubsciption = this.dataSource.messages$.subscribe(message => this.messages.push(message));
+    this.messagesSubsciption = this.dataSource.messages$.subscribe(message  =>  this.ShowMessage(message.message_content, message.isError));
     this.RefreshAll();
   }
 
@@ -134,32 +163,6 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
 
   }
 
-  ChangeExpandedPanel() {
-    this.panelExpanded = !this.panelExpanded;
-    this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
-  }
-
-  GetLitleButtonsLayout() : string {
-    if(this.panelExpanded || this.screenState[this._Breakpoints.XSmall]) {
-      return "row wrap";
-    } 
-    else {
-      return "column";
-    }
-  }
-
-  GetPanelFlexOption() {
-    if(this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
-      return "1 0 252px";
-    }
-    else if(!this.panelExpanded && !this.screenState[this._Breakpoints.XSmall]) {
-      return "1 0 64px";
-    }
-    else {
-      return "";
-    }
-  }
-
   GetThemeClass() : string {
     let props : Array<string> = Object.getOwnPropertyNames(this.themes);
     let themeName : string ; 
@@ -171,25 +174,14 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
     return themeName;
   }
 
-  OnPanelMessageClick(message) {
-    
-    this.messages.splice(this.messages.lastIndexOf(message),1);
-  }
 
   StarterMessages() {
 
-    let startmessage = {
-      message_content : "На этой странице можно управлять сессиями сервиса 1С.", 
-      isError : false
-    }
 
-    this.messages.push(startmessage);
+    this.ShowMessage("На этой странице можно управлять сессиями сервиса 1С.",false);
  
   }
 
-  ClearMesaages() {
-    this.messages = [];
-  }
 
   EmptyOneCSessionStatus() : IOneCSessionStatus {
 
@@ -216,12 +208,12 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       .pipe(
         catchError((err)=>{
           console.log(err);
-          this.messages.push({message_content: "Ошибка при обновлении сессии.",isError : true})
+          this.ShowMessage("Ошибка при обновлении сессии.", true)
           return JSON.stringify(this.EmptyOneCSessionStatus())}),
         finalize(() => {this.sessionStatusUpdatingEventer.next(false);}))
       .subscribe(res => 
         {
-          this.messages.push({message_content: "Состояние сессии обновлено.",isError : false})
+          this.ShowMessage( "Состояние сессии обновлено.", false)
           this.sessionstatus = JSON.parse(res);});
   }
 
@@ -237,8 +229,8 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
         this.RefreshAll();
         this.sessionStatusUpdatingEventer.next(false)}))
         .toPromise()
-          .then(() =>this.messages.push({message_content: "Прошел запрос на соединение с 1С.",isError : false}))
-          .catch(err => this.messages.push({message_content: "Ошибка при запросе на соединение с 1С.",isError : true}));
+          .then(() =>this.ShowMessage( "Прошел запрос на соединение с 1С.",false))
+          .catch(err => this.ShowMessage("Ошибка при запросе на соединение с 1С.",true));
   }
 
   StopOneCSesiion() {
@@ -248,10 +240,38 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       this.RefreshAll();
       this.sessionStatusUpdatingEventer.next(false)}))
       .toPromise()
-        .then(() =>this.messages.push({message_content: "Прошел запрос на разрыв 1С.",isError : false}))
-          .catch(err => this.messages.push({message_content: "Ошибка при запросе на соединение с 1С.",isError : true}));
+        .then(() =>this.ShowMessage("Прошел запрос на разрыв 1С.",false))
+          .catch(err => this.ShowMessage("Ошибка при запросе на соединение с 1С.", true));
     
     this.RefreshAll();
+  }
+
+  ShowMessage(content : string , isError : boolean) {
+    this.panelform.messages.push({message_content : content, isError :  isError} )
+  }
+
+
+  OnPanelAction(action : string ) {
+   
+
+    switch (action) {
+     case "Запустить сессии":
+       this.StartOneCSesiion();
+       break;
+   
+      case "Остановить сессии":
+        this.StopOneCSesiion();
+        break;
+      case "Печатные формы":
+          console.log("Печатные формы ");
+          break;
+        
+     
+     default:
+       break;
+   }
+    
+
   }
 
 

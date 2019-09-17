@@ -21,17 +21,17 @@ export class DateRangeSelectorComponent implements OnInit {
   menucontetnt_fast_forward : IMenuContent = {
     actions : [
       {
-        name : "week",
+        name : ["week"],
         iconeName : "add"
       },
 
       {
-        name : "10 days",
+        name : ["10 days"],
         iconeName : "add"
       },
 
       {
-        name : "month",
+        name : ["month"],
         iconeName : "add"
       },
 
@@ -42,9 +42,7 @@ export class DateRangeSelectorComponent implements OnInit {
     },
 
     links : [
-      {name : "home",
-      iconeName : "home",
-      link : "/" }
+      
     ]
 
   }
@@ -52,17 +50,17 @@ export class DateRangeSelectorComponent implements OnInit {
   menucontetnt_fast_rewind : IMenuContent = {
     actions : [
       {
-        name : "week",
+        name : ["week"],
         iconeName : "remove"
       },
 
       {
-        name : "10 days",
+        name : ["10 days"],
         iconeName : "remove"
       },
 
       {
-        name : "month",
+        name : ["month"],
         iconeName : "remove"
       },
 

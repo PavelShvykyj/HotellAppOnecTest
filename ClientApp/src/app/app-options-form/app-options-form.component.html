@@ -8,7 +8,7 @@
      'contrast-theme-panel': themes['contrast']}"
      >
 
-     <panel-form [panelcontent]="panelcontent"  > </panel-form>
+     <panel-form [panelcontent]="panelcontent" (actioneventer)="OnPanelAction($event)" > </panel-form>
 
 
      <!-- BODY  -->

@@ -124,6 +124,19 @@ export class PanelFormComponent implements OnInit, OnDestroy {
     this.messages.splice(this.messages.lastIndexOf(message),1);
   }
 
+  OnPrintMenuAction(printactionname : string) {
+    this.actioneventer.emit(printactionname);
+  }
+
+  OnActionButtonClick(actionname : string) {
+    this.actioneventer.emit(actionname);
+  } 
+
+  RefreshAll() {
+    this.actioneventer.emit("RefreshAll");
+  }
+
+
   ClearMesaages() {
     this.messages = [];
   }

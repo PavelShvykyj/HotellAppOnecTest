@@ -29,19 +29,19 @@
 
         <!-- КНОПКИ ДЕЙСТВИЯ -->
         
-        <button *ngFor="let action of menucontent.actions" mat-menu-item  class="dark mat-nav-item no-outline"
-            (click)="OnActionButtonClick(action.name)">
+        <button *ngFor="let action of menucontent.actions" mat-menu-item  class="primary mat-nav-item no-outline"
+            (click)="OnActionButtonClick(action.name[0])">
             <mat-icon mat-list-icon> {{action.iconeName}} </mat-icon>
-            <span> {{action.name}}  </span>
+            <span mat-line *ngFor="let partname of action.name"> {{partname}}  </span>
         </button>
 
         <!-- ЛИНКИ -->
         <button *ngFor="let linkItem of menucontent.links"
-            mat-menu-item class="primary"
+            mat-menu-item class="dark"
             [routerLink]="linkItem.link"
             >
             <mat-icon mat-list-icon>{{linkItem.iconeName}}</mat-icon>
-            <span mat-line> {{linkItem.name}} </span>
+            <span mat-line *ngFor="let partname of linkItem.name" > {{partname}} </span>
         </button>
 
 

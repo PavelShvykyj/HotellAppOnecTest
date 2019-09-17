@@ -3,8 +3,7 @@ import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/l
 import { Subscription } from 'rxjs';
 import { OptionsService } from '../options.service'
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map, first } from 'rxjs/operators';
-import { IPanelContent, IMenuMessage } from '../IMenuContetnt';
+import { IPanelContent } from '../IMenuContetnt';
 import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
 
 
@@ -28,31 +27,32 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
+  
   panelcontent : IPanelContent = {
     actions : [],
     links : [ 
       {
-        name : "Настройки приложения",
+        name : ["Настройки","приложения"],
         iconeName : "settings_applications",
         link : "/appoptions"
       },
 
       {
-        name : "Настройки 1C",
+        name : ["Настройки 1C"],
         iconeName : "build",
         link : "/onecoptions"
       },
 
       {
-        name : "Состояние подключения к 1С",
+        name : ["Состояние", "подключения к 1С"],
         iconeName : "av_timer",
         link : "/counter"
       }
      ],
     print : [      
       {
-        name : "Печатные формы не назначены",
-        iconeName : "",
+        name : ["Печатные формы", " не назначены."],
+        iconeName : "cancel",
       }
      ]
     }
@@ -131,7 +131,6 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
 
 
 
-
   
   
   TestFB() {
@@ -164,6 +163,11 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
   
   ShowMessage(content : string , isError : boolean) {
     this.panelform.messages.push({message_content : content, isError :  isError} )
+  }
+
+
+  OnPanelAction(action : string ) {
+    console.log(action);
   }
 
 

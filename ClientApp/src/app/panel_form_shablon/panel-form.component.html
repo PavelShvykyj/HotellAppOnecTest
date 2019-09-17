@@ -34,13 +34,15 @@
                        fxFlex="1 1 1fr"
                        mat-list-item
                        class="dark panel-flex-element"
-                       (click)="OnActionButtonClick(action.name)"
+                       (click)="OnActionButtonClick(action.name[0])"
 
 
                        > 
                
                          <mat-icon mat-list-icon>{{action.iconeName}}</mat-icon>
-                         <span mat-line *ngIf="panelExpanded"> {{action.name}} </span>
+                         <span  *ngIf="panelExpanded">
+                              <span *ngFor="let namepart of action.name" mat-line > {{namepart}} </span>
+                         </span>    
                </button>                    
           </mat-action-list>      
 
@@ -63,7 +65,9 @@
                   [routerLinkActiveOptions]="{exact:true}"
                   class="primary panel-flex-element"> 
                     <mat-icon mat-list-icon>{{linkItem.iconeName}}</mat-icon> 
-                    <span mat-line  *ngIf="panelExpanded">  {{linkItem.name}}  </span>
+                    <span *ngIf="panelExpanded">
+                         <span mat-line  *ngFor="let partname of linkItem.name">  {{partname}}  </span>
+                    </span>
                </a>
           
           
@@ -105,11 +109,11 @@
           id="footer"
           class="panel-little-flex-comp  pt-0"
           >
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
-               <button  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
+               <button routerLink="/"  fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>home</mat-icon> </button>
+               <button (click)="RefreshAll()" fxFlex="1 0 " mat-list-item  class="dark panel-flex-element" [ngClass]="{'h-100':  screenState[_Breakpoints.XSmall]}"> <mat-icon>refresh</mat-icon> </button>
                
                <button-menu 
-               [menucontent]="{ menubutton : {className : 'dark h-100', iconeName : 'print' }, actions : panelcontent.print  }  "
+                    [menucontent]="{ menubutton : {className : 'dark h-100', iconeName : 'print' }, actions : panelcontent.print  }  "
                     (actioneventer)="OnPrintMenuAction($event)"
                     fxFlex="1 0 "
                     mat-list-item
