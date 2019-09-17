@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component,  Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { IMenuContent } from '../IMenuContetnt';
 import { Subscription } from 'rxjs';
 import { OptionsService } from '../options.service';
@@ -8,7 +8,7 @@ import { OptionsService } from '../options.service';
   templateUrl: './button-menu.component.html',
   styleUrls: ['./button-menu.component.scss']
 })
-export class ButtonMenuComponent implements OnInit, OnDestroy {
+export class ButtonMenuComponent implements  OnDestroy {
 
   @Input('menucontent')
   menucontent : IMenuContent = {
@@ -34,8 +34,7 @@ export class ButtonMenuComponent implements OnInit, OnDestroy {
       this.themes = res.themes });
   }
 
-  ngOnInit() {
-  }
+  
 
   ngOnDestroy() {
     this.themesStateSubsciption.unsubscribe();  
@@ -55,7 +54,7 @@ export class ButtonMenuComponent implements OnInit, OnDestroy {
     });
 
     
-    return themeName;
+    return themeName+" h-100";
   }
 
  

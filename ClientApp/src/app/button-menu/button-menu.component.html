@@ -1,11 +1,11 @@
     <!-- КНОПКА открытия меню для планшетной раскладки -->
-    <div [class]="GetThemeClass()" >
+    <div [class]="GetThemeClass()" class="h-100">
 
         
     <!-- class binding не работает напрямую с mat-raised-button директивой руинит формат кнопки поетому биндим родителя а в кнопке наследуем-->    
-    <div [class]="menucontent.menubutton.className">
+    <div class="h-100" [class]="menucontent.menubutton.className" >
         <button  
-            class="inherit-theme w-100"
+            class="inherit-theme w-100 h-100"
             [matMenuTriggerFor]="menu"
             mat-button
             >

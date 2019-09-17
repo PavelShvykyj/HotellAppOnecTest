@@ -1,9 +1,11 @@
 import { animate, trigger, transition, query, stagger, animateChild } from '@angular/animations';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { disappearTrigger } from './panel-form.animate'
 import { OptionsService } from '../options.service'
+import { IMenuContent, IPanelContent, IMenuMessage } from '../IMenuContetnt';
+
 
 @Component({
   selector: 'panel-form',
@@ -20,7 +22,7 @@ import { OptionsService } from '../options.service'
 
   ]
 })
-export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PanelFormComponent implements OnInit, OnDestroy {
 
   themes = {
     "brown" : true,
@@ -35,8 +37,19 @@ export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
   themesStateSubsciption : Subscription ;
   litleButtonsLayoutEventer = new BehaviorSubject<string>("column");
   litleButtonsLayout : Observable<string> = this.litleButtonsLayoutEventer.asObservable();
-  messages : Array<{message_content : string, isError : boolean }> = [];  
+  
+  
+  public messages : IMenuMessage[] = []  
+  
+  @Input('panelcontent')
+  panelcontent : IPanelContent = {
+    actions : [],
+    links : [],
+    print : []
+}
 
+  @Output('actioneventer')
+  actioneventer : EventEmitter<string> = new EventEmitter<string>();
   
   constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
@@ -45,48 +58,28 @@ export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.screnStateSubsciption = this.breakpointObserver
     .observe([
-              Breakpoints.Large, 
-              Breakpoints.Medium,
-              Breakpoints.Small,
+              
               Breakpoints.XSmall
             ])
     .subscribe((state: BreakpointState) => {
       
-      this.screenState = state.breakpoints; 
-      this.screenState["no_show"] = false;
-      this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
-      
+      let NewscreenState = state.breakpoints; 
+      NewscreenState["no_show"] = false;
+      if (this.screenState[this._Breakpoints.XSmall] != NewscreenState[this._Breakpoints.XSmall]) {
+        this.screenState = NewscreenState;
+        this.screenState["no_show"] = false;
+        this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());  
+      }
     });
-  
-    
-    this.StarterMessages()
-
   }
-
-   ngAfterViewInit() {
-  }
-
 
   ngOnInit() {
     this.litleButtonsLayoutEventer.next(this.GetLitleButtonsLayout());
   }
 
-
-
   ngOnDestroy() {
     this.screnStateSubsciption.unsubscribe();
     this.themesStateSubsciption.unsubscribe();  
-  }
-
-
-  SetTheme(theme : string) {
-    let props : Array<string> = Object.getOwnPropertyNames(this.themes);
-    props.forEach(element => {
-      this.themes[element] = false;
-    });
-
-    this.themes[theme] = true;
-
   }
 
   ChangeExpandedPanel() {
@@ -115,7 +108,6 @@ export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-
   GetThemeClass() : string {
     let props : Array<string> = Object.getOwnPropertyNames(this.themes);
     let themeName : string ; 
@@ -124,29 +116,13 @@ export class PanelFormComponent implements OnInit, OnDestroy, AfterViewInit {
         themeName = element+"-theme-panel";
       }  
     });
-
-    
     return themeName;
   }
 
   OnPanelMessageClick(message) {
-    console.log(message);
+    
     this.messages.splice(this.messages.lastIndexOf(message),1);
   }
-
-  
-
-  StarterMessages() {
-
-    let startmessage = {
-      message_content : "Написать сюда сообщение описание страницы.", 
-      isError : false
-    }
-
-    this.messages.push(startmessage);
- 
-  }
-
 
   ClearMesaages() {
     this.messages = [];
