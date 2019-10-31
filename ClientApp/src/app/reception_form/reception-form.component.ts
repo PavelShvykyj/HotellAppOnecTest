@@ -1,5 +1,5 @@
 
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable,  BehaviorSubject } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { OptionsService } from '../options.service'
 import { IRange } from '../date-range-selector/date-range-selector.component';
 import { IPanelContent } from '../IMenuContetnt';
 import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
+import { debounceTime } from 'rxjs/operators';
 
 
 enum GridElementType {
@@ -89,6 +90,7 @@ interface IGridObjectData {
   selector: 'reception-form',
   templateUrl: './reception-form.component.html',
   styleUrls: ['./reception-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
   
 })
 export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -153,7 +155,7 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild(PanelFormComponent, {static : false})
   panelform : PanelFormComponent  
 
-  constructor(private breakpointObserver: BreakpointObserver, private Options : OptionsService) {
+  constructor(private breakpointObserver: BreakpointObserver, private Options : OptionsService, private changeDetector : ChangeDetectorRef) {
     this.themesStateSubsciption = Options.handler.subscribe(res => {
       this.themes = res.themes
       });
@@ -161,13 +163,25 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     this.screnStateSubsciption = this.breakpointObserver
     .observe([
               Breakpoints.Small,
-              Breakpoints.XSmall
+              Breakpoints.XSmall,
+              Breakpoints.Medium,
+              Breakpoints.Tablet,
+              Breakpoints.Web
             ])
+            .pipe(
+              debounceTime(200)
+            )
+
     .subscribe((state: BreakpointState) => {
       console.log('event');
       let NewscreenState = state.breakpoints; 
       NewscreenState["no_show"] = false;
-      if (this.screenState[this._Breakpoints.Small] != NewscreenState[this._Breakpoints.Small] || this.screenState[this._Breakpoints.XSmall] != NewscreenState[this._Breakpoints.XSmall]) {
+      if (this.screenState[this._Breakpoints.Small]  != NewscreenState[this._Breakpoints.Small]  || 
+          this.screenState[this._Breakpoints.XSmall] != NewscreenState[this._Breakpoints.XSmall] ||
+          this.screenState[this._Breakpoints.Medium] != NewscreenState[this._Breakpoints.Medium] ||
+          this.screenState[this._Breakpoints.Web] != NewscreenState[this._Breakpoints.Web] )
+         
+      {
         
         console.log('resize');
         this.screenState = NewscreenState;
@@ -178,10 +192,10 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
     });
   }
 
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event) {
-  //   let currWidth = event.target.innerWidth;
-  // }
+  //  @HostListener('window:resize', ['$event'])
+  //  onResize(event) {   
+  //   console.log('on resize');
+  //  }
 
 
   ngAfterViewInit() {
@@ -217,10 +231,12 @@ export class ReceptionFormComponent implements OnInit, OnDestroy, AfterViewInit 
   ReformatRoomstockGreed() {    
     if(this.screenState[this._Breakpoints.Small] || this.screenState[this._Breakpoints.XSmall]) {
       this.SmallFormat();
-      return;
+      
+    } else {
+      this.Format();
     }
       
-    this.Format();
+    this.changeDetector.detectChanges();
   }
 
   SmallFormat() {
