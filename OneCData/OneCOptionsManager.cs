@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace TestCOneConnection.OneCData
 {
@@ -15,8 +16,14 @@ namespace TestCOneConnection.OneCData
 
         public OneCOptionsManager(IOptions<OneCOptions> options)
         {
+            // получаем путь к файлу 
+            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
+            // путь к каталогу проекта
+            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+
             _options = options;
-            _optionspath = Directory.GetCurrentDirectory() + "\\onecoptions.json";
+            //_optionspath = Directory.GetCurrentDirectory() + "\\onecoptions.json";
+            _optionspath = pathToContentRoot + "\\onecoptions.json";
 
         }
 

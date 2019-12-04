@@ -36,7 +36,7 @@
                                    <input required [formControl]="BASE_URL" type="url"  matInput placeholder="Base URL"> 
                                    <mat-hint>Адрес http сервиса  </mat-hint> 
                                    <mat-icon matSuffix>mode_edit</mat-icon>
-                                   <mat-error >{{ getErrorMessage( BASE_URL ) }}</mat-error>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
                               </mat-form-field>   
                               
                          </li>
@@ -46,7 +46,7 @@
                                    <input required [formControl]="LOGIN" matInput placeholder="Login"> 
                                    <mat-hint>Имя пользователя 1С</mat-hint> 
                                    <mat-icon matSuffix>mode_edit</mat-icon>
-                                   <mat-error >{{ getErrorMessage( LOGIN ) }}</mat-error>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
                               </mat-form-field>   
                          </li>
                          
@@ -55,7 +55,7 @@
                                    <input required [formControl]="PASSWORD" type="password" matInput placeholder="Password"> 
                                    <mat-hint>Пароль пользователя 1С</mat-hint> 
                                    <mat-icon matSuffix>visibility_off</mat-icon>
-                                   <mat-error >{{ getErrorMessage( PASSWORD ) }}</mat-error>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
                               </mat-form-field>   
                          </li>
                     </ul>
@@ -69,7 +69,7 @@
                                    <input required [formControl]="REQUEST_TIMEOUT" type="number" matInput placeholder="Request timeout"> 
                                    <mat-hint>Время ожидания ответа от 1С (ms)</mat-hint> 
                                    <mat-icon matSuffix>filter_1</mat-icon>
-                                   <mat-error >{{ getErrorMessage( REQUEST_TIMEOUT ) }}</mat-error>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
                               </mat-form-field>   
                          </li>
                          
@@ -78,7 +78,7 @@
                                    <input required [formControl]="MAX_BADREQUEST_COUNT"  type="number" matInput placeholder="Max bad request count"> 
                                    <mat-hint>Допустимое количество "плохих" ответов 1С подряд</mat-hint> 
                                    <mat-icon matSuffix>filter_1</mat-icon>
-                                   <mat-error >{{ getErrorMessage( MAX_BADREQUEST_COUNT ) }}</mat-error>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
                               </mat-form-field>   
                          </li>
                          
@@ -87,7 +87,7 @@
                                    <input required [formControl]="PING_FREQUENCY" type="number" matInput placeholder="Ping frequency"> 
                                    <mat-hint>Частота фонового пинга для поддержания сессии (ms)</mat-hint> 
                                    <mat-icon matSuffix>filter_1</mat-icon>
-                                   <mat-error >{{ getErrorMessage( PING_FREQUENCY ) }}</mat-error>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
                               </mat-form-field>   
                          </li>
                          

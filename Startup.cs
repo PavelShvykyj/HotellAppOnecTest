@@ -65,7 +65,8 @@ namespace TestCOneConnection
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -97,7 +98,7 @@ namespace TestCOneConnection
 
             /// поскольку services.Add не создает екземпляр класса то первичный запуск 
             /// подключения к 1С делаем вручную тут а не в кострукторе класа как пердпологалось
-            OneCSessionManager.StartSessionAsync();
+            //OneCSessionManager.StartSessionAsync();
              
             //app.ApplicationServices.GetService<OneCSessionManager>().StartSessionAsync();
         }

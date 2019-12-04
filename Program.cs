@@ -7,21 +7,37 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting.WindowsServices;
+using System.Diagnostics;
 
 namespace TestCOneConnection
 {
     public class Program
     {
+
+
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+
+            // получаем путь к файлу 
+            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
+            // путь к каталогу проекта
+            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+
+            CreateWebHostBuilder(args).UseContentRoot(pathToContentRoot).UseStartup<Startup>().Build().RunAsService();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, config) => {
-                config.SetBasePath(Directory.GetCurrentDirectory());
+
+
+        WebHost.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, config) => {
+            // получаем путь к файлу 
+            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
+            // путь к каталогу проекта
+            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+
+            config.SetBasePath(pathToContentRoot);
                 config.AddJsonFile("onecoptions.json", optional: false, reloadOnChange: true);
-            })
-                .UseStartup<Startup>();
+            });
     }
 }

@@ -83,7 +83,7 @@ export class DateRangeSelectorComponent implements OnInit {
   @Input('AutoEmit')
   AutoEmit : boolean = false;
 
-  constructor(private Options : OptionsService) { }
+  constructor(public Options : OptionsService) { }
 
   ngOnInit() {
   }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Diagnostics;
 
 namespace TestCOneConnection.OneCData
 {
@@ -78,7 +79,7 @@ namespace TestCOneConnection.OneCData
             /// в нашем случае ExecuteStartSession нас это не устраивает так как вызовы пинг старт стоп могут пойти в перемешку
             /// посему нужно дождаться ответа await ExecuteTaskAsync и тогда вручную запускаем завешающий метод 
             /// new RestRequestAsyncHandle() - этот параметр оставляем для совместимости с ExecuteAsync (этот параметр передается в делегат)
-            ExecuteStartSession(response, new RestRequestAsyncHandle(), message);
+            await ExecuteStartSession(response, new RestRequestAsyncHandle(), message);
         }
 
         public async Task StartSessionAsync()
@@ -167,10 +168,10 @@ namespace TestCOneConnection.OneCData
             IMessage message = _logger.StartMessage("ping", new { });
             //Client.ExecuteAsync(request, (r, rh) => ExecutePing(r, rh, message), Method.GET);
             IRestResponse response = await _client.ExecuteTaskAsync(request);
-            ExecutePing(response, new RestRequestAsyncHandle(), message);
+             ExecutePing(response, new RestRequestAsyncHandle(), message);
         }
 
-        private void ExecutePing(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
+        private async void ExecutePing(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
         {
             message.additionalsparams = new { requeststatus = response.StatusCode, error = response.ErrorMessage, contenet = response.Content };
             _sessionstatus.LastResponseStatus = response.StatusCode;
@@ -187,7 +188,7 @@ namespace TestCOneConnection.OneCData
                 }
 
 
-                StartSessionAsync();
+               await  StartSessionAsync();
             }
             _sessionstatus.BadResponseCount = 0;
 
