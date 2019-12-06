@@ -23,8 +23,9 @@ namespace TestCOneConnection
             var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
             // путь к каталогу проекта
             var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+            pathToContentRoot = Directory.GetCurrentDirectory();
 
-            CreateWebHostBuilder(args).UseContentRoot(pathToContentRoot).UseStartup<Startup>().Build().RunAsService();
+            CreateWebHostBuilder(args).UseContentRoot(pathToContentRoot).UseStartup<Startup>().Build().Run(); //RunAsService();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -36,8 +37,11 @@ namespace TestCOneConnection
             // путь к каталогу проекта
             var pathToContentRoot = Path.GetDirectoryName(pathToExe);
 
+            pathToContentRoot = Directory.GetCurrentDirectory();
+
             config.SetBasePath(pathToContentRoot);
                 config.AddJsonFile("onecoptions.json", optional: false, reloadOnChange: true);
-            });
+                config.AddJsonFile("tcpoptions.json", optional: false, reloadOnChange: true);
+        });
     }
 }

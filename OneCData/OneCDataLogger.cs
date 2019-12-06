@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace TestCOneConnection.OneCData
 {
@@ -21,7 +21,7 @@ namespace TestCOneConnection.OneCData
         private List<IMessage> _messages;
         private Boolean _uselogg;
         public List<IMessage> Messages { get => _messages; }
-        
+        public Boolean uselogg { get => _uselogg; set  => _uselogg = value; }
 
         public OneCDataLogger(IOptions<OneCOptions> options)
         {

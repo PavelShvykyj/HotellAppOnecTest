@@ -1,34 +1,33 @@
 ﻿using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.IO;
 
-namespace TestCOneConnection.OneCData
+
+namespace TestCOneConnection.TCPData
 {
-    public class OneCOptionsManager : IOneCOptionsManager
+    public class TCPOptionsManager : ITCPOptionsManager
     {
-        private IOptions<OneCOptions> _options;
+        private IOptions<TCPOptions> _options;
         private readonly string _optionspath;
 
-        public OneCOptionsManager(IOptions<OneCOptions> options)
+        public TCPOptionsManager(IOptions<TCPOptions> options)
         {
+            _options = options;
             // получаем путь к файлу 
             var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
             // путь к каталогу проекта
             var pathToContentRoot = Path.GetDirectoryName(pathToExe);
 
             pathToContentRoot = Directory.GetCurrentDirectory();
+
             _options = options;
             //_optionspath = Directory.GetCurrentDirectory() + "\\onecoptions.json";
-            _optionspath = pathToContentRoot + "\\onecoptions.json";
+            _optionspath = pathToContentRoot + "\\tcpoptions.json";
 
         }
 
-        public string GetOneCOptions()
+        public string GetTCPOptions()
         {
             using (StreamReader OptionFileReader = new StreamReader(_optionspath))
             {
@@ -36,15 +35,15 @@ namespace TestCOneConnection.OneCData
             }
         }
 
-        public void SetOneCOption(IOneCOptions newoptions)
+        public void SetTCPOption(ITCPOptions newoptions)
         {
 
             if (newoptions == null)
             {
                 return;
             }
-            
-            
+
+
 
             if (!_options.Equals(newoptions))
             {
@@ -57,6 +56,7 @@ namespace TestCOneConnection.OneCData
             }
 
         }
+
 
     }
 }

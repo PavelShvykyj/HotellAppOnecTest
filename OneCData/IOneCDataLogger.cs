@@ -18,7 +18,6 @@ namespace TestCOneConnection.OneCData
     public interface IOneCDataLogger
     {
         List<IMessage> Messages { get; }
-
         IMessage StartMessage(string messagecontent, object addparams);
         void FinishMessage(IMessage message);
 

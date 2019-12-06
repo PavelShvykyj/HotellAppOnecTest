@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using TestCOneConnection.OneCData;
+using TestCOneConnection.TCPData;
 using TestCOneConnection.RequestProxy;
 
 namespace TestCOneConnection
@@ -26,7 +27,9 @@ namespace TestCOneConnection
 
             services.AddOptions();
             services.Configure<OneCOptions>(Configuration);
+            services.Configure<TCPOptions>(Configuration);
 
+            //// OneC part
             services.AddSingleton<IRestClientAccessor, RestClientAccessor> ();
             services.AddSingleton<IOneCDataLogger, OneCDataLogger>();
             services.AddSingleton<IOneCAPIManager, OneCAPIManager>();
@@ -35,6 +38,11 @@ namespace TestCOneConnection
             services.AddSingleton<IRequestProxy, ProxyServise>();
             services.AddSingleton<IOneCOptionsManager, OneCOptionsManager>();
 
+            //// TCP part 
+            services.AddSingleton<ITCPOptionsManager, TCPOptionsManager>();
+            services.AddSingleton<ITCPAPIManager, TCPAPIManager>();
+            services.AddSingleton<ITCPproxy, TCPProxy>();
+            services.AddSingleton<ITCPDataLogger, TCPDataLogger>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(opt =>
             {

@@ -25,8 +25,8 @@ namespace TestCOneConnection.RequestProxy
 
         private void InitDelegates()
         {
-            GetRoomStockDelegate     += _OneCDataProvider.APIManager.GetRoomStock;
-            SimpeProxyGetDelegate += _OneCDataProvider.APIManager.SimpleProxyGet;
+            GetRoomStockDelegate   += _OneCDataProvider.APIManager.GetRoomStock;
+            SimpeProxyGetDelegate  += _OneCDataProvider.APIManager.SimpleProxyGet;
             SimpeProxyPostDelegate += _OneCDataProvider.APIManager.SimpleProxyPost;
         }
 
