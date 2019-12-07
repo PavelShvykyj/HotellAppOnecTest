@@ -5,7 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
-using System.Diagnostics;
+using TestCOneConnection.CommonData;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TestCOneConnection.OneCData
 {
@@ -14,14 +15,11 @@ namespace TestCOneConnection.OneCData
         private IOptions<OneCOptions> _options;
         private readonly string _optionspath;
 
-        public OneCOptionsManager(IOptions<OneCOptions> options)
+        public OneCOptionsManager(IOptions<OneCOptions> options, IHostingEnvironment env)
         {
-            // получаем путь к файлу 
-            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
-            // путь к каталогу проекта
-            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+            string pathToContentRoot = EnviroumentDepend.GetPathToContentRoot(env.IsDevelopment());
 
-            pathToContentRoot = Directory.GetCurrentDirectory();
+            
             _options = options;
             //_optionspath = Directory.GetCurrentDirectory() + "\\onecoptions.json";
             _optionspath = pathToContentRoot + "\\onecoptions.json";

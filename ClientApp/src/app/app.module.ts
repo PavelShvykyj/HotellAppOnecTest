@@ -35,7 +35,7 @@ import { DateRangeSelectorComponent } from './date-range-selector/date-range-sel
 import { TCPOptionsFormComponent } from './tcp-options-form/tcp-options-form.component';
 import { TCPOptionsResolver } from './tcp-options-form/tcp-options-form.resolver';
 import { TCPSessionsFormComponent } from './tcp-sessions-form/tcp-sessions-form.component';
-
+import { TcptaskFormComponent } from './tcptask-form/tcptask-form.component';
 
 /// MATERIAL COMPONENTS ///
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -54,6 +54,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ButtonMenuComponent } from './button-menu/button-menu.component';      
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import {MatDialogModule} from "@angular/material";
+import {MatSelectModule} from '@angular/material/select';
+
 
 
 
@@ -78,8 +81,14 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
     ReceptionFormComponent,
     ReceptionSubperiodComponent,
     DateRangeSelectorComponent,
-    ButtonMenuComponent
+    ButtonMenuComponent,
+    TcptaskFormComponent
   ],
+
+  entryComponents: [
+    TcptaskFormComponent
+  ],
+
   imports: [
     /// MATERIAL COMPONENTS ///
     MatProgressSpinnerModule,
@@ -97,6 +106,8 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
     MatGridListModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatDialogModule,
+    MatSelectModule,
     /// MATERIAL COMPONENTS ///
     FlexLayoutModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

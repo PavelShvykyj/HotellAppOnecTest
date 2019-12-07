@@ -81,7 +81,7 @@ namespace TestCOneConnection.Controllers
             
             
             _proxy.AddTask(tcpdata);
-            return Ok();
+            return Ok(tcpdata);
         }
 
 

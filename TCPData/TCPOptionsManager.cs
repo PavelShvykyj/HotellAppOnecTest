@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.IO;
-
+using TestCOneConnection.CommonData;
 
 namespace TestCOneConnection.TCPData
 {
@@ -10,16 +11,14 @@ namespace TestCOneConnection.TCPData
     {
         private IOptions<TCPOptions> _options;
         private readonly string _optionspath;
+        
 
-        public TCPOptionsManager(IOptions<TCPOptions> options)
+
+        public TCPOptionsManager(IOptions<TCPOptions> options, IHostingEnvironment env)
         {
             _options = options;
-            // получаем путь к файлу 
-            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
-            // путь к каталогу проекта
-            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
-
-            pathToContentRoot = Directory.GetCurrentDirectory();
+            
+            string pathToContentRoot = EnviroumentDepend.GetPathToContentRoot(env.IsDevelopment());
 
             _options = options;
             //_optionspath = Directory.GetCurrentDirectory() + "\\onecoptions.json";

@@ -1,3 +1,4 @@
+import { ITCPTask } from './tcp-sessions-form/ITCPStatus';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -54,7 +55,7 @@ export class OptionsService {
 
 
   GetOptions() {
-    let connection = this.BASE_URL + "/Values/proxy";
+    let connection = this.BASE_URL + "/ONEC/proxy";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
     let proxyparametr : IProxyParametr = {
       URL : "options",
@@ -94,7 +95,7 @@ export class OptionsService {
       BodyParametr = JSON.stringify(newoptions);    
     }
     
-    let connection = this.BASE_URL + "/Values/proxy";
+    let connection = this.BASE_URL + "/ONEC/proxy";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
     let proxyparametr : IProxyParametr = {
       URL : "options",
@@ -117,7 +118,7 @@ export class OptionsService {
 
   GetOneCOptions() : Observable<string> {
 
-    let connection = this.BASE_URL + "/Values/onecoptions";
+    let connection = this.BASE_URL + "/ONEC/onecoptions";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
     
 
@@ -147,7 +148,7 @@ export class OptionsService {
 
 
   SetOneCOptions(options : IOneCOptions) {
-    let connection = this.BASE_URL + "/Values/onecoptions";
+    let connection = this.BASE_URL + "/ONEC/onecoptions";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
     
 
@@ -177,7 +178,7 @@ export class OptionsService {
   }
 
   GetSessionLog() {
-    let connection = this.BASE_URL + "/Values";
+    let connection = this.BASE_URL + "/ONEC";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     
     return this.http.get(connection, {
@@ -205,7 +206,7 @@ export class OptionsService {
   }
 
   GetOneCSesiionStatus() {
-    let connection = this.BASE_URL + "/Values/onecsessionstatus";
+    let connection = this.BASE_URL + "/ONEC/onecsessionstatus";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     
     return this.http.get(connection, {
@@ -233,7 +234,7 @@ export class OptionsService {
   }
 
   StartOneCSesiion() {
-    let connection = this.BASE_URL + "/Values/startonecsession";
+    let connection = this.BASE_URL + "/ONEC/startonecsession";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     
     return this.http.get(connection, {
@@ -259,7 +260,7 @@ export class OptionsService {
   }
 
   StopOneCSesiion() {
-    let connection = this.BASE_URL + "/Values/stoponecsession";
+    let connection = this.BASE_URL + "/ONEC/stoponecsession";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     return this.http.get(connection, {
       headers: headers,
@@ -286,5 +287,20 @@ export class OptionsService {
 
   }
 
+  AddTCPTask(newtask : ITCPTask) {
+    let connection = this.BASE_URL + "/TCP/addtask";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    return this.http.post(connection,JSON.stringify(newtask) ,{
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'json'
+    })
+
+
+  }
 
 }

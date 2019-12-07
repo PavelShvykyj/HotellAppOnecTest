@@ -1,0 +1,28 @@
+<h2 mat-dialog-title> Новая задача для TCP </h2>
+
+<mat-dialog-content [formGroup]="form">
+    <mat-form-field>
+        <mat-label>Тип задания</mat-label>
+        <mat-select formControlName="taskType" required>
+          <mat-option *ngFor="let index of tasktypes" [value]="index">
+            {{tasktype[index]}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-icon matPrefix> keyboard_arrow_left </mat-icon>
+        <input matInput
+               placeholder="строка команды"
+               formControlName="parametr"
+               required
+               >
+
+        <mat-hint><strong>комада для TCP хоста  </strong> </mat-hint>       
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="Close()">Close</button>
+    <button class="mat-raised-button"(click)="Save()">Save</button>
+</mat-dialog-actions>

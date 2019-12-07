@@ -9,35 +9,47 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
 using System.Diagnostics;
+using TestCOneConnection.CommonData;
 
 namespace TestCOneConnection
 {
     public class Program
     {
+        private static Boolean isDevelopment;
 
+        
 
         public static void Main(string[] args)
         {
 
-            // получаем путь к файлу 
-            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
-            // путь к каталогу проекта
-            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
-            pathToContentRoot = Directory.GetCurrentDirectory();
 
-            CreateWebHostBuilder(args).UseContentRoot(pathToContentRoot).UseStartup<Startup>().Build().Run(); //RunAsService();
+
+
+            var Builder = CreateWebHostBuilder(args);
+            string pathToContentRoot = EnviroumentDepend.GetPathToContentRoot(isDevelopment);
+
+            var Build = Builder.UseContentRoot(pathToContentRoot).UseStartup<Startup>().Build();
+
+            if (isDevelopment)
+            {
+                Build.Run();
+            }
+            else
+            {
+                Build.RunAsService();
+            }
+            
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 
 
         WebHost.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, config) => {
-            // получаем путь к файлу 
-            var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
-            // путь к каталогу проекта
-            var pathToContentRoot = Path.GetDirectoryName(pathToExe);
 
-            pathToContentRoot = Directory.GetCurrentDirectory();
+            
+            isDevelopment = hostingContext.HostingEnvironment.IsDevelopment();
+            string pathToContentRoot = EnviroumentDepend.GetPathToContentRoot(isDevelopment);
+
 
             config.SetBasePath(pathToContentRoot);
                 config.AddJsonFile("onecoptions.json", optional: false, reloadOnChange: true);

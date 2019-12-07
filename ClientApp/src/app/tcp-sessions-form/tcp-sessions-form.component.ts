@@ -3,10 +3,12 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable,  BehaviorSubject } from 'rxjs';
 import { OptionsService } from '../options.service'
-import { ITCPStatus, TCPTaskType } from './ITCPStatus';
+import { ITCPStatus, TCPTaskType, ITCPTask } from './ITCPStatus';
 import { TCPSessionLogSourse } from './tcp-session-logsourse'
 import { catchError, finalize } from 'rxjs/operators';
 import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { TcptaskFormComponent } from '../tcptask-form/tcptask-form.component';
 
 
 interface IBodyFlexStatus  {
@@ -97,7 +99,10 @@ export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   panelform : PanelFormComponent  
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
+  constructor(private breakpointObserver: BreakpointObserver, 
+              private OptionsService : OptionsService,
+              private dialog: MatDialog  
+    ) {
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
       this.themes = res.themes
       });
@@ -242,7 +247,26 @@ export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   AddTask() {
-    console.log("Add task");
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogref = this.dialog.open(TcptaskFormComponent,dialogConfig);
+    dialogref.afterClosed().subscribe(res => {
+        if(res) {
+          this.RequestAddTask(res as ITCPTask);
+        }
+    })
+  }
+
+  RequestAddTask(task : ITCPTask) {
+    this.sessionStatusUpdatingEventer.next(true);
+    this.OptionsService.AddTCPTask(task)
+      .pipe(finalize(() =>{
+        this.RefreshAll();
+        this.sessionStatusUpdatingEventer.next(false)}))
+        .toPromise()
+          .then(() =>this.ShowMessage("Задача добавлена",false))
+          .catch(err => this.ShowMessage("Ошибка при добавлении задачи",true));
   }
 
   ShowMessage(content : string , isError : boolean) {
@@ -278,3 +302,4 @@ export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
 
 
+ 

@@ -15,13 +15,13 @@ using TestCOneConnection.RequestProxy;
 namespace TestCOneConnection.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ONECController : Controller
     {
 
 
         private readonly IRequestProxy _proxy;
 
-        public ValuesController(IRequestProxy Proxy)
+        public ONECController(IRequestProxy Proxy)
         {
  
             _proxy = Proxy;
