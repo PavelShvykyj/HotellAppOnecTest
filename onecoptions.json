@@ -1,1 +1,1 @@
-{"BASE_URL":"http://localhost/base/hs/Worksheets/","LOGIN":"Admin","PASSWORD":"1","REQUEST_TIMEOUT":6000,"PING_FREQUENCY":5500,"USE_LOG":true,"MAX_BADREQUEST_COUNT":5}
+{"BASE_URL":"http://localhost/Base/hs/Worksheets/","LOGIN":"Admin","PASSWORD":"1","REQUEST_TIMEOUT":6000,"PING_FREQUENCY":5500,"USE_LOG":true,"MAX_BADREQUEST_COUNT":5}

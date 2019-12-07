@@ -1,0 +1,45 @@
+<h2 mat-dialog-title> Новая задача для 1C </h2>
+
+<mat-dialog-content [formGroup]="form">
+    <mat-form-field>
+        <mat-label>Тип запроса</mat-label>
+        <mat-select formControlName="Metod" required>
+          <mat-option  value="POST">
+            POST
+          </mat-option>
+          <mat-option  value="GET">
+            GET
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        
+        <input matInput
+               placeholder="API 1C"
+               formControlName="URL"
+               required
+               >
+
+        <mat-hint><strong>API 1C (Без базового URl)  </strong> </mat-hint>       
+    </mat-form-field>
+
+    <mat-form-field>
+        
+        <input matInput
+               placeholder="JSON тело команды"
+               formControlName="Body"
+               
+               >
+
+        <mat-hint><strong>не обязательно JSON тело запроса  </strong> </mat-hint>       
+    </mat-form-field>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="Close()">Close</button>
+    <button class="mat-raised-button"(click)="Save()">Save</button>
+</mat-dialog-actions>
+

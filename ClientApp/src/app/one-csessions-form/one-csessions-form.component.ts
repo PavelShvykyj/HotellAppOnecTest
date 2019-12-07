@@ -1,13 +1,16 @@
+import { IOneCOptions } from './../one-coptions-form/IOneCOptions';
 import {  IPanelContent } from './../IMenuContetnt';
 
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable,  BehaviorSubject } from 'rxjs';
-import { OptionsService } from '../options.service'
+import { OptionsService, IProxyParametr } from '../options.service'
 import { IOneCSessionStatus } from './IOneCSessionStatus';
 import { SessionLogSourse } from './one-csession-logsourse'
 import { catchError, finalize } from 'rxjs/operators';
 import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { OnectaskFormComponent } from '../onectask-form/onectask-form.component';
 
 
 interface IBodyFlexStatus  {
@@ -40,6 +43,11 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       {
         name : ["Запустить сессии"],
         iconeName : "lock_open",
+      },
+      
+      {
+        name : ["Выполнить задание"],
+        iconeName : "add_to_queue",
       },
     ],
     links : [ 
@@ -95,7 +103,9 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
   panelform : PanelFormComponent  
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService) {
+  constructor(private breakpointObserver: BreakpointObserver,
+              private OptionsService : OptionsService,
+              private dialog: MatDialog) {
     this.themesStateSubsciption = OptionsService.handler.subscribe(res => {
       this.themes = res.themes
       });
@@ -264,6 +274,9 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       case "Остановить сессии":
         this.StopOneCSesiion();
         break;
+      case "Выполнить задание":
+          this.AddTask();
+          break;      
       case "Печатные формы":
           console.log("Печатные формы ");
           break;
@@ -274,6 +287,39 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
    }
     
 
+  }
+  
+  async AddTask() {
+    
+    let baseurl : string;
+
+    await this.OptionsService.GetOneCOptionsAsynk()
+    .catch(() => baseurl = "")
+    .then((res) => {const onecoptions = (JSON.parse(res) as IOneCOptions); baseurl = onecoptions.BASE_URL;  });
+    
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "250px";
+    dialogConfig.data = {url : baseurl}
+    
+    const dialogref = this.dialog.open(OnectaskFormComponent,dialogConfig);
+    dialogref.afterClosed().subscribe(res => {
+        if(res) {
+          this.RequestAddTask(res as IProxyParametr);
+        }
+    })
+  }
+
+  RequestAddTask(task : IProxyParametr) {
+    this.sessionStatusUpdatingEventer.next(true);
+    this.OptionsService.AddOneCTask(task)
+      .pipe(finalize(() =>{
+        this.RefreshAll();
+        this.sessionStatusUpdatingEventer.next(false)}))
+        .toPromise()
+          .then((res) =>this.ShowMessage(res,false))
+          .catch(err => this.ShowMessage("Ошибка при добавлении задачи",true));
   }
 
 

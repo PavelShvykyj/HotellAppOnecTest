@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import { Component, OnInit, Inject } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import { ITCPTask, TCPTaskType } from '../tcp-sessions-form/ITCPStatus';

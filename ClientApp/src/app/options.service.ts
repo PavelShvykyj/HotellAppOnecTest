@@ -131,6 +131,22 @@ export class OptionsService {
     })
   }
 
+   GetOneCOptionsAsynk() : Promise<string> {
+
+    let connection = this.BASE_URL + "/ONEC/onecoptions";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    return  this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'text'
+    }).toPromise()
+  }
+
+
   GetTCPOptions() : Observable<string> {
 
     let connection = this.BASE_URL + "/TCP/tcpoptions";
@@ -302,5 +318,24 @@ export class OptionsService {
 
 
   }
+
+  AddOneCTask(newtask : IProxyParametr) {
+    let connection = this.BASE_URL + "/ONEC/proxy";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    console.log(JSON.stringify(newtask));
+
+    return this.http.post(connection, JSON.stringify(newtask) ,{
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'text'
+    })
+
+
+  }
+
 
 }

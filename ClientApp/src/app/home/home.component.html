@@ -1,14 +1,107 @@
-<h1>Hello, world!</h1>
-<p>Welcome to your new single-page application, built with:</p>
-<ul>
-  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
-<p>To help you get started, we've also set up:</p>
-<ul>
-  <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-  <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-  <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
-</ul>
-<p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+<mat-card class="m-2">
+    <mat-card-header>
+      <mat-card-title>Simple 1C TCP proxy server</mat-card-title>
+      <mat-card-subtitle>Служба осуществляет постоянную связь с HHTP сервисом 1С</mat-card-subtitle>
+      <mat-card-subtitle>Служба осуществляет постоянную связь с TCP хостом</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card-subtitle>
+          После запукска слсужбы необходимо инициализировать сессии связи на соответветсвующих закладках на панели. 
+        </mat-card-subtitle>
+    </mat-card-content> 
+    
+    <mat-card-footer class="ml-5"> 
+        Описание и консультацию можно получить по нашим адресам:
+        <mat-card-subtitle>телл. +380509999999 </mat-card-subtitle>
+        <mat-card-subtitle>email email@domen.com  </mat-card-subtitle>
+    </mat-card-footer>
+</mat-card>  
+
+<div 
+class="m-2"
+fxLayout="row"
+fxLayoutAlign="center start">
+
+<div fxFlex class="m-2">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Базовые API 1C (http://localhost:5000/api/ONEC/) </mat-card-title>
+        </mat-card-header>   
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item >
+                  <h5 matLine> proxy POST/GET </h5>
+                  <p matLine>
+                    <span> Обратиться к серверу 1С с  POST/GET запросом  </span>
+                  </p>
+                </mat-list-item>
+                
+                <mat-list-item >
+                 <h5 matLine> options POST/GET </h5>
+                  <p matLine>
+                    <span> Сохранить\Получить параметры связи с сервером 1С  </span>
+                  </p>
+                </mat-list-item>
+          
+                <mat-list-item >
+                  <h5 matLine> startonecsession \ stoponecsession GET </h5>
+                   <p matLine>
+                     <span> Запустить\Остановить связь с сервером 1С  </span>
+                   </p>
+                 </mat-list-item>
+           
+                 <mat-list-item >
+                  <h5 matLine> onecsessionstatus GET </h5>
+                   <p matLine>
+                     <span> Получить статус связи с сервером 1С  </span>
+                   </p>
+                 </mat-list-item>
+              </mat-list>        
+        
+        </mat-card-content>  
+    </mat-card>
+</div>
+
+<div fxFlex class="m-2">
+    <mat-card>
+        <mat-card-header>
+          <mat-card-title>Базовые API TCP (http://localhost:5000/api/TCP/) </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list-item >
+                <h5 matLine> addtask POST </h5>
+                <p matLine>
+                  <span> Обратиться к серверу TCP с запросом READ | WRIGHT </span>
+                </p>
+              </mat-list-item>
+              
+              <mat-list-item >
+               <h5 matLine> tcpoptions POST/GET </h5>
+                <p matLine>
+                  <span> Сохранить\Получить параметры связи с сервером TCP </span>
+                </p>
+              </mat-list-item>
+          
+              <mat-list-item >
+                <h5 matLine> start \ stop GET </h5>
+                 <p matLine>
+                   <span> Запустить\Остановить связь с сервером TCP  </span>
+                 </p>
+               </mat-list-item>
+          
+               <mat-list-item >
+                <h5 matLine> tcpstatus GET </h5>
+                 <p matLine>
+                   <span> Получить статус связи с сервером TCP  </span>
+                 </p>
+               </mat-list-item>
+                  
+        </mat-card-content>  
+    </mat-card>
+</div>
+
+
+</div>  
+
+
+

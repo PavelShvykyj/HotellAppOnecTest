@@ -56,6 +56,7 @@ import { ButtonMenuComponent } from './button-menu/button-menu.component';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import {MatDialogModule} from "@angular/material";
 import {MatSelectModule} from '@angular/material/select';
+import { OnectaskFormComponent } from './onectask-form/onectask-form.component';
 
 
 
@@ -82,11 +83,13 @@ import {MatSelectModule} from '@angular/material/select';
     ReceptionSubperiodComponent,
     DateRangeSelectorComponent,
     ButtonMenuComponent,
-    TcptaskFormComponent
+    TcptaskFormComponent,
+    OnectaskFormComponent
   ],
 
   entryComponents: [
-    TcptaskFormComponent
+    TcptaskFormComponent,
+    OnectaskFormComponent
   ],
 
   imports: [

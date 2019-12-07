@@ -27,8 +27,6 @@ namespace TestCOneConnection.Controllers
             _proxy = Proxy;
         }
 
-        
-        
         // GET: api/<controller>
         [HttpGet]
         public  IActionResult  Get()
@@ -86,9 +84,6 @@ namespace TestCOneConnection.Controllers
             return Ok(newoptions);
         }
 
-
-        
-
         [HttpGet("roomstock/{id}")]
         public async Task<IActionResult> GetRoomStock(string Id)
         {
@@ -104,7 +99,6 @@ namespace TestCOneConnection.Controllers
 
             return Ok(response.FormatedAswer);
         }
-
 
         [HttpPost("proxy")]
         public async Task<IActionResult> SimpleProxyPost([FromBody] ProxyParametrDTO proxyParametr)

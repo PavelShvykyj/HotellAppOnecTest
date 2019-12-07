@@ -250,6 +250,7 @@ export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
+    dialogConfig.width = "300px"
     const dialogref = this.dialog.open(TcptaskFormComponent,dialogConfig);
     dialogref.afterClosed().subscribe(res => {
         if(res) {
