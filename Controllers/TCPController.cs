@@ -74,12 +74,7 @@ namespace TestCOneConnection.Controllers
             return Ok(newoptions);
         }
 
-
         
-
-        
-
-
         [HttpPost("addtask")]
         public IActionResult AddTask([FromBody] ITCPTask tcpdata)
         {

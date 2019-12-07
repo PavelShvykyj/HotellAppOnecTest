@@ -3,7 +3,7 @@
               'contrast-theme-nav': themes['contrast']}">
 
   <mat-toolbar class="mat-navbar dark mb-1">
-    <a class="mat-nav-link" [routerLink]='["/"]'>Simple Hotel</a>
+    <a class="mat-nav-link" [routerLink]='["/"]'>Simple 1C-TCP proxy</a>
  
     <span class="m-auto"></span> <!-- разделитель создает пространство в флекс контейнере за счет авто марджина -->
 
@@ -41,8 +41,8 @@
       </button> -->
 
 
-      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/roomstock" routerLinkActive="link-active">
-        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">Roomstock</span>
+      <button fxFlex="1 1 auto" class="dark mat-nav-item mat-nav-link" mat-list-item routerLink="/tcpoptions" routerLinkActive="link-active">
+        <span *ngIf="screenState[_Breakpoints.Large] || screenState[_Breakpoints.Medium]">TCP options</span>
         <mat-icon class="px-2">apps</mat-icon>
       </button>
     </mat-action-list>
@@ -82,9 +82,9 @@
         <span>shablon</span>
       </button> -->
 
-      <button class="dark mat-nav-item no-outline" mat-menu-item routerLink="/roomstock" routerLinkActive="link-active">
+      <button class="dark mat-nav-item no-outline" mat-menu-item routerLink="/tcpoptions" routerLinkActive="link-active">
         <mat-icon>apps</mat-icon>
-        <span>Roomstock</span>
+        <span>TCP options</span>
       </button>
     
     </mat-menu>

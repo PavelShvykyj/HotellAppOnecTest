@@ -1,0 +1,111 @@
+
+<!-- CONTAINER  -->
+<div [fxLayout]="screenState[_Breakpoints.XSmall] ? 'column-reverse' : 'row'"
+     class="main-block" 
+     fxLayoutAlign="start stretch"
+     [ngClass]="{'brown-theme-panel': themes['brown'],
+     'grey-theme-panel': themes['grey'],
+     'contrast-theme-panel': themes['contrast']}"
+     >
+
+     <!-- PANEL  -->
+     <panel-form [panelcontent]="panelcontent" (actioneventer)="OnPanelAction($event)" > </panel-form>
+
+     <!-- BODY  -->
+     <div 
+     [fxLayout]="(BodyLayout$ | async).BodyLayout"
+     [fxLayoutAlign]="(BodyLayout$ | async).BodyAlign"
+     fxFlex="1 1 auto"
+     class="form-body p-1 w-100  scrollable">
+               
+     <mat-card fxFlex="1 1 " class="m-2">
+          <mat-card-header>
+               <mat-card-title>Текущая активная сессия</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+               <ul  class="list-group">
+                    <li class="list-group-item"> Связь установлена : {{sessionstatus.connected}} </li>
+                    <li class="list-group-item"> Заданий в очереди : {{sessionstatus.bufersize}}</li>
+                    <li class="list-group-item"> Сейчас выполняю : {{tasktype[sessionstatus.workon.taskType]}} </li>
+                    <li class="list-group-item"> C параметром : {{sessionstatus.workon.parametr}} </li>
+               </ul>
+          </mat-card-content>
+
+          <mat-card-footer>
+               <preloadpage class="w-100 h-100" [spindiametr]=25 *ngIf="sessionStatusUpdating$ | async"></preloadpage>
+          </mat-card-footer>     
+
+          <mat-card-actions>
+               <button fxFlex  class="secondry" mat-raised-button (click)="GetOneCSesiionStatus()"> Обновить </button>
+          </mat-card-actions>
+
+     </mat-card>
+
+
+     <mat-card fxFlex="4 1 " class="m-2">
+          <mat-card-header>
+               <mat-card-title>Лог сессий 1С</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content >
+               <div class="table-container">
+                    <mat-table   [dataSource]="dataSource">
+                         <ng-container matColumnDef="start">
+                              <mat-header-cell *matHeaderCellDef>Start</mat-header-cell>
+                              <mat-cell *matCellDef="let element"> {{element.start |  date: 'mediumTime'}} </mat-cell>
+                         </ng-container>
+               
+                         <ng-container matColumnDef="content">
+                                   <mat-header-cell mat-header-cell *matHeaderCellDef>Content</mat-header-cell>
+                                   <mat-cell *matCellDef="let element"> {{element.content}} </mat-cell>
+                         </ng-container>
+               
+                         <ng-container matColumnDef="duration">
+                              <mat-header-cell mat-header-cell *matHeaderCellDef>Duration</mat-header-cell>
+                              <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
+                         </ng-container>
+                    
+                         <ng-container matColumnDef="status">
+                              <mat-header-cell mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                              <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.requeststatus}} </mat-cell>
+                         </ng-container>
+                    
+                         <ng-container matColumnDef="error">
+                              <mat-header-cell mat-header-cell *matHeaderCellDef>Error</mat-header-cell>
+                              <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.error}} </mat-cell>
+                         </ng-container>
+                    
+                         <ng-container matColumnDef="errorcontent">
+                                   <mat-header-cell mat-header-cell *matHeaderCellDef>Error content</mat-header-cell>
+                                   <mat-cell mat-cell *matCellDef="let element"> {{element.additionalsparams?.contenet}} </mat-cell>
+                         </ng-container>
+               
+                         
+                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+               </div>
+          </mat-card-content>
+
+          <mat-card-footer>
+               <preloadpage class="w-100 h-100" [spindiametr]=25 *ngIf="dataSource.loading$ | async"></preloadpage>
+          </mat-card-footer>     
+
+          <mat-card-actions>
+               <button fxFlex  class="secondry" mat-raised-button (click)="RefreshLog()"> Обновить </button>
+          </mat-card-actions>
+
+     </mat-card>
+
+
+
+     
+     
+    
+     
+     
+     </div>
+</div>
+
+

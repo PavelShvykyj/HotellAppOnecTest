@@ -1,11 +1,10 @@
-import {  IPanelContent } from './../IMenuContetnt';
-
+import { IPanelContent } from '../IMenuContetnt';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { Subscription, Observable,  BehaviorSubject } from 'rxjs';
 import { OptionsService } from '../options.service'
-import { IOneCSessionStatus } from './IOneCSessionStatus';
-import { SessionLogSourse } from './one-csession-logsourse'
+import { ITCPStatus, TCPTaskType } from './ITCPStatus';
+import { TCPSessionLogSourse } from './tcp-session-logsourse'
 import { catchError, finalize } from 'rxjs/operators';
 import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
 
@@ -17,11 +16,11 @@ interface IBodyFlexStatus  {
 
 
 @Component({
-  selector: 'one-csessions-form',
-  templateUrl: './one-csessions-form.component.html',
-  styleUrls: ['./one-csessions-form.component.scss'],
+  selector: 'tcp-sessions-form',
+  templateUrl: './tcp-sessions-form.component.html',
+  styleUrls: ['./tcp-sessions-form.component.scss'],
 })
-export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   themes = {
     "brown" : true,
@@ -41,6 +40,12 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
         name : ["Запустить сессии"],
         iconeName : "lock_open",
       },
+
+      {
+        name : ["Выполнить задание"],
+        iconeName : "add_to_queue",
+      },
+
     ],
     links : [ 
       {
@@ -50,15 +55,15 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       },
 
       {
-        name : ["Настройки 1C"],
-        iconeName : "build",
-        link : "/onecoptions"
+        name : ["Настройки TCP"],
+        iconeName : "wifi_tethering",
+        link : "/tcpoptions"
       },
 
       {
-        name : ["Состояние", "подключения к 1С"],
+        name : ["Состояние", "подключения к TCP"],
         iconeName : "av_timer",
-        link : "/counter"
+        link : "/tcpcounter"
       }
      ],
     print : [      
@@ -69,27 +74,24 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
      ]
     }
 
-
-  
   _Breakpoints : typeof Breakpoints = Breakpoints;
-  
+  tasktype : typeof TCPTaskType = TCPTaskType
   screenState : {[key : string] : boolean } = {"no_show" : true}; 
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
   messagesSubsciption : Subscription ;
-  
   BodyLayoutEventer = new BehaviorSubject<IBodyFlexStatus>({BodyLayout : "row", BodyAlign : "start start"});
   BodyLayout$ : Observable<IBodyFlexStatus> = this.BodyLayoutEventer.asObservable();
   
   sessionStatusUpdatingEventer = new BehaviorSubject<boolean>(false);
   sessionStatusUpdating$ = this.sessionStatusUpdatingEventer.asObservable();
   
-  sessionstatus : IOneCSessionStatus = this.EmptyOneCSessionStatus()
+  sessionstatus : ITCPStatus = this.EmptyTCPSessionStatus()
   options;
   
   /// table options
   displayedColumns: string[] = ['start', 'content', 'duration', 'status', 'error', 'errorcontent'];
-  dataSource :  SessionLogSourse;
+  dataSource :  TCPSessionLogSourse;
 
   @ViewChild(PanelFormComponent, {static : false})
   panelform : PanelFormComponent  
@@ -128,21 +130,14 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
       this.BodyLayoutEventer.next(BodyFlexStatus);
       
     });
-  
-    
-    
-
   }
 
-   ngAfterViewInit() {
+  ngAfterViewInit() {
     this.StarterMessages();
   }
 
-
   ngOnInit() {
-   
-    
-    this.dataSource = new SessionLogSourse(this.OptionsService);
+    this.dataSource = new TCPSessionLogSourse(this.OptionsService);
     this.messagesSubsciption = this.dataSource.messages$.subscribe(message  =>  this.ShowMessage(message.message_content, message.isError));
     this.RefreshAll();
   }
@@ -174,22 +169,22 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
     return themeName;
   }
 
-
   StarterMessages() {
 
 
-    this.ShowMessage("На этой странице можно управлять сессиями сервиса 1С.",false);
+    this.ShowMessage("На этой странице можно управлять сессиями TCP сервиса.",false);
  
   }
 
-
-  EmptyOneCSessionStatus() : IOneCSessionStatus {
+  EmptyTCPSessionStatus() : ITCPStatus {
 
     return  {    
-      LastResponseStatus : 0,
-      BadResponseCount : 0,
-      PingTimerStarted : false, 
-      OneCSesionId : ""
+      connected : false,
+      workon : { 
+        taskType : TCPTaskType.reconnect,
+        parametr : "non"
+      },
+      bufersize : 0
     }
 
   }
@@ -198,23 +193,23 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
     this.dataSource.GetLog();
   }
 
-
   GetOneCSesiionStatus() {
 
-    this.sessionstatus = this.EmptyOneCSessionStatus();
+    this.sessionstatus = this.EmptyTCPSessionStatus();
     this.sessionStatusUpdatingEventer.next(true);
     
-    this.OptionsService.GetOneCSesiionStatus()
+    this.OptionsService.GetTCPSesiionStatus()
       .pipe(
         catchError((err)=>{
           console.log(err);
           this.ShowMessage("Ошибка при обновлении сессии.", true)
-          return JSON.stringify(this.EmptyOneCSessionStatus())}),
+          return JSON.stringify(this.EmptyTCPSessionStatus())}),
         finalize(() => {this.sessionStatusUpdatingEventer.next(false);}))
       .subscribe(res => 
         {
           this.ShowMessage( "Состояние сессии обновлено.", false)
-          this.sessionstatus = JSON.parse(res);});
+          this.sessionstatus = JSON.parse(res);
+        });
   }
 
   RefreshAll() {
@@ -224,51 +219,53 @@ export class OneCSessionsFormComponent implements OnInit, OnDestroy, AfterViewIn
  
   StartOneCSesiion() {
     this.sessionStatusUpdatingEventer.next(true);
-    this.OptionsService.StartOneCSesiion()
+    this.OptionsService.StartTCPSesiion()
       .pipe(finalize(() =>{
         this.RefreshAll();
         this.sessionStatusUpdatingEventer.next(false)}))
         .toPromise()
-          .then(() =>this.ShowMessage( "Прошел запрос на соединение с 1С.",false))
-          .catch(err => this.ShowMessage("Ошибка при запросе на соединение с 1С.",true));
+          .then(() =>this.ShowMessage( "Прошел запрос на соединение с TCP",false))
+          .catch(err => this.ShowMessage("Ошибка при запросе на соединение с TCP",true));
   }
 
   StopOneCSesiion() {
     this.sessionStatusUpdatingEventer.next(true);
-    this.OptionsService.StopOneCSesiion()
+    this.OptionsService.StopTCPSesiion()
     .pipe(finalize(() =>{
       this.RefreshAll();
       this.sessionStatusUpdatingEventer.next(false)}))
       .toPromise()
-        .then(() =>this.ShowMessage("Прошел запрос на разрыв 1С.",false))
-          .catch(err => this.ShowMessage("Ошибка при запросе на соединение с 1С.", true));
+        .then(() =>this.ShowMessage("Прошел запрос на разрыв TCP",false))
+          .catch(err => this.ShowMessage("Ошибка при запросе на разрыв TCP", true));
     
     this.RefreshAll();
+  }
+
+  AddTask() {
+    console.log("Add task");
   }
 
   ShowMessage(content : string , isError : boolean) {
     if(this.panelform.messages){
       this.panelform.messages.push({message_content : content, isError :  isError} )
     }
+    
   }
 
-
   OnPanelAction(action : string ) {
-   
-
     switch (action) {
      case "Запустить сессии":
        this.StartOneCSesiion();
        break;
-   
-      case "Остановить сессии":
+     case "Остановить сессии":
         this.StopOneCSesiion();
         break;
-      case "Печатные формы":
+     case "Выполнить задание":
+          this.AddTask();
+          break;
+     case "Печатные формы":
           console.log("Печатные формы ");
           break;
-        
-     
      default:
        break;
    }

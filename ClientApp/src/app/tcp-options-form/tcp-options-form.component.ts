@@ -6,7 +6,7 @@ import { Subscription, Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { OptionsService } from '../options.service'
 import { ActivatedRoute } from '@angular/router';
-import { IOneCOptions } from './IOneCOptions';
+import { ITCPOptions } from './ITCPOptions';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PanelFormComponent } from '../panel_form_shablon/panel-form.component';
 import { IPanelContent } from '../IMenuContetnt';
@@ -15,12 +15,12 @@ import { IPanelContent } from '../IMenuContetnt';
 
 
 @Component({
-  selector: 'one-coptions-form',
-  templateUrl: './one-coptions-form.component.html',
-  styleUrls: ['./one-coptions-form.component.scss'],
+  selector: 'tcp-options-form',
+  templateUrl: './tcp-options-form.component.html',
+  styleUrls: ['./tcp-options-form.component.scss'],
 
 })
-export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TCPOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   themes = {
     "brown" : false,
@@ -34,7 +34,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   screnStateSubsciption : Subscription ;
   themesStateSubsciption : Subscription ;
   
-  options : IOneCOptions;
+  options : ITCPOptions;
   form : FormGroup;
 
   @ViewChild(PanelFormComponent, {static : false})
@@ -50,16 +50,15 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
       },
 
       {
-        name : ["Настройки 1C"],
-        iconeName : "build",
-        link : "/onecoptions"
+        name : ["Настройки TCP"],
+        iconeName : "wifi_tethering",
+        link : "/tcpoptions"
       },
-      
 
       {
-        name : ["Состояние", "подключения к 1С"],
+        name : ["Состояние", "подключения к TCP"],
         iconeName : "av_timer",
-        link : "/counter"
+        link : "/tcpcounter"
       }
      ],
     print : [      
@@ -73,15 +72,14 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(private breakpointObserver: BreakpointObserver, private OptionsService : OptionsService, private route: ActivatedRoute) {
     
-    this.options = this.route.snapshot.data.onecoptions;
+    this.options = this.route.snapshot.data.tcpoptions;
     
     this.form = new FormGroup({ 
-      'BASE_URL' : new FormControl(this.options.BASE_URL, Validators.required),
-      'LOGIN' : new FormControl(this.options.LOGIN, Validators.required),
-      'MAX_BADREQUEST_COUNT' : new FormControl(this.options.MAX_BADREQUEST_COUNT, [Validators.required, Validators.min(1)]),
-      'PASSWORD' : new FormControl(this.options.PASSWORD, Validators.required),
-      'PING_FREQUENCY' : new FormControl(this.options.PING_FREQUENCY, [Validators.required, Validators.min(1000)]),
-      'REQUEST_TIMEOUT' : new FormControl(this.options.REQUEST_TIMEOUT, [Validators.required, Validators.min(1000)]),
+      'TIMEOUT' : new FormControl(this.options.TIMEOUT, Validators.required),
+      'LONG_TIMEOUT' : new FormControl(this.options.LONG_TIMEOUT, Validators.required),
+      'SHORT_TIMEOUT' : new FormControl(this.options.SHORT_TIMEOUT, [Validators.required, Validators.min(1)]),
+      'HOST' : new FormControl(this.options.HOST, Validators.required),
+      'PORT' : new FormControl(this.options.PORT, Validators.required),
       'USE_LOG' : new FormControl(this.options.USE_LOG)
     })
 
@@ -138,7 +136,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   StarterMessages() {
-    this.ShowMessage("На этой странице настраиваются параметры подключения к серверу 1C", false);
+    this.ShowMessage("На этой странице настраиваются параметры подключения к TCP серверу", false);
   }
 
   getErrorMessage(control : FormControl ) : string {
@@ -162,7 +160,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     .toPromise()
     .then(res =>
       {
-        this.form.setValue((JSON.parse(res) as IOneCOptions));
+        this.form.setValue((JSON.parse(res) as ITCPOptions));
         this.ShowMessage("Настройки успешно считаны", false);
       })
     .catch(err =>
@@ -181,7 +179,7 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
     
     
     this.OptionsService
-    .SetOneCOptions(this.form.value)
+    .SetTCPOptions(this.form.value)
     .toPromise()
     .then(res =>
       {
@@ -208,23 +206,26 @@ export class OneCOptionsFormComponent implements OnInit, OnDestroy, AfterViewIni
  
   //  FORM GET SET
 
-  get BASE_URL() {
-    return this.form.get('BASE_URL');
+ 
+  
+  
+   
+
+
+  get TIMEOUT() {
+    return this.form.get('TIMEOUT');
   }
-  get LOGIN() {
-    return this.form.get('LOGIN');
+  get LONG_TIMEOUT() {
+    return this.form.get('LONG_TIMEOUT');
   }
-  get MAX_BADREQUEST_COUNT() {
-    return this.form.get('MAX_BADREQUEST_COUNT');
+  get SHORT_TIMEOUT() {
+    return this.form.get('SHORT_TIMEOUT');
   }
-  get PASSWORD() {
-    return this.form.get('PASSWORD');
+  get HOST() {
+    return this.form.get('HOST');
   }
-  get PING_FREQUENCY() {
-    return this.form.get('PING_FREQUENCY');
-  }
-  get REQUEST_TIMEOUT() {
-    return this.form.get('REQUEST_TIMEOUT');
+  get PORT() {
+    return this.form.get('PORT');
   }
     
   get USE_LOG() {

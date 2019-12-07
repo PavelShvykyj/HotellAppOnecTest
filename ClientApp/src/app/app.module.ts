@@ -32,6 +32,9 @@ import { OneCOptionsResolver } from './one-coptions-form/one-coptions-form.resol
 import { ReceptionFormComponent } from './reception_form/reception-form.component';
 import { ReceptionSubperiodComponent } from './reception-subperiod/reception-subperiod.component';
 import { DateRangeSelectorComponent } from './date-range-selector/date-range-selector.component';
+import { TCPOptionsFormComponent } from './tcp-options-form/tcp-options-form.component';
+import { TCPOptionsResolver } from './tcp-options-form/tcp-options-form.resolver';
+import { TCPSessionsFormComponent } from './tcp-sessions-form/tcp-sessions-form.component';
 
 
 /// MATERIAL COMPONENTS ///
@@ -53,6 +56,7 @@ import { ButtonMenuComponent } from './button-menu/button-menu.component';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 
 
+
 /// MATERIAL COMPONENTS ///
 
 
@@ -65,7 +69,9 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
     FetchDataComponent,
     RoomstockComponent,
     OneCOptionsFormComponent,
+    TCPOptionsFormComponent,
     OneCSessionsFormComponent,
+    TCPSessionsFormComponent,
     AppOptionsFormComponent,
     PanelFormComponent,
     PreloadpageComponent,
@@ -106,16 +112,19 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: OneCSessionsFormComponent },
+      { path: 'tcpcounter', component: TCPSessionsFormComponent },
       { path: 'fetch-data', component: DateRangeSelectorComponent },
       { path: 'roomstock', component: ReceptionFormComponent },
       { path: 'appoptions', component: AppOptionsFormComponent },
       { path: 'onecoptions', component: OneCOptionsFormComponent, resolve : {onecoptions : OneCOptionsResolver} },
+      { path: 'tcpoptions', component: TCPOptionsFormComponent, resolve : {tcpoptions : TCPOptionsResolver} },
       { path: 'shablon', component: PanelFormComponent },
     ])
   ],
   providers: [RouterEventHendlerService,
               OptionsService,
               OneCOptionsResolver,
+              TCPOptionsResolver,
               MatDatepickerModule,
               {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
               ],

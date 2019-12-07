@@ -1,0 +1,102 @@
+
+<!-- CONTAINER  -->
+<div [fxLayout]="screenState[_Breakpoints.XSmall] ? 'column-reverse' : 'row'"
+     class="main-block" 
+     fxLayoutAlign="start stretch"
+     [ngClass]="{'brown-theme-panel': themes['brown'],
+     'grey-theme-panel': themes['grey'],
+     'contrast-theme-panel': themes['contrast']}"
+     >
+
+     <panel-form [panelcontent]="panelcontent" (actioneventer)="OnPanelAction($event)" > </panel-form>
+
+     <!-- BODY  -->
+     <div 
+     fxLayout="row"
+     fxLayoutAlign="center center"  
+     fxFlex="1 1 auto"
+     class="form-body p-1 w-100  scrollable">
+      
+     
+     <mat-card   class="body-card">
+          <mat-card-header >
+            <div mat-card-avatar class="header-image"></div>  <!-- header-image background-image: url('путь к картинке заголовка'); background-size: cover; -->
+               
+            <mat-card-title>Настройки подключения к TCP хосту</mat-card-title>
+            <mat-card-subtitle>Обязательны для работы с TCP</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content >
+               <form fxLayout="row" [formGroup]="form">
+                    <mat-divider ></mat-divider>
+                    <ul fxFlex class="list-group list-group-flush">
+                         <h6 class="list-group-item ">Параметры хоста </h6>
+                         <li class="list-group-item "> 
+                              <mat-form-field color='accent' class="w-100">  
+                                   <input required [formControl]="HOST"   matInput placeholder="TCP адрес"> 
+                                   <mat-hint> TCP адрес вида 192.168.0.100 </mat-hint> 
+                                   <mat-icon matSuffix>mode_edit</mat-icon>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
+                              </mat-form-field>   
+                              
+                         </li>
+               
+                         <li class="list-group-item "> 
+                              <mat-form-field  color='accent' class="w-100">  
+                                   <input required [formControl]="PORT" type="number" matInput placeholder="Порт"> 
+                                   <mat-hint>Номер порта </mat-hint> 
+                                   <mat-icon matSuffix>mode_edit</mat-icon>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
+                              </mat-form-field>   
+                         </li>
+                         
+                         
+                    </ul>
+
+                    
+                    <mat-divider ></mat-divider>     
+                    <ul fxFlex class="list-group list-group-flush">
+                         <h6 class="list-group-item ">Параметры запросов </h6>     
+                         <li  class="list-group-item"> 
+                              <mat-form-field  color='accent' class="w-100">  
+                                   <input required [formControl]="TIMEOUT" type="number" matInput placeholder="time out"> 
+                                   <mat-hint>Время на подключение к хосту  (ms)</mat-hint> 
+                                   <mat-icon matSuffix>filter_1</mat-icon>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                              <mat-form-field color='accent' class="w-100">  
+                                   <input required [formControl]="SHORT_TIMEOUT"  type="number" matInput placeholder="short time out"> 
+                                   <mat-hint>Допустимое время записи в порт  (ms)</mat-hint> 
+                                   <mat-icon matSuffix>filter_1</mat-icon>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                               <mat-form-field  color='accent' class="w-100">  
+                                   <input required [formControl]="LONG_TIMEOUT" type="number" matInput placeholder="long time out"> 
+                                   <mat-hint>Период на чтение из порта (ms)</mat-hint> 
+                                   <mat-icon matSuffix>filter_1</mat-icon>
+                                   <mat-error >'Значение должно быть заполнено'</mat-error>
+                              </mat-form-field>   
+                         </li>
+                         
+                         <li class="list-group-item"> 
+                              <mat-checkbox  [formControl]="USE_LOG"  fxFlex> Использовать лог</mat-checkbox>
+                         </li>     
+                    </ul>
+               </form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button class="secondry" mat-raised-button (click)="Save()">Сохранить</button>
+            <button class="secondry" mat-raised-button (click)="Cansel()">Отмена</button>
+          </mat-card-actions>
+     </mat-card>
+     
+     </div>
+</div>
+
+

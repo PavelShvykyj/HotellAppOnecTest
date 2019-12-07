@@ -1,7 +1,9 @@
+import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IOneCOptions } from './one-coptions-form/IOneCOptions';
+import { ITCPOptions } from './tcp-options-form/ITCPOptions';
 
 export interface  IProxyParametr
 {
@@ -128,8 +130,39 @@ export class OptionsService {
     })
   }
 
+  GetTCPOptions() : Observable<string> {
+
+    let connection = this.BASE_URL + "/TCP/tcpoptions";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'text'
+    })
+  }
+
+
   SetOneCOptions(options : IOneCOptions) {
     let connection = this.BASE_URL + "/Values/onecoptions";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
+    
+
+    return this.http.post(connection,JSON.stringify(options) ,{
+      headers: headers,
+      observe: 'body',
+      withCredentials: false,
+      reportProgress: false,
+      responseType: 'text'
+    })
+
+  }
+
+  SetTCPOptions(options : ITCPOptions) {
+    let connection = this.BASE_URL + "/TCP/tcpoptions";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
     
 
@@ -156,6 +189,21 @@ export class OptionsService {
     })
   }
 
+  GetTCPSessionLog() {
+    let connection = this.BASE_URL + "/TCP";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    })
+
+
+  }
+
   GetOneCSesiionStatus() {
     let connection = this.BASE_URL + "/Values/onecsessionstatus";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
@@ -170,8 +218,35 @@ export class OptionsService {
 
   }
 
+  GetTCPSesiionStatus() {
+    let connection = this.BASE_URL + "/TCP/tcpstatus";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'json'
+    })
+    .pipe(map(res => {return JSON.stringify(res)} )); 
+  }
+
   StartOneCSesiion() {
     let connection = this.BASE_URL + "/Values/startonecsession";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    });
+  }
+
+  StartTCPSesiion() {
+    let connection = this.BASE_URL + "/TCP/start";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
     
     return this.http.get(connection, {
@@ -196,7 +271,20 @@ export class OptionsService {
 
   }
 
+  StopTCPSesiion(clearbuffer : boolean = false) {
+    let connection = this.BASE_URL + `/TCP/stop/${clearbuffer}`;
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'text'
+    }); 
 
+
+  }
 
 
 }

@@ -43,6 +43,7 @@ export class AppOptionsFormComponent implements OnInit, OnDestroy, AfterViewInit
         link : "/onecoptions"
       },
 
+
       {
         name : ["Состояние", "подключения к 1С"],
         iconeName : "av_timer",
