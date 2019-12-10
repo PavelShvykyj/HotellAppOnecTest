@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -87,11 +88,10 @@ namespace TestCOneConnection.Controllers
         [HttpGet("roomstock/{id}")]
         public async Task<IActionResult> GetRoomStock(string Id)
         {
-            IProxyParametr parametr = new ProxyParametr();
-            //{
-            //    Request = HttpContext.Request,
-            //
-            //};
+            IProxyParametr parametr = new ProxyParametr()
+            {
+                Request = HttpContext.Request
+            };
             parametr.Parametr.Add("Id", Id);
 
             IProxyResponse response = await _proxy.GetRoomStock(parametr);
@@ -105,10 +105,10 @@ namespace TestCOneConnection.Controllers
         {
 
 
-            IProxyParametr parametr = new ProxyParametr();
-            //{
-            //Request = HttpContext.Request,
-            //};
+            IProxyParametr parametr = new ProxyParametr()
+            {
+                Request = HttpContext.Request,
+            };
             parametr.Parametr.Add("OneCURL", proxyParametr.URL);
             parametr.Parametr.Add("OneCBody", proxyParametr.Body);
 

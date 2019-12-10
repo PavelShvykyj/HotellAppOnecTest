@@ -60,8 +60,14 @@ namespace TestCOneConnection.TCPData
         }
 
         private bool Connect() {
+            if (_status.connected)
+            {
+                return true;
+            }
+
             IMessage logmessage = _logger.StartMessage("connect" , new { });
             try {
+                _client = new TcpClient();
                 _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT);
                 _stream = _client.GetStream();
                 _status.connected = true;
@@ -72,7 +78,8 @@ namespace TestCOneConnection.TCPData
             catch {
                 logmessage.additionalsparams = new { requeststatus = 400, error = "Не подключились", contenet = "time out"+ _options.Value.TIMEOUT.ToString() };
                 _logger.FinishMessage(logmessage);
-
+                _status.connected = false;
+                Disconnect();
                 return false;
             }           
         }
@@ -88,6 +95,10 @@ namespace TestCOneConnection.TCPData
                 _client.Close();
                 _client.Dispose();
             }
+
+            _stream = null;
+            _client = null;
+            
         }
 
         private byte[] GetMessageByte(string message) {
@@ -254,12 +265,7 @@ namespace TestCOneConnection.TCPData
             foreach (string message in messages)
             {
                 if (!message.Contains("ERR")) {
-
-
                     IProxyParametr parametr = new ProxyParametr();
-                    //{
-                    //Request = HttpContext.Request,
-                    //};
                     parametr.Parametr.Add("OneCURL",_onecoptions.Value.BASE_URL+"TCPevent");
                     parametr.Parametr.Add("OneCBody", message);
                     _proxy.SimpleProxyPost(parametr);
@@ -269,8 +275,6 @@ namespace TestCOneConnection.TCPData
 
             return true;
         }
-
-
 
 
 
@@ -292,6 +296,9 @@ namespace TestCOneConnection.TCPData
         public void Start()
         {
             Connect();
+           
+
+
         }
 
         public void Stop(bool clearbufer)
