@@ -7,27 +7,38 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
+using TestCOneConnection.RequestProxy;
+using Microsoft.AspNetCore.Http;
 
 namespace TestCOneConnection.TCPData
 {
     public class TCPAPIManager : ITCPAPIManager
     {
 
-        private ITCPDataLogger _logger;
         public List<IMessage> Logg { get => _logger.Messages; }
-        private ITCPStatus _status;
+
+        private ITCPDataLogger _logger;
+        private IRequestProxy _proxy;
+
+
         private IOptions<TCPOptions> _options;
         private IOptions<OneCOptions> _onecoptions;
+
         private Queue<ITCPTask> _tasks;
         private bool _dotasks = false;
+        private ITCPStatus _status;
 
         private TcpClient _client;
         private NetworkStream _stream;
         private CancellationTokenSource _cancelTokenSourse;
 
-        public TCPAPIManager(ITCPDataLogger dataLogger, IOptions<TCPOptions> options, IOptions<OneCOptions> onecoptions)
+
+        public TCPAPIManager(ITCPDataLogger dataLogger, IOptions<TCPOptions> options, IOptions<OneCOptions> onecoptions, IRequestProxy Proxy)
         {
+            _tasks = new Queue<ITCPTask>();
+            _cancelTokenSourse = new CancellationTokenSource();
             _logger = dataLogger;
+            _proxy = Proxy;
             _options = options;
             _onecoptions = onecoptions;
             _status = new TCPStatus
@@ -41,8 +52,6 @@ namespace TestCOneConnection.TCPData
                 bufersize = 0
             };
 
-            IMessage message = _logger.StartMessage("test TCP message", new { });
-            _logger.FinishMessage(message);
             _tasks.Clear();
             _client = new TcpClient();
 
@@ -51,13 +60,19 @@ namespace TestCOneConnection.TCPData
         }
 
         private bool Connect() {
+            IMessage logmessage = _logger.StartMessage("connect" , new { });
             try {
                 _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT);
                 _stream = _client.GetStream();
                 _status.connected = true;
+                logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
+                _logger.FinishMessage(logmessage);
                 return true;
             }
             catch {
+                logmessage.additionalsparams = new { requeststatus = 400, error = "Не подключились", contenet = "time out"+ _options.Value.TIMEOUT.ToString() };
+                _logger.FinishMessage(logmessage);
+
                 return false;
             }           
         }
@@ -83,21 +98,42 @@ namespace TestCOneConnection.TCPData
         }
 
         private bool Write(string message, int timeout) {
+            IMessage logmessage = _logger.StartMessage("Write :"+ message, new { });
             byte[] data = GetMessageByte(message);
 
 
             if (_stream.WriteAsync(data, 0, data.Length, _cancelTokenSourse.Token).Wait(timeout))
             {
+                logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
+                _logger.FinishMessage(logmessage);
                 return true;
             }
             else {
+                logmessage.additionalsparams = new { requeststatus = 400, error = "Не смогли записать в поток", contenet = "time out"+ timeout.ToString() };
+                _logger.FinishMessage(logmessage);
                 return false;
             }
-             
+            
         }
+
+        // вспомогатеотная к Read - получает количество полученых байт
+        int BytesCount(byte[] data) {
+            short count = 0;
+            foreach (byte item in data)
+            {
+                if (item == 0)
+                {
+                    break;
+                }
+                count += 1;
+            }
+            return count;
+        }
+
 
         // вспомогатеотная к Read - получает доступные данные в потоке пакетами по 256 байт
         private List<byte[]> GetPackets(int timeout) {
+            IMessage logmessage = _logger.StartMessage("Read", new { });
             List<byte[]> packets = new List<byte[]>();
             if (_cancelTokenSourse.Token.IsCancellationRequested) {
                 return packets;
@@ -111,6 +147,15 @@ namespace TestCOneConnection.TCPData
 
                     if (_stream.ReadAsync(data, 0, data.Length, _cancelTokenSourse.Token).Wait(timeout))
                     {
+                        if (BytesCount(data) == 0) {
+                            /// пришла пустышка - соединение разорвано
+                            logmessage.additionalsparams = new { requeststatus = 400, error = "Пакет нулевой длины", contenet = packets.ToString() };
+                            _logger.FinishMessage(logmessage);
+                            return packets;
+
+                        }
+
+
                         packets.Add(data);
                     }
                     else
@@ -121,15 +166,21 @@ namespace TestCOneConnection.TCPData
             }
             catch 
             {
+
+                logmessage.additionalsparams = new { requeststatus = 400, error = "Не смогли прочитать поток", contenet = packets.ToString() };
+                _logger.FinishMessage(logmessage);
                 return packets;
             }
 
+            logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = packets.ToString() };
+            _logger.FinishMessage(logmessage);
             return packets;
         }
 
         /// получает данные пакетами по 256 байт и разбирает их в строки с разделителем сивол 13 (следующий пропускает это 10)
         private List<string> Read(int timeout)
         {
+            
             List<byte[]> packets = GetPackets(timeout);
             List<string> messages = new List<string>();
             StringBuilder builder = new StringBuilder();
@@ -172,6 +223,8 @@ namespace TestCOneConnection.TCPData
                 messages.Add(builder.ToString());
             }
 
+
+
             return messages;
 
 
@@ -181,7 +234,38 @@ namespace TestCOneConnection.TCPData
 
 
         private bool Ping() {
-            
+
+            IMessage logmessage = _logger.StartMessage("Task Ping", new { });
+            _logger.FinishMessage(logmessage);
+
+
+            if (!Write("< 9999 BADCOMMAND",_options.Value.SHORT_TIMEOUT))
+            {
+                return false;
+            }
+
+            List<string> messages = Read(_options.Value.SHORT_TIMEOUT);
+
+            if (messages.Count == 0 )
+            {
+                return false;
+            }
+
+            foreach (string message in messages)
+            {
+                if (!message.Contains("ERR")) {
+
+
+                    IProxyParametr parametr = new ProxyParametr();
+                    //{
+                    //Request = HttpContext.Request,
+                    //};
+                    parametr.Parametr.Add("OneCURL",_onecoptions.Value.BASE_URL+"TCPevent");
+                    parametr.Parametr.Add("OneCBody", message);
+                    _proxy.SimpleProxyPost(parametr);
+                } 
+            }
+
 
             return true;
         }

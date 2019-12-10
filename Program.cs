@@ -48,6 +48,7 @@ namespace TestCOneConnection
 
             
             isDevelopment = hostingContext.HostingEnvironment.IsDevelopment();
+            isDevelopment = true;
             string pathToContentRoot = EnviroumentDepend.GetPathToContentRoot(isDevelopment);
 
 

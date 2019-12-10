@@ -11,7 +11,7 @@ namespace TestCOneConnection.RequestProxy
 {
     public interface IProxyParametr
     {
-        HttpRequest Request { get; set; }
+        //HttpRequest Request { get; set; }
         Dictionary<string, string> Parametr { get; set; }
     }
 
