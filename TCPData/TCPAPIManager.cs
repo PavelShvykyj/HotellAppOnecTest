@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Text;
 using TestCOneConnection.RequestProxy;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace TestCOneConnection.TCPData
 {
@@ -25,7 +26,7 @@ namespace TestCOneConnection.TCPData
         private IOptions<OneCOptions> _onecoptions;
 
         private Queue<ITCPTask> _tasks;
-        private bool _dotasks = false;
+        
         private ITCPStatus _status;
 
         private TcpClient _client;
@@ -65,10 +66,14 @@ namespace TestCOneConnection.TCPData
                 return true;
             }
 
+            if (_cancelTokenSourse.Token.IsCancellationRequested) {
+                return false;
+            }
+
             IMessage logmessage = _logger.StartMessage("connect" , new { });
             try {
                 _client = new TcpClient();
-                _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT);
+                _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT,_cancelTokenSourse.Token);
                 _stream = _client.GetStream();
                 _status.connected = true;
                 logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
@@ -98,7 +103,10 @@ namespace TestCOneConnection.TCPData
 
             _stream = null;
             _client = null;
-            
+            _status.connected = false;
+            _client = new TcpClient();
+            _cancelTokenSourse = new CancellationTokenSource();
+
         }
 
         private byte[] GetMessageByte(string message) {
@@ -109,6 +117,11 @@ namespace TestCOneConnection.TCPData
         }
 
         private bool Write(string message, int timeout) {
+            if (_cancelTokenSourse.Token.IsCancellationRequested)
+            {
+                return false;
+            }
+
             IMessage logmessage = _logger.StartMessage("Write :"+ message, new { });
             byte[] data = GetMessageByte(message);
 
@@ -262,25 +275,18 @@ namespace TestCOneConnection.TCPData
                 return false;
             }
 
-            foreach (string message in messages)
-            {
-                //// поймали сообщение событие отправим в 1С
-                if (!message.Contains("ERR")) {
-                    IProxyParametr parametr = new ProxyParametr();
-                    parametr.Parametr.Add("OneCURL",_onecoptions.Value.BASE_URL+"TCPevent");
-                    parametr.Parametr.Add("OneCBody", message);
-                    _proxy.SimpleProxyPost(parametr);
-                } 
-            }
 
+            
+            //// может поймали сообщение событие отправим в 1С
+            SendToOneCAsync(messages);
 
             return true;
         }
 
-        private void DoQueueTaskss(CancellationToken token) {
+        private void DoQueueTaskss() {
             while (_tasks.Count != 0)
             {
-                if (token.IsCancellationRequested)
+                if (_cancelTokenSourse.Token.IsCancellationRequested)
                 {
                     break;
                 }
@@ -291,60 +297,163 @@ namespace TestCOneConnection.TCPData
                 switch (tasktype)
                 {
                     case TCPTaskType.ping:
-                        DoChainPingtask();
+                        DoChainPingtask(queuetask);
                         break;
                     case TCPTaskType.read:
-                        DoChainReadtask();
+                        DoChainReadtask(queuetask);
                         break;
                     case TCPTaskType.wright:
-                        DoChainWrighttask();
+                        DoChainWrighttask(queuetask);
                         break;
                     case TCPTaskType.reconnect:
-                        DoChainConnectTask();
+                        DoChainConnectTask(queuetask);
                         break;
                     default:
                         break;
                 }
-
-
-
-
-
             }
         }
 
-        private void DoChainConnectTask()
+        private void DoChainConnectTask(ITCPTask queuetask)
         {
 
             /// обновление статуса + метод + анализ результата + вызов цепочки
-            throw new NotImplementedException();
+            _status.workon = queuetask;
+            _status.bufersize = _tasks.Count;
+            _status.connected = false;
+
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = TCPTaskType.read,
+                parametr = ""
+            };
+
+            byte connectionTrysCount = 0;
+            while (connectionTrysCount <= _onecoptions.Value.MAX_BADREQUEST_COUNT)
+            {
+                connectionTrysCount++;
+                if (Connect()) {
+                    _status.connected = true;
+                    AddTask(chainTask);
+                    break;
+                }
+            }
+
+            if (!_status.connected)
+            {
+                Stop(false);
+            }
+
         }
 
-        private void DoChainWrighttask()
+        private void DoChainWrighttask(ITCPTask queuetask)
         {
-            throw new NotImplementedException();
+            /// обновление статуса + метод + анализ результата + вызов цепочки
+            _status.workon = queuetask;
+            _status.bufersize = _tasks.Count;
+            
+
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = TCPTaskType.read,
+                parametr = ""
+            };
+
+            if (Write(queuetask.parametr, _options.Value.SHORT_TIMEOUT))
+            {
+                chainTask.taskType = TCPTaskType.read;
+            }
+            else
+            {
+                chainTask.taskType = TCPTaskType.reconnect;
+            }
+            AddTask(chainTask);
         }
 
-        private void DoChainReadtask()
+        private void DoChainReadtask(ITCPTask queuetask)
         {
-            throw new NotImplementedException();
+            _status.workon = queuetask;
+            _status.bufersize = _tasks.Count;
+
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = TCPTaskType.ping,
+                parametr = ""
+            };
+
+            List<string> messages = Read(_options.Value.LONG_TIMEOUT);
+            SendToOneCAsync(messages);
+            AddTask(chainTask);
         }
 
-        private void DoChainPingtask()
+        private void DoChainPingtask(ITCPTask queuetask)
         {
-            throw new NotImplementedException();
+            /// обновление статуса + метод + анализ результата + вызов цепочки
+            _status.workon = queuetask;
+            _status.bufersize = _tasks.Count;
+
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = TCPTaskType.ping,
+                parametr = ""
+            };
+
+            if (Ping())
+            {
+                chainTask.taskType = TCPTaskType.read;
+            }
+            else
+            {
+                chainTask.taskType = TCPTaskType.reconnect;
+            }
+            AddTask(chainTask);
         }
 
+        private void SendToOneCAsync(List<string> messages)
+        {
+            //// где взять адрес контроллера? Хочется показать на экране что операция не прошла.
+            TCPTask catnOneC = new TCPTask() {taskType=TCPTaskType.wright, parametr = "< 0132 DISPLAY cant connect to 1C" };
+            Task OneCNotificationTask = new Task(async () => {
+                foreach (string message in messages)
+                {
+                    IMessage logmessage = _logger.StartMessage("send to one c:" + message, new { });
+                    if (_proxy.GetOneCSessionStatus().LastResponseStatus == HttpStatusCode.Accepted)
+                    {
+                        IProxyParametr parametr = new ProxyParametr();
+                        parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "TCPEvent");
+                        parametr.Parametr.Add("OneCBody", message);
+                        IProxyResponse response = await _proxy.SimpleProxyPost(parametr);
+                        logmessage.additionalsparams = new { requeststatus = response.Response.StatusCode, error = response.Response.ErrorMessage, contenet = response.Response.ErrorException };
+                        _logger.FinishMessage(logmessage);
+                        /// сообщение на дисплей о ошибке
+                        if (response.Response.StatusCode != HttpStatusCode.Accepted)
+                        {
+                            catnOneC.parametr = "< " + message.Substring(2, 4) + "DISPLAY cant connect to 1C";
+                            AddTask(catnOneC);
+                        }
+
+                    }
+                    else {
+                        /// сообщение на дисплей о ошибке
+                        logmessage.additionalsparams = new { requeststatus = 400, error = "cant connect to 1C", contenet = "" };
+                        _logger.FinishMessage(logmessage);
+                        catnOneC.parametr = "< " + message.Substring(2, 4) + "DISPLAY cant connect to 1C";
+                        AddTask(catnOneC);
+                    }
+                    
+                }
+            });
+
+            OneCNotificationTask.Start();
+        }
 
 
         /// PUBLIC
 
         public void AddTask(ITCPTask TCPTask)
         {
-            if (_dotasks) {
-                _tasks.Enqueue(TCPTask);
-                _status.bufersize = _tasks.Count;
-            }
+            _tasks.Enqueue(TCPTask);
+            _status.bufersize = _tasks.Count;
         }
 
         public ITCPStatus GetStatus()
@@ -354,15 +463,17 @@ namespace TestCOneConnection.TCPData
 
         public void Start()
         {
-            //Connect();
-            /// создаем новую задачу именно task DoQueueTaskss и запускаем ее с токеном общим
-
-
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = TCPTaskType.reconnect,
+                parametr = ""
+            };
+            AddTask(chainTask);
+            DoQueueTaskss();
         }
 
         public void Stop(bool clearbufer)
         {
-
             Disconnect();
             if (clearbufer) {
                 _tasks.Clear();
