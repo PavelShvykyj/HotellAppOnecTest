@@ -264,6 +264,7 @@ namespace TestCOneConnection.TCPData
 
             foreach (string message in messages)
             {
+                //// поймали сообщение событие отправим в 1С
                 if (!message.Contains("ERR")) {
                     IProxyParametr parametr = new ProxyParametr();
                     parametr.Parametr.Add("OneCURL",_onecoptions.Value.BASE_URL+"TCPevent");
@@ -276,10 +277,68 @@ namespace TestCOneConnection.TCPData
             return true;
         }
 
+        private void DoQueueTaskss(CancellationToken token) {
+            while (_tasks.Count != 0)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                ITCPTask queuetask = _tasks.Dequeue();
+                TCPTaskType tasktype = queuetask.taskType;
+
+                switch (tasktype)
+                {
+                    case TCPTaskType.ping:
+                        DoChainPingtask();
+                        break;
+                    case TCPTaskType.read:
+                        DoChainReadtask();
+                        break;
+                    case TCPTaskType.wright:
+                        DoChainWrighttask();
+                        break;
+                    case TCPTaskType.reconnect:
+                        DoChainConnectTask();
+                        break;
+                    default:
+                        break;
+                }
+
+
+
+
+
+            }
+        }
+
+        private void DoChainConnectTask()
+        {
+
+            /// обновление статуса + метод + анализ результата + вызов цепочки
+            throw new NotImplementedException();
+        }
+
+        private void DoChainWrighttask()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DoChainReadtask()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DoChainPingtask()
+        {
+            throw new NotImplementedException();
+        }
+
 
 
         /// PUBLIC
-    
+
         public void AddTask(ITCPTask TCPTask)
         {
             if (_dotasks) {
@@ -295,8 +354,8 @@ namespace TestCOneConnection.TCPData
 
         public void Start()
         {
-            Connect();
-           
+            //Connect();
+            /// создаем новую задачу именно task DoQueueTaskss и запускаем ее с токеном общим
 
 
         }
