@@ -17,8 +17,9 @@
      [fxLayoutAlign]="(BodyLayout$ | async).BodyAlign"
      fxFlex="1 1 auto"
      class="form-body p-1 w-100  scrollable">
-               
-     <mat-card fxFlex="1 1 " class="m-2">
+        
+     <div fxFlex="1 1 " fxLayout="column" fxLayoutAlign="start start">
+         <mat-card fxFlex="1 1 " class="m-2">
           <mat-card-header>
                <mat-card-title>Текущая активная сессия</mat-card-title>
           </mat-card-header>
@@ -42,6 +43,27 @@
 
      </mat-card>
 
+     <mat-card fxFlex="1 1 " class="m-2">
+          <mat-card-header>
+               <mat-card-title>Задания активной сессии</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+               <ul *ngFor="let task of sessiontasks" class="list-group">
+                    <li class="list-group-item"> {{ tasktype[task.taskType]}} : {{task.parametr}}  </li>
+               </ul>
+          </mat-card-content>
+
+          <mat-card-footer>
+               <preloadpage class="w-100 h-100" [spindiametr]=25 *ngIf="sessionStatusUpdating$ | async"></preloadpage>
+          </mat-card-footer>     
+
+          <mat-card-actions>
+               <button fxFlex  class="secondry" mat-raised-button (click)="GetSessionTasks()"> Обновить </button>
+          </mat-card-actions>
+
+     </mat-card>
+     </div>
 
      <mat-card fxFlex="4 1 " class="m-2">
           <mat-card-header>

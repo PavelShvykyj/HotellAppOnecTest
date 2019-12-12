@@ -34,6 +34,13 @@ namespace TestCOneConnection.Controllers
             return Ok(_proxy.GetStatus());
         }
 
+        [HttpGet("tcpstasks")]
+        public IActionResult GetTCPTasks()
+        {
+            return Ok(_proxy.GetTasks());
+        }
+
+
         [HttpGet("start")]
         public IActionResult Start()
         {
@@ -69,7 +76,7 @@ namespace TestCOneConnection.Controllers
 
         
         [HttpPost("addtask")]
-        public IActionResult AddTask([FromBody] ITCPTask tcpdata)
+        public IActionResult AddTask([FromBody] TCPTask tcpdata)
         {
             
             

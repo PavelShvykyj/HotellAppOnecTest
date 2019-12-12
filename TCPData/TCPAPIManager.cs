@@ -27,16 +27,19 @@ namespace TestCOneConnection.TCPData
 
         private Queue<ITCPTask> _tasks;
         
+
+
         private ITCPStatus _status;
 
         private TcpClient _client;
         private NetworkStream _stream;
         private CancellationTokenSource _cancelTokenSourse;
-
+        private Task _chaintask;
 
         public TCPAPIManager(ITCPDataLogger dataLogger, IOptions<TCPOptions> options, IOptions<OneCOptions> onecoptions, IRequestProxy Proxy)
         {
             _tasks = new Queue<ITCPTask>();
+            _chaintask = null;
             _cancelTokenSourse = new CancellationTokenSource();
             _logger = dataLogger;
             _proxy = Proxy;
@@ -60,20 +63,20 @@ namespace TestCOneConnection.TCPData
 
         }
 
-        private bool Connect() {
+        private bool Connect(CancellationToken token) {
             if (_status.connected)
             {
                 return true;
             }
 
-            if (_cancelTokenSourse.Token.IsCancellationRequested) {
+            if (token.IsCancellationRequested) {
                 return false;
             }
 
             IMessage logmessage = _logger.StartMessage("connect" , new { });
             try {
                 _client = new TcpClient();
-                _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT,_cancelTokenSourse.Token);
+                _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT, token);
                 _stream = _client.GetStream();
                 _status.connected = true;
                 logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
@@ -91,21 +94,22 @@ namespace TestCOneConnection.TCPData
 
         private void Disconnect() {
             _cancelTokenSourse.Cancel();
+            
             if (_stream != null) {
                 _stream.Close();
-                _stream.Dispose();
+                //_stream.Dispose();
             }
 
             if (_client != null) {
                 _client.Close();
-                _client.Dispose();
+                //_client.Dispose();
             }
 
             _stream = null;
             _client = null;
             _status.connected = false;
-            _client = new TcpClient();
-            _cancelTokenSourse = new CancellationTokenSource();
+            
+            
 
         }
 
@@ -116,8 +120,8 @@ namespace TestCOneConnection.TCPData
             return data;
         }
 
-        private bool Write(string message, int timeout) {
-            if (_cancelTokenSourse.Token.IsCancellationRequested)
+        private bool Write(string message, int timeout, CancellationToken token) {
+            if (token.IsCancellationRequested)
             {
                 return false;
             }
@@ -125,18 +129,20 @@ namespace TestCOneConnection.TCPData
             IMessage logmessage = _logger.StartMessage("Write :"+ message, new { });
             byte[] data = GetMessageByte(message);
 
-
-            if (_stream.WriteAsync(data, 0, data.Length, _cancelTokenSourse.Token).Wait(timeout))
+            try
             {
-                logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
+                _stream.WriteAsync(data, 0, data.Length, token).Wait(timeout);
                 _logger.FinishMessage(logmessage);
                 return true;
+
             }
-            else {
-                logmessage.additionalsparams = new { requeststatus = 400, error = "Не смогли записать в поток", contenet = "time out"+ timeout.ToString() };
+            catch 
+            {
+                logmessage.additionalsparams = new { requeststatus = 400, error = "Не смогли записать в поток", contenet = "time out" + timeout.ToString() };
                 _logger.FinishMessage(logmessage);
                 return false;
             }
+
             
         }
 
@@ -156,10 +162,10 @@ namespace TestCOneConnection.TCPData
 
 
         // вспомогатеотная к Read - получает доступные данные в потоке пакетами по 256 байт
-        private List<byte[]> GetPackets(int timeout) {
-            IMessage logmessage = _logger.StartMessage("Read", new { });
+        private List<byte[]> GetPackets(int timeout, CancellationToken token) {
+            
             List<byte[]> packets = new List<byte[]>();
-            if (_cancelTokenSourse.Token.IsCancellationRequested) {
+            if (token.IsCancellationRequested) {
                 return packets;
             }
 
@@ -168,75 +174,59 @@ namespace TestCOneConnection.TCPData
                 do
                 {
                     byte[] data = new byte[256];
-
-                    if (_stream.ReadAsync(data, 0, data.Length, _cancelTokenSourse.Token).Wait(timeout))
-                    {
+                    _stream.ReadTimeout = timeout;
+                    _stream.Read(data, 0, data.Length);
                         if (BytesCount(data) == 0) {
                             /// пришла пустышка - соединение разорвано
-                            logmessage.additionalsparams = new { requeststatus = 400, error = "Пакет нулевой длины", contenet = packets.ToString() };
-                            _logger.FinishMessage(logmessage);
                             return packets;
-
                         }
-
-
                         packets.Add(data);
-                    }
-                    else
-                    {
-                        break;
-                    }
                 } while (_stream.DataAvailable);
             }
             catch 
             {
-
-                logmessage.additionalsparams = new { requeststatus = 400, error = "Не смогли прочитать поток", contenet = packets.ToString() };
-                _logger.FinishMessage(logmessage);
                 return packets;
             }
 
-            logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = packets.ToString() };
-            _logger.FinishMessage(logmessage);
             return packets;
         }
 
         /// получает данные пакетами по 256 байт и разбирает их в строки с разделителем сивол 13 (следующий пропускает это 10)
-        private List<string> Read(int timeout)
+        private List<string> Read(int timeout, CancellationToken token)
         {
-            
-            List<byte[]> packets = GetPackets(timeout);
+            IMessage logmessage = _logger.StartMessage("Read : " + timeout.ToString(), new { });
+            List<byte[]> packets = GetPackets(timeout,token);
             List<string> messages = new List<string>();
             StringBuilder builder = new StringBuilder();
             int startindex = 0;
-            for (int i = 0; i <= packets.Count; i++)
+            for (int i = 0; i <= packets.Count-1; i++)
             {
                 byte[] packet = packets[i];
 
                 if (packet.Length == 0) {
                     continue;
                 }
-                for (int j = 0; j < packet.Length; j++)
+                for (int j = 0; j < packet.Length-1; j++)
                 {
                     if (packet[j] == 0)
                     {
-                        builder.Append(Encoding.ASCII.GetString(packet, startindex, j));
+                        builder.Append(Encoding.ASCII.GetString(packet, startindex, (j-startindex)));
                         messages.Add(builder.ToString());
                         startindex = 0;
-
+                        builder.Clear();
                         break;
                     }
                     else if(packet[j] == 13)
                     {
-                        builder.Append(Encoding.ASCII.GetString(packet, startindex, j-1));
+                        builder.Append(Encoding.ASCII.GetString(packet, startindex, (j - startindex)));
                         messages.Add(builder.ToString());
                         builder.Clear();
                         j++;
-                        startindex = j++;
+                        startindex = j+1;
                     }
                     else if (j == packet.Length-1)
                     {
-                        builder.Append(Encoding.ASCII.GetString(packet, startindex, j));
+                        builder.Append(Encoding.ASCII.GetString(packet, startindex, (j - startindex)));
                         startindex = 0;
                     }
                 }
@@ -247,32 +237,28 @@ namespace TestCOneConnection.TCPData
                 messages.Add(builder.ToString());
             }
 
-
-
+            logmessage.additionalsparams = new { requeststatus = 200, error = "Закончили чтение", contenet = messages.ToArray() };
+            _logger.FinishMessage(logmessage);
             return messages;
-
-
-
-
         }
 
 
-        private bool Ping() {
+        private bool Ping(CancellationToken token) {
 
             IMessage logmessage = _logger.StartMessage("Task Ping", new { });
             _logger.FinishMessage(logmessage);
 
-
-            if (!Write("< 9999 BADCOMMAND",_options.Value.SHORT_TIMEOUT))
+         
+            if (!Write("< 9999 BADCOMMAND",_options.Value.SHORT_TIMEOUT,token))
             {
                 return false;
             }
 
-            List<string> messages = Read(_options.Value.SHORT_TIMEOUT);
+            List<string> messages = Read(_options.Value.LONG_TIMEOUT,token);
 
             if (messages.Count == 0 )
             {
-                return false;
+                return true;
             }
 
 
@@ -283,10 +269,10 @@ namespace TestCOneConnection.TCPData
             return true;
         }
 
-        private void DoQueueTaskss() {
+        private void DoQueueTaskss(CancellationToken token) {
             while (_tasks.Count != 0)
             {
-                if (_cancelTokenSourse.Token.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
                     break;
                 }
@@ -297,24 +283,26 @@ namespace TestCOneConnection.TCPData
                 switch (tasktype)
                 {
                     case TCPTaskType.ping:
-                        DoChainPingtask(queuetask);
+                        DoChainPingtask(queuetask, token);
                         break;
                     case TCPTaskType.read:
-                        DoChainReadtask(queuetask);
+                        DoChainReadtask(queuetask, token);
                         break;
                     case TCPTaskType.wright:
-                        DoChainWrighttask(queuetask);
+                        DoChainWrighttask(queuetask, token);
                         break;
                     case TCPTaskType.reconnect:
-                        DoChainConnectTask(queuetask);
+                        DoChainConnectTask(queuetask, token);
                         break;
                     default:
                         break;
                 }
             }
+
+            
         }
 
-        private void DoChainConnectTask(ITCPTask queuetask)
+        private void DoChainConnectTask(ITCPTask queuetask, CancellationToken token)
         {
 
             /// обновление статуса + метод + анализ результата + вызов цепочки
@@ -332,9 +320,13 @@ namespace TestCOneConnection.TCPData
             while (connectionTrysCount <= _onecoptions.Value.MAX_BADREQUEST_COUNT)
             {
                 connectionTrysCount++;
-                if (Connect()) {
+                if (Connect(token)) {
                     _status.connected = true;
-                    AddTask(chainTask);
+                    if (_tasks.Count == 0)
+                    {
+                        AddTask(chainTask);
+                    }
+                    
                     break;
                 }
             }
@@ -346,7 +338,7 @@ namespace TestCOneConnection.TCPData
 
         }
 
-        private void DoChainWrighttask(ITCPTask queuetask)
+        private void DoChainWrighttask(ITCPTask queuetask, CancellationToken token)
         {
             /// обновление статуса + метод + анализ результата + вызов цепочки
             _status.workon = queuetask;
@@ -359,7 +351,7 @@ namespace TestCOneConnection.TCPData
                 parametr = ""
             };
 
-            if (Write(queuetask.parametr, _options.Value.SHORT_TIMEOUT))
+            if (Write(queuetask.parametr, _options.Value.SHORT_TIMEOUT,token))
             {
                 chainTask.taskType = TCPTaskType.read;
             }
@@ -367,26 +359,34 @@ namespace TestCOneConnection.TCPData
             {
                 chainTask.taskType = TCPTaskType.reconnect;
             }
-            AddTask(chainTask);
+            if (!token.IsCancellationRequested & _tasks.Count == 0)
+            {
+                AddTask(chainTask);
+            }
+            
         }
 
-        private void DoChainReadtask(ITCPTask queuetask)
+        private void DoChainReadtask(ITCPTask queuetask, CancellationToken token)
         {
             _status.workon = queuetask;
             _status.bufersize = _tasks.Count;
 
             ITCPTask chainTask = new TCPTask()
             {
-                taskType = TCPTaskType.ping,
+                taskType = TCPTaskType.read,
                 parametr = ""
             };
 
-            List<string> messages = Read(_options.Value.LONG_TIMEOUT);
+            List<string> messages = Read(_options.Value.LONG_TIMEOUT,token);
             SendToOneCAsync(messages);
+            if (!token.IsCancellationRequested & _tasks.Count == 0)
+            {
             AddTask(chainTask);
+            }
+
         }
 
-        private void DoChainPingtask(ITCPTask queuetask)
+        private void DoChainPingtask(ITCPTask queuetask, CancellationToken token)
         {
             /// обновление статуса + метод + анализ результата + вызов цепочки
             _status.workon = queuetask;
@@ -394,11 +394,11 @@ namespace TestCOneConnection.TCPData
 
             ITCPTask chainTask = new TCPTask()
             {
-                taskType = TCPTaskType.ping,
+                taskType = TCPTaskType.reconnect,
                 parametr = ""
             };
 
-            if (Ping())
+            if (Ping(token))
             {
                 chainTask.taskType = TCPTaskType.read;
             }
@@ -406,16 +406,36 @@ namespace TestCOneConnection.TCPData
             {
                 chainTask.taskType = TCPTaskType.reconnect;
             }
-            AddTask(chainTask);
+            if (!token.IsCancellationRequested & _tasks.Count == 0)
+            {
+                    AddTask(chainTask);
+            }
+
         }
 
         private void SendToOneCAsync(List<string> messages)
         {
             //// где взять адрес контроллера? Хочется показать на экране что операция не прошла.
-            TCPTask catnOneC = new TCPTask() {taskType=TCPTaskType.wright, parametr = "< 0132 DISPLAY cant connect to 1C" };
+            TCPTask catnOneC = new TCPTask() {taskType=TCPTaskType.wright, parametr = "" };
             Task OneCNotificationTask = new Task(async () => {
                 foreach (string message in messages)
                 {
+                    if (message.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    if (message.Substring(0, 1) != ">")
+                    {
+                        continue;
+                    }
+
+                    if (message.Contains("[Error]"))
+                    {
+                        continue;
+                    }
+
+
                     IMessage logmessage = _logger.StartMessage("send to one c:" + message, new { });
                     if (_proxy.GetOneCSessionStatus().LastResponseStatus == HttpStatusCode.Accepted)
                     {
@@ -428,16 +448,16 @@ namespace TestCOneConnection.TCPData
                         /// сообщение на дисплей о ошибке
                         if (response.Response.StatusCode != HttpStatusCode.Accepted)
                         {
-                            catnOneC.parametr = "< " + message.Substring(2, 4) + "DISPLAY cant connect to 1C";
+                            catnOneC.parametr = "< " + message.Substring(2, 4) + " DISPLAY cant connect to DB";
                             AddTask(catnOneC);
                         }
 
                     }
                     else {
                         /// сообщение на дисплей о ошибке
-                        logmessage.additionalsparams = new { requeststatus = 400, error = "cant connect to 1C", contenet = "" };
+                        logmessage.additionalsparams = new { requeststatus = 400, error = "cant connect to DB", contenet = "" };
                         _logger.FinishMessage(logmessage);
-                        catnOneC.parametr = "< " + message.Substring(2, 4) + "DISPLAY cant connect to 1C";
+                        catnOneC.parametr = "< " + message.Substring(2, 4) + " DISPLAY cant connect to DB";
                         AddTask(catnOneC);
                     }
                     
@@ -456,6 +476,9 @@ namespace TestCOneConnection.TCPData
             _status.bufersize = _tasks.Count;
         }
 
+    
+
+
         public ITCPStatus GetStatus()
         {
             return _status;
@@ -463,13 +486,25 @@ namespace TestCOneConnection.TCPData
 
         public void Start()
         {
+            if (_chaintask != null)
+            {
+                return;
+            }
+
             ITCPTask chainTask = new TCPTask()
             {
                 taskType = TCPTaskType.reconnect,
                 parametr = ""
             };
             AddTask(chainTask);
-            DoQueueTaskss();
+            _cancelTokenSourse = new CancellationTokenSource();
+            _chaintask = new Task(() => DoQueueTaskss(_cancelTokenSourse.Token),_cancelTokenSourse.Token);
+            _chaintask.Start();
+            
+        }
+
+        public ITCPTask[] GetTasks() {
+            return _tasks.ToArray();
         }
 
         public void Stop(bool clearbufer)
@@ -478,6 +513,9 @@ namespace TestCOneConnection.TCPData
             if (clearbufer) {
                 _tasks.Clear();
             }
+            _chaintask = null;
+            _status.bufersize = _tasks.Count;
+
         }
     }
 }

@@ -12,6 +12,7 @@ namespace TestCOneConnection.TCPData
         void Stop(bool clearbufer);
         void AddTask(ITCPTask TCPTask);
         ITCPStatus GetStatus();
+        ITCPTask[] GetTasks();
         List<IMessage> Logg { get; }
     }
 }

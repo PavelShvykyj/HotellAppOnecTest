@@ -162,7 +162,7 @@ export class OptionsService {
     })
   }
 
-
+  
   SetOneCOptions(options : IOneCOptions) {
     let connection = this.BASE_URL + "/ONEC/onecoptions";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
@@ -249,6 +249,23 @@ export class OptionsService {
     .pipe(map(res => {return JSON.stringify(res)} )); 
   }
 
+  GetTCPTasks() {
+    let connection = this.BASE_URL + "/TCP/tcpstasks";
+    let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
+    
+    return this.http.get(connection, {
+      headers: headers,
+      observe: 'body',
+      withCredentials: true,
+      reportProgress: false,
+      responseType: 'json'
+    })
+    .pipe(map(res => {return JSON.stringify(res)} )); 
+  }
+
+
+
+
   StartOneCSesiion() {
     let connection = this.BASE_URL + "/ONEC/startonecsession";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json')
@@ -307,7 +324,7 @@ export class OptionsService {
     let connection = this.BASE_URL + "/TCP/addtask";
     let headers = new HttpHeaders().append('Authorization', 'none').append('Content-Type', 'text/json');
     
-
+    
     return this.http.post(connection,JSON.stringify(newtask) ,{
       headers: headers,
       observe: 'body',

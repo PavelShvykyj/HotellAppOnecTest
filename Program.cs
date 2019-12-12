@@ -15,7 +15,7 @@ namespace TestCOneConnection
 {
     public class Program
     {
-        private static Boolean isDevelopment = true;
+        private static Boolean isDevelopment ;
 
         
 
@@ -47,7 +47,7 @@ namespace TestCOneConnection
         WebHost.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, config) => {
 
             
-            //isDevelopment = hostingContext.HostingEnvironment.IsDevelopment();
+            isDevelopment = hostingContext.HostingEnvironment.IsDevelopment();
             
             string pathToContentRoot = EnviroumentDepend.GetPathToContentRoot(isDevelopment);
 

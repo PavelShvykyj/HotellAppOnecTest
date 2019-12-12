@@ -14,5 +14,6 @@ namespace TestCOneConnection.TCPData
         string GetOptions();
         List<IMessage> GetLogg();
         void SetOptions(ITCPOptions newoptions);
+        ITCPTask[] GetTasks();
     }
 }

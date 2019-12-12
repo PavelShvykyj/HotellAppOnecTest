@@ -90,7 +90,9 @@ export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewIni
   
   sessionstatus : ITCPStatus = this.EmptyTCPSessionStatus()
   options;
+  sessiontasks : ITCPTask[] = [];
   
+
   /// table options
   displayedColumns: string[] = ['start', 'content', 'duration', 'status', 'error', 'errorcontent'];
   dataSource :  TCPSessionLogSourse;
@@ -215,11 +217,35 @@ export class TCPSessionsFormComponent implements OnInit, OnDestroy, AfterViewIni
           this.ShowMessage( "Состояние сессии обновлено.", false)
           this.sessionstatus = JSON.parse(res);
         });
+    
+    
+
+  
   }
 
+  GetSessionTasks() {
+    this.OptionsService.GetTCPTasks()    
+    .pipe(
+      catchError((err)=>{
+        console.log(err);
+        this.ShowMessage("Ошибка при обновлении заданий.", true)
+        return []}),
+      finalize(() => {this.sessionStatusUpdatingEventer.next(false);}))
+    .subscribe(res => 
+      {
+        console.log(res);
+        console.log(JSON.parse(res));
+        this.ShowMessage( "Состояние заданий обновлено.", false)
+        this.sessiontasks = JSON.parse(res);
+      });
+
+  }
+
+  
   RefreshAll() {
     this.GetOneCSesiionStatus();
     this.dataSource.GetLog();
+    this.GetSessionTasks()
   }
  
   StartOneCSesiion() {

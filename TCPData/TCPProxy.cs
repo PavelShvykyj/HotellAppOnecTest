@@ -18,7 +18,10 @@ namespace TestCOneConnection.TCPData
             _tcpmanager = tcpmanager;
         }
 
-
+        public ITCPTask[] GetTasks()
+        {
+            return _tcpmanager.GetTasks();
+        }
 
 
         public void AddTask(ITCPTask TCPTask)
@@ -52,7 +55,8 @@ namespace TestCOneConnection.TCPData
 
         public void Stop(bool clearbufer)
         {
-            _tcpmanager.Stop(clearbufer);
+            _tcpmanager.Stop(true);
+            
         }
     }
 }
