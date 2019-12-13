@@ -10,6 +10,7 @@ namespace TestCOneConnection.TCPData
     {
         void Start();
         void Stop(bool clearbufer);
+        void SaveLog();
         void AddTask(ITCPTask TCPTask);
         ITCPStatus GetStatus();
         ITCPTask[] GetTasks();

@@ -34,6 +34,7 @@ namespace TestCOneConnection.OneCData
             _maxbadresponsecount = options.Value.MAX_BADREQUEST_COUNT;
             
             _logger = logger;
+            
 
             _timer = new Timer(options.Value.PING_FREQUENCY)
             {

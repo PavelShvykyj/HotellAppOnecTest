@@ -10,10 +10,27 @@ using System.Text;
 using TestCOneConnection.RequestProxy;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using System.Timers;
+
 
 namespace TestCOneConnection.TCPData
 {
-    public class TCPAPIManager : ITCPAPIManager
+    public class PingTimer : System.Timers.Timer {
+
+        public TCPTaskType TaskType { get; set; }
+
+        public PingTimer()
+            :base() 
+        {
+
+        }
+
+
+
+    }
+
+
+     public class TCPAPIManager : ITCPAPIManager
     {
 
         public List<IMessage> Logg { get => _logger.Messages; }
@@ -24,7 +41,8 @@ namespace TestCOneConnection.TCPData
 
         private IOptions<TCPOptions> _options;
         private IOptions<OneCOptions> _onecoptions;
-
+        private PingTimer _timer;
+        
         private Queue<ITCPTask> _tasks;
         
 
@@ -60,8 +78,67 @@ namespace TestCOneConnection.TCPData
             _client = new TcpClient();
 
 
+           
+
+
+            
+        }
+
+
+        private void InitTimer() {
+            _timer = new PingTimer()
+            {
+                TaskType = TCPTaskType.ping,
+                Interval = 10000,
+                AutoReset = true,
+                Enabled = false
+            };
+            _timer.Elapsed += OnTimedEvent;
+        }
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e) {
+            
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = _timer.TaskType,
+                parametr = ""
+            };
+
+            AddTask(chainTask);
 
         }
+
+
+        private void SwichTimer(TCPTaskType taskType) {
+            
+            if (taskType == TCPTaskType.reconnect)
+            {
+                _timer.Interval = 60000;
+                _timer.TaskType = TCPTaskType.reconnect;
+            }
+            else if (taskType == TCPTaskType.ping)
+            {
+                _timer.TaskType = TCPTaskType.ping;
+                _timer.Interval = 30000;
+            }
+            
+                
+
+        }
+
+        private void StartPing()
+        {
+            _timer.Enabled = true;
+            _timer.Start();
+            
+        }
+
+        private void StopPing()
+        {
+            _timer.Enabled = false;
+            _timer.Stop();
+        }
+
 
         private bool Connect(CancellationToken token) {
             if (_status.connected)
@@ -76,7 +153,8 @@ namespace TestCOneConnection.TCPData
             IMessage logmessage = _logger.StartMessage("connect" , new { });
             try {
                 _client = new TcpClient();
-                _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT, token);
+                //_client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT, token);
+                _client.Connect(_options.Value.HOST, _options.Value.PORT);
                 _stream = _client.GetStream();
                 _status.connected = true;
                 logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
@@ -87,13 +165,12 @@ namespace TestCOneConnection.TCPData
                 logmessage.additionalsparams = new { requeststatus = 400, error = "Не подключились", contenet = "time out"+ _options.Value.TIMEOUT.ToString() };
                 _logger.FinishMessage(logmessage);
                 _status.connected = false;
-                Disconnect();
                 return false;
             }           
         }
 
         private void Disconnect() {
-            _cancelTokenSourse.Cancel();
+            
             
             if (_stream != null) {
                 _stream.Close();
@@ -236,9 +313,11 @@ namespace TestCOneConnection.TCPData
             {
                 messages.Add(builder.ToString());
             }
-
-            logmessage.additionalsparams = new { requeststatus = 200, error = "Закончили чтение", contenet = messages.ToArray() };
-            _logger.FinishMessage(logmessage);
+            if (messages.Count !=0 )
+            {
+                logmessage.additionalsparams = new { requeststatus = 200, error = "Закончили чтение", contenet = messages.ToArray() };
+                _logger.FinishMessage(logmessage);
+            }
             return messages;
         }
 
@@ -254,11 +333,11 @@ namespace TestCOneConnection.TCPData
                 return false;
             }
 
-            List<string> messages = Read(_options.Value.LONG_TIMEOUT,token);
+            List<string> messages = Read(_options.Value.SHORT_TIMEOUT,token);
 
             if (messages.Count == 0 )
             {
-                return true;
+                return false;
             }
 
 
@@ -331,9 +410,15 @@ namespace TestCOneConnection.TCPData
                 }
             }
 
+            //// переключаем таймер на долгий реконнект 
+
+
             if (!_status.connected)
             {
-                Stop(false);
+                SwichTimer(TCPTaskType.reconnect);
+            }
+            else {
+                SwichTimer(TCPTaskType.ping);
             }
 
         }
@@ -437,7 +522,7 @@ namespace TestCOneConnection.TCPData
 
 
                     IMessage logmessage = _logger.StartMessage("send to one c:" + message, new { });
-                    if (_proxy.GetOneCSessionStatus().LastResponseStatus == HttpStatusCode.Accepted)
+                    if (_proxy.GetOneCSessionStatus().OneCSesionId.Length != 0)
                     {
                         IProxyParametr parametr = new ProxyParametr();
                         parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "TCPEvent");
@@ -446,7 +531,7 @@ namespace TestCOneConnection.TCPData
                         logmessage.additionalsparams = new { requeststatus = response.Response.StatusCode, error = response.Response.ErrorMessage, contenet = response.Response.ErrorException };
                         _logger.FinishMessage(logmessage);
                         /// сообщение на дисплей о ошибке
-                        if (response.Response.StatusCode != HttpStatusCode.Accepted)
+                        if (response.Response.StatusCode != HttpStatusCode.OK)
                         {
                             catnOneC.parametr = "< " + message.Substring(2, 4) + " DISPLAY cant connect to DB";
                             AddTask(catnOneC);
@@ -476,9 +561,6 @@ namespace TestCOneConnection.TCPData
             _status.bufersize = _tasks.Count;
         }
 
-    
-
-
         public ITCPStatus GetStatus()
         {
             return _status;
@@ -497,10 +579,12 @@ namespace TestCOneConnection.TCPData
                 parametr = ""
             };
             AddTask(chainTask);
+            InitTimer();
             _cancelTokenSourse = new CancellationTokenSource();
             _chaintask = new Task(() => DoQueueTaskss(_cancelTokenSourse.Token),_cancelTokenSourse.Token);
             _chaintask.Start();
-            
+            SwichTimer(TCPTaskType.reconnect);
+            StartPing();
         }
 
         public ITCPTask[] GetTasks() {
@@ -509,13 +593,20 @@ namespace TestCOneConnection.TCPData
 
         public void Stop(bool clearbufer)
         {
+            StopPing();
+            _cancelTokenSourse.Cancel();
             Disconnect();
             if (clearbufer) {
                 _tasks.Clear();
             }
             _chaintask = null;
             _status.bufersize = _tasks.Count;
+            _timer.Dispose();
+            _timer = null;
+        }
 
+        public void SaveLog() {
+            _logger.SaveLog("tcp_");
         }
     }
 }

@@ -28,11 +28,21 @@ namespace TestCOneConnection.Controllers
             return Ok(_proxy.GetLogg());
         }
 
+
+
         [HttpGet("tcpstatus")]
         public IActionResult GetTCPStatus()
         {
             return Ok(_proxy.GetStatus());
         }
+
+        [HttpGet("tcpsavelog")]
+        public IActionResult GetTCPsavelog()
+        {
+            _proxy.SaveLog();
+            return Ok();
+        }
+
 
         [HttpGet("tcpstasks")]
         public IActionResult GetTCPTasks()

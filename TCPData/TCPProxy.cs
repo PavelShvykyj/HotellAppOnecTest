@@ -58,5 +58,9 @@ namespace TestCOneConnection.TCPData
             _tcpmanager.Stop(true);
             
         }
+
+        public void SaveLog() {
+            _tcpmanager.SaveLog();
+        }
     }
 }

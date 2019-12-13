@@ -5,11 +5,8 @@ using TestCOneConnection.OneCData;
 
 namespace TestCOneConnection.TCPData
 {
-    public interface ITCPDataLogger
+    public interface ITCPDataLogger : IOneCDataLogger
     {
-        List<IMessage> Messages { get; }
-        IMessage StartMessage(string messagecontent, object addparams);
-        void FinishMessage(IMessage message);
 
     }
 }

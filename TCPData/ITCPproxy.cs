@@ -11,6 +11,7 @@ namespace TestCOneConnection.TCPData
         void AddTask(ITCPTask TCPTask);
         void Start();
         void Stop(bool clearbufer);
+        void SaveLog();
         string GetOptions();
         List<IMessage> GetLogg();
         void SetOptions(ITCPOptions newoptions);

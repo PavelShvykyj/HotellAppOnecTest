@@ -17,8 +17,10 @@ namespace TestCOneConnection.OneCData
 
     public interface IOneCDataLogger
     {
+        string prefixname { get; set; }
         List<IMessage> Messages { get; }
         IMessage StartMessage(string messagecontent, object addparams);
+        void SaveLog(string prefix);
         void FinishMessage(IMessage message);
 
     }
