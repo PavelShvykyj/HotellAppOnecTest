@@ -11,8 +11,10 @@ namespace TestCOneConnection.OneCData {
         public RestClientAccessor(IOptions<OneCOptions> options)
         {
             Client = new RestClient(options.Value.BASE_URL);
+            Client.ConfigureWebRequest(x => x.AllowWriteStreamBuffering = false);
             Client.Authenticator = new HttpBasicAuthenticator(options.Value.LOGIN, options.Value.PASSWORD);
         }
+
 
     }
 }

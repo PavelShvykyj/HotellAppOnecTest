@@ -9,15 +9,22 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Diagnostics;
+using System.Threading;
+using TestCOneConnection.CommonData;
 
 namespace TestCOneConnection.OneCData
 {
-    
+
+    public enum OneCTaskType {
+        Start,
+        Ping
+    }
+
     public class OneCSessionManager : IOneCSessionManager
     {
         private readonly RestClient _client;
         private IOneCDataLogger _logger;
-        private Timer _timer;
+        private PingTimer<OneCTaskType> _timer;
         private IOneCSessionStatus _sessionstatus;
 
         private int _restrequesttimeout;
@@ -26,19 +33,24 @@ namespace TestCOneConnection.OneCData
         public List<IMessage> Logg { get => _logger.Messages; }
         public IOneCSessionStatus SessionStatus { get => _sessionstatus; }
 
+        
+        private CancellationTokenSource _cancelTokenSourse;
+        
+        private IOptions<OneCOptions> _options;
 
 
         public OneCSessionManager(IRestClientAccessor ClientAccessor, IOneCDataLogger logger, IOptions<OneCOptions> options)
         {
             _restrequesttimeout = options.Value.REQUEST_TIMEOUT;
             _maxbadresponsecount = options.Value.MAX_BADREQUEST_COUNT;
-            
+            _options = options;
             _logger = logger;
-            
 
-            _timer = new Timer(options.Value.PING_FREQUENCY)
+
+            _timer = new PingTimer<OneCTaskType>()  
             {
-                AutoReset = true,
+                Interval =  _options.Value.PING_FREQUENCY,
+                AutoReset = false,
                 Enabled = false
             };
             _timer.Elapsed += OnTimedEvent;
@@ -52,14 +64,21 @@ namespace TestCOneConnection.OneCData
                 PingTimerStarted = false,
                 OneCSesionId = ""
             };
-            
+
+
+            _cancelTokenSourse = new CancellationTokenSource();
+
             ///// перенесено в startup - Configure см. коментарий там
             //StartSessionAsync();
         }
 
+      
+
+     
         private async Task RunStartSessionTask()
         {
-            await StopSessionAsync();
+            StopPing();
+            await RunStopSessionTask();
             var request = new RestRequest()
             {
                 Resource = "ping",
@@ -68,7 +87,7 @@ namespace TestCOneConnection.OneCData
 
 
             request.AddHeader("IBSession", "start");
-            _client.CookieContainer = new CookieContainer();
+            
             IMessage message = _logger.StartMessage("StartSession", new { });
 
             //var cancellationTokenSource = new CancellationTokenSource();
@@ -80,60 +99,56 @@ namespace TestCOneConnection.OneCData
             /// в нашем случае ExecuteStartSession нас это не устраивает так как вызовы пинг старт стоп могут пойти в перемешку
             /// посему нужно дождаться ответа await ExecuteTaskAsync и тогда вручную запускаем завешающий метод 
             /// new RestRequestAsyncHandle() - этот параметр оставляем для совместимости с ExecuteAsync (этот параметр передается в делегат)
-            await ExecuteStartSession(response, new RestRequestAsyncHandle(), message);
+             ExecuteStartSession(response, new RestRequestAsyncHandle(), message);
         }
 
-        public async Task StartSessionAsync()
+        private  void ExecuteStartSession(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
         {
-            await Task.Run(RunStartSessionTask);
-        }
+            
 
-        private async Task ExecuteStartSession(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
-        {
             message.additionalsparams = new { requeststatus = response.StatusCode, error = response.ErrorMessage, contenet = response.Content };
             _logger.FinishMessage(message);
             _sessionstatus.LastResponseStatus = response.StatusCode;
+
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.OK)
             {
                 _sessionstatus.BadResponseCount += 1;
 
                 if (_sessionstatus.BadResponseCount > _maxbadresponsecount)
                 {
-                    StopPing();
-                    return;
+                    // тут что то можно отослать например на скайп и почту
+                    //return;
                 }
-
-                await StartSessionAsync();
-                return;
+                SwichTimer(OneCTaskType.Start, 30000);
+            }
+            else {
+                _sessionstatus.BadResponseCount = 0;
+                RestResponseCookie cookie = response.Cookies.SingleOrDefault(c => c.Name == "ibsession");
+                _sessionstatus.OneCSesionId = cookie.Value.ToString();
+                _client.CookieContainer = new CookieContainer();
+                _client.CookieContainer.Add(new Cookie(cookie.Name, cookie.Value.ToString(), cookie.Path, cookie.Domain));
+                SwichTimer(OneCTaskType.Ping, _options.Value.PING_FREQUENCY);
             }
 
-            _sessionstatus.BadResponseCount = 0;
-
-            RestResponseCookie cookie = response.Cookies.SingleOrDefault(c => c.Name == "ibsession");
-            _sessionstatus.OneCSesionId = cookie.Value.ToString();
-
-            _client.CookieContainer.Add(new Cookie(cookie.Name, cookie.Value.ToString(), cookie.Path, cookie.Domain));
             StartPing();
         }
 
-
         private async Task RunStopSessionTask()
         {
-            StopPing();
-            var request = new RestRequest()
-            {
-                Resource = "ping",
-                Timeout  = _restrequesttimeout
-            };
-            request.AddHeader("IBSession", "finish");
-            IMessage message = _logger.StartMessage("StopSession", new { });
-            IRestResponse response = await _client.ExecuteTaskAsync(request);
-            ExecuteStopSession(response, new RestRequestAsyncHandle(), message);
-        }
+            
+            if (_sessionstatus.OneCSesionId.Length != 0) {
+                StopPing();
+                var request = new RestRequest()
+                {
+                    Resource = "ping",
+                    Timeout = _restrequesttimeout
+                };
+                request.AddHeader("IBSession", "finish");
+                IMessage message = _logger.StartMessage("StopSession", new { });
+                IRestResponse response = await _client.ExecuteTaskAsync(request);
+                ExecuteStopSession(response, new RestRequestAsyncHandle(), message);
+            }
 
-        public async Task StopSessionAsync()
-        {
-            await Task.Run(RunStopSessionTask);
         }
 
         private void ExecuteStopSession(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
@@ -147,10 +162,6 @@ namespace TestCOneConnection.OneCData
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.OK)
             {
                 _sessionstatus.BadResponseCount += 1;
-                if (_sessionstatus.BadResponseCount > _maxbadresponsecount)
-                {
-                    StopPing();
-                }
             }
             else {
                 _sessionstatus.BadResponseCount = 0;
@@ -158,8 +169,9 @@ namespace TestCOneConnection.OneCData
 
         }
 
-        private async void Ping()
+        private async Task Ping()
         {
+            StopPing();
             var request = new RestRequest()
             {
                 Resource = "ping",
@@ -168,36 +180,64 @@ namespace TestCOneConnection.OneCData
             
             IMessage message = _logger.StartMessage("ping", new { });
             //Client.ExecuteAsync(request, (r, rh) => ExecutePing(r, rh, message), Method.GET);
-            IRestResponse response = await _client.ExecuteTaskAsync(request);
-             ExecutePing(response, new RestRequestAsyncHandle(), message);
+            IRestResponse response =  await _client.ExecuteTaskAsync(request);
+            RestRequestAsyncHandle requesthandle = new RestRequestAsyncHandle();
+            
+            ExecutePing( response,  requesthandle,  message);
+            //FakeExecutePing(message);
         }
 
-        private async void ExecutePing(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
+        //private void FakeExecutePing(IMessage message)
+        //{
+        //    message.additionalsparams = new { requeststatus = HttpStatusCode.OK, error = "", contenet = "" };
+        //    _sessionstatus.LastResponseStatus = HttpStatusCode.OK;
+        //    _logger.FinishMessage(message);
+
+        //    _sessionstatus.BadResponseCount = 0;
+        //    SwichTimer(OneCTaskType.Ping, _options.Value.PING_FREQUENCY);
+
+        //    StartPing();
+
+        //}
+
+        private void ExecutePing(IRestResponse response, RestRequestAsyncHandle requesthandle, IMessage message)
         {
+            
             message.additionalsparams = new { requeststatus = response.StatusCode, error = response.ErrorMessage, contenet = response.Content };
             _sessionstatus.LastResponseStatus = response.StatusCode;
             _logger.FinishMessage(message);
-            
+
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.OK)
             {
                 _sessionstatus.BadResponseCount += 1;
-
-                if (_sessionstatus.BadResponseCount > _maxbadresponsecount)
-                {
-                    StopPing();
-                    return;
-                }
-
-
-               await  StartSessionAsync();
+                SwichTimer(OneCTaskType.Start, 100);
             }
-            _sessionstatus.BadResponseCount = 0;
+            else
+            {
+
+                _sessionstatus.BadResponseCount = 0;
+                SwichTimer(OneCTaskType.Ping, _options.Value.PING_FREQUENCY);
+            }
+
+            StartPing();
 
         }
 
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        async private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Ping();
+            if (_timer.TaskType == OneCTaskType.Ping)
+            {
+                //Task PingTask = new Task(async () => await Ping());
+                //PingTask.Start();
+                await Ping();
+
+            }
+            else if (_timer.TaskType == OneCTaskType.Start)
+            {
+                //Task StartTask = new Task(async () => await RunStartSessionTask());
+                //StartTask.Start();
+                await RunStartSessionTask();
+            }
         }
 
         private void StartPing()
@@ -207,12 +247,58 @@ namespace TestCOneConnection.OneCData
             _sessionstatus.PingTimerStarted = true;
         }
 
+        private void SwichTimer(OneCTaskType taskType, int interval)
+        {
+
+            if (taskType == OneCTaskType.Start)
+            {
+                _timer.Interval = interval;
+                
+            }
+            else if (taskType == OneCTaskType.Ping)
+            {
+
+                _timer.Interval = interval;
+            }
+
+            _timer.TaskType = taskType;
+
+        }
+
+
         private void StopPing()
         {
             
             _timer.Enabled = false;
             _timer.Stop();
             _sessionstatus.PingTimerStarted = false;
+            _timer.Dispose();
+
+            _timer = new PingTimer<OneCTaskType>()
+            {
+                Interval = _options.Value.PING_FREQUENCY,
+                AutoReset = false,
+                Enabled = false
+            };
+            _timer.Elapsed += OnTimedEvent;
+
         }
+
+
+        public async Task StopSessionAsync()
+        {
+            await RunStopSessionTask();
+        }
+
+
+        public async Task StartSessionAsync()
+        {
+             await RunStartSessionTask();
+        }
+
+
+
+
+
     }
 }

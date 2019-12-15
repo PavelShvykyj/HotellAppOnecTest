@@ -11,23 +11,12 @@ using TestCOneConnection.RequestProxy;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Timers;
-
+using System.Linq;
+using TestCOneConnection.CommonData;
 
 namespace TestCOneConnection.TCPData
 {
-    public class PingTimer : System.Timers.Timer {
-
-        public TCPTaskType TaskType { get; set; }
-
-        public PingTimer()
-            :base() 
-        {
-
-        }
-
-
-
-    }
+  
 
 
      public class TCPAPIManager : ITCPAPIManager
@@ -41,11 +30,11 @@ namespace TestCOneConnection.TCPData
 
         private IOptions<TCPOptions> _options;
         private IOptions<OneCOptions> _onecoptions;
-        private PingTimer _timer;
+        private PingTimer<TCPTaskType> _timer;
         
         private Queue<ITCPTask> _tasks;
-        
 
+        private int _connectionTrysCount;
 
         private ITCPStatus _status;
 
@@ -53,9 +42,11 @@ namespace TestCOneConnection.TCPData
         private NetworkStream _stream;
         private CancellationTokenSource _cancelTokenSourse;
         private Task _chaintask;
+        
 
         public TCPAPIManager(ITCPDataLogger dataLogger, IOptions<TCPOptions> options, IOptions<OneCOptions> onecoptions, IRequestProxy Proxy)
         {
+            _connectionTrysCount = 0;
             _tasks = new Queue<ITCPTask>();
             _chaintask = null;
             _cancelTokenSourse = new CancellationTokenSource();
@@ -76,17 +67,12 @@ namespace TestCOneConnection.TCPData
 
             _tasks.Clear();
             _client = new TcpClient();
-
-
-           
-
-
             
         }
 
 
         private void InitTimer() {
-            _timer = new PingTimer()
+            _timer = new PingTimer<TCPTaskType>()
             {
                 TaskType = TCPTaskType.ping,
                 Interval = 10000,
@@ -104,7 +90,11 @@ namespace TestCOneConnection.TCPData
                 parametr = ""
             };
 
-            AddTask(chainTask);
+            if (!_tasks.Any(t => t.taskType == _timer.TaskType))
+            {
+                AddTask(chainTask);
+            }
+            
 
         }
 
@@ -153,8 +143,8 @@ namespace TestCOneConnection.TCPData
             IMessage logmessage = _logger.StartMessage("connect" , new { });
             try {
                 _client = new TcpClient();
-                //_client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT, token);
-                _client.Connect(_options.Value.HOST, _options.Value.PORT);
+                _client.ConnectAsync(_options.Value.HOST, _options.Value.PORT).Wait(_options.Value.TIMEOUT, token);
+                //_client.Connect(_options.Value.HOST, _options.Value.PORT);
                 _stream = _client.GetStream();
                 _status.connected = true;
                 logmessage.additionalsparams = new { requeststatus = 200, error = "OK", contenet = "" };
@@ -373,6 +363,10 @@ namespace TestCOneConnection.TCPData
                     case TCPTaskType.reconnect:
                         DoChainConnectTask(queuetask, token);
                         break;
+                    case TCPTaskType.pause:
+                        DoChainPauseTask(queuetask, token);
+                        break;
+
                     default:
                         break;
                 }
@@ -381,7 +375,29 @@ namespace TestCOneConnection.TCPData
             
         }
 
-        private void DoChainConnectTask(ITCPTask queuetask, CancellationToken token)
+        private void DoChainPauseTask(ITCPTask queuetask, CancellationToken token)
+        {
+            _status.workon = queuetask;
+            _status.bufersize = _tasks.Count;
+            _status.connected = false;
+
+            ITCPTask chainTask = new TCPTask()
+            {
+                taskType = TCPTaskType.reconnect,
+                parametr = ""
+            };
+
+            Thread.Sleep(60000);
+            
+            if (!token.IsCancellationRequested & !_tasks.Any(t => t.taskType == chainTask.taskType))
+            {
+                AddTask(chainTask);
+            }
+
+        }
+
+
+     private void DoChainConnectTask(ITCPTask queuetask, CancellationToken token)
         {
 
             /// обновление статуса + метод + анализ результата + вызов цепочки
@@ -395,31 +411,58 @@ namespace TestCOneConnection.TCPData
                 parametr = ""
             };
 
-            byte connectionTrysCount = 0;
-            while (connectionTrysCount <= _onecoptions.Value.MAX_BADREQUEST_COUNT)
+
+            ////// это варианит с остановкой реконнекта
+            //byte connectionTrysCount = 0;
+            //while (connectionTrysCount <= _onecoptions.Value.MAX_BADREQUEST_COUNT)
+            //{
+            //    connectionTrysCount++;
+            //    if (Connect(token)) {
+            //        _status.connected = true;
+            //        if (_tasks.Count == 0)
+            //        {
+            //            AddTask(chainTask);
+            //        }
+
+            //        break;
+            //    }
+            //}
+
+
+            if (Connect(token))
             {
-                connectionTrysCount++;
-                if (Connect(token)) {
-                    _status.connected = true;
-                    if (_tasks.Count == 0)
-                    {
-                        AddTask(chainTask);
-                    }
-                    
-                    break;
+                _connectionTrysCount = 0;
+                _status.connected = true;
+                if (_tasks.Count == 0)
+                {
+                    AddTask(chainTask);
                 }
-            }
+                SwichTimer(TCPTaskType.ping);
+               
 
-            //// переключаем таймер на долгий реконнект 
-
-
-            if (!_status.connected)
-            {
-                SwichTimer(TCPTaskType.reconnect);
             }
             else {
-                SwichTimer(TCPTaskType.ping);
+                ++_connectionTrysCount;
+                //if (_connectionTrysCount > _onecoptions.Value.MAX_BADREQUEST_COUNT)
+                //{
+                //    /// сигнал отослать
+                //    /// и обнулить чтоб не спамило 
+                //}
+
+                _status.connected = false;
+                SwichTimer(TCPTaskType.reconnect);
+
+                if (!token.IsCancellationRequested & _tasks.Count == 0)
+                {
+                    chainTask.taskType = TCPTaskType.pause;
+                    AddTask(queuetask);
+                }
+
+
             }
+
+
+  
 
         }
 
@@ -582,6 +625,7 @@ namespace TestCOneConnection.TCPData
             InitTimer();
             _cancelTokenSourse = new CancellationTokenSource();
             _chaintask = new Task(() => DoQueueTaskss(_cancelTokenSourse.Token),_cancelTokenSourse.Token);
+
             _chaintask.Start();
             SwichTimer(TCPTaskType.reconnect);
             StartPing();

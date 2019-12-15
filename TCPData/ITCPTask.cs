@@ -6,7 +6,8 @@ namespace TestCOneConnection.TCPData
         read,
         wright,
         ping,
-        reconnect
+        reconnect,
+        pause
 
 
     }
