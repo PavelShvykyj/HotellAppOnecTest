@@ -2,7 +2,8 @@ export enum TCPTaskType {
     read,
     wright,
     ping,
-    reconnect
+    reconnect,
+    pause
 }
 
 export interface ITCPTask {

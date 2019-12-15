@@ -428,7 +428,7 @@ namespace TestCOneConnection.TCPData
             //    }
             //}
 
-
+            Disconnect(); /// очстим переменныые
             if (Connect(token))
             {
                 _connectionTrysCount = 0;
@@ -455,7 +455,7 @@ namespace TestCOneConnection.TCPData
                 if (!token.IsCancellationRequested & _tasks.Count == 0)
                 {
                     chainTask.taskType = TCPTaskType.pause;
-                    AddTask(queuetask);
+                    AddTask(chainTask);
                 }
 
 
