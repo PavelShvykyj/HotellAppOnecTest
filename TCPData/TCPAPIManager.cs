@@ -429,6 +429,7 @@ namespace TestCOneConnection.TCPData
             //}
 
             Disconnect(); /// очстим переменныые
+            StopPing();   /// иначе очередь сбивается 
             if (Connect(token))
             {
                 _connectionTrysCount = 0;
@@ -438,7 +439,7 @@ namespace TestCOneConnection.TCPData
                     AddTask(chainTask);
                 }
                 SwichTimer(TCPTaskType.ping);
-               
+                StartPing();
 
             }
             else {
