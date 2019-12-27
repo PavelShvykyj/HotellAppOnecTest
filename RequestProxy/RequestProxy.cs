@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestCOneConnection.CommonData;
+using TestCOneConnection.Notifications;
 using TestCOneConnection.OneCData;
 
 namespace TestCOneConnection.RequestProxy
@@ -9,7 +11,7 @@ namespace TestCOneConnection.RequestProxy
     public class ProxyServise : IRequestProxy
     {
         private readonly IOneCDataProvider _OneCDataProvider;
-
+        private INotificator _notificator;
         // delegates
         private Func<IProxyParametr, Task<IProxyResponse>> GetRoomStockDelegate;
         private Func<IProxyParametr, Task<IProxyResponse>> SimpeProxyGetDelegate;
@@ -17,10 +19,39 @@ namespace TestCOneConnection.RequestProxy
 
 
 
-        public ProxyServise(IOneCDataProvider OneCDataProvider) 
+        public ProxyServise(IOneCDataProvider OneCDataProvider, INotificator notificator) 
         {
             _OneCDataProvider = OneCDataProvider;
             InitDelegates();
+            _notificator = notificator;
+            _notificator.NotificationRecieved += OnNotificationRecieved;
+            _OneCDataProvider.SessionManager.ONECNotification += OnONECNotification;
+        }
+
+        async private void  OnNotificationRecieved(object source, TextEventArgs args)
+        {
+            string command = args.Data;
+            switch (command)
+            {
+                case "ONEC_Start":
+                    await StopOneCSession();
+                    break;
+                case "ONEC_Stop":
+                    await StartOneCSession();
+                    break;
+                case "ONEC_Status":
+                    IOneCSessionStatus status = GetOneCSessionStatus();
+                    string message = "ИД сесии : " + status.OneCSesionId + " статус ответа : " + status.LastResponseStatus.ToString() + " пинг запущен : " + status.PingTimerStarted;
+                    _notificator.SendNotificationText(message);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnONECNotification(object source, TextEventArgs args)
+        {
+            _notificator.SendNotificationText(args.Data);
         }
 
         private void InitDelegates()

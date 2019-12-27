@@ -38,6 +38,7 @@ namespace TestCOneConnection.OneCData
         
         private IOptions<OneCOptions> _options;
 
+        public event EventHandler<TextEventArgs> ONECNotification;
 
         public OneCSessionManager(IRestClientAccessor ClientAccessor, IOneCDataLogger logger, IOptions<OneCOptions> options)
         {
@@ -294,10 +295,15 @@ namespace TestCOneConnection.OneCData
         public async Task StartSessionAsync()
         {
              await RunStartSessionTask();
+            ONECNotification(this, new TextEventArgs() { Data = "ONEC service stoped" });
         }
 
 
+        protected virtual void OnONECNotification(object sourse, TextEventArgs args)
+        {
 
+            ONECNotification(sourse, args);
+        }
 
 
     }

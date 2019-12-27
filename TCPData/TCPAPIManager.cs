@@ -23,6 +23,7 @@ namespace TestCOneConnection.TCPData
     {
 
         public List<IMessage> Logg { get => _logger.Messages; }
+        public event EventHandler<TextEventArgs> TCPNotification;
 
         private ITCPDataLogger _logger;
         private IRequestProxy _proxy;
@@ -648,10 +649,18 @@ namespace TestCOneConnection.TCPData
             _status.bufersize = _tasks.Count;
             _timer.Dispose();
             _timer = null;
+
+            OnTCPNotification(this, new TextEventArgs() { Data = "TCP service stoped" });
         }
 
         public void SaveLog() {
             _logger.SaveLog("tcp_");
         }
+
+        protected virtual void OnTCPNotification(object sourse, TextEventArgs args) {
+
+            TCPNotification( sourse,  args);
+        }
+
     }
 }

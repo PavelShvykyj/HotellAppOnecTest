@@ -9,6 +9,7 @@ using Newtonsoft.Json.Serialization;
 using TestCOneConnection.OneCData;
 using TestCOneConnection.TCPData;
 using TestCOneConnection.RequestProxy;
+using TestCOneConnection.Notifications;
 
 namespace TestCOneConnection
 {
@@ -43,6 +44,10 @@ namespace TestCOneConnection
             services.AddSingleton<ITCPAPIManager, TCPAPIManager>();
             services.AddSingleton<ITCPproxy, TCPProxy>();
             services.AddSingleton<ITCPDataLogger, TCPDataLogger>();
+
+            /// common part
+            services.AddSingleton<INotificator, TelegramNotificator>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(opt =>
             {

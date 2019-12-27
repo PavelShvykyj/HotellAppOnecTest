@@ -1,7 +1,9 @@
 ﻿
 
 
+using System;
 using System.Collections.Generic;
+using TestCOneConnection.CommonData;
 using TestCOneConnection.OneCData;
 
 namespace TestCOneConnection.TCPData
@@ -15,5 +17,6 @@ namespace TestCOneConnection.TCPData
         ITCPStatus GetStatus();
         ITCPTask[] GetTasks();
         List<IMessage> Logg { get; }
+        event EventHandler<TextEventArgs> TCPNotification;
     }
 }
