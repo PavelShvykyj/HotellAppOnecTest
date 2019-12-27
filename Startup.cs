@@ -65,7 +65,7 @@ namespace TestCOneConnection
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void  Configure(IApplicationBuilder app, IHostingEnvironment env, IOneCSessionManager OneCSessionManager)
+        public void  Configure(IApplicationBuilder app, IHostingEnvironment env, IOneCSessionManager OneCSessionManager, ITCPAPIManager TCPAPIManager)
         {
             if (env.IsDevelopment())
             {
@@ -105,9 +105,9 @@ namespace TestCOneConnection
             });
 
             /// поскольку services.Add не создает екземпляр класса то первичный запуск 
-            /// подключения к 1С делаем вручную тут а не в кострукторе класа как пердпологалось
-            //OneCSessionManager.StartSessionAsync();
-             
+            /// подключения к 1С И TCP делаем вручную тут а не в кострукторе класа как пердпологалось
+            OneCSessionManager.StartSessionAsync();
+            TCPAPIManager.Start();
             //app.ApplicationServices.GetService<OneCSessionManager>().StartSessionAsync();
         }
     }
