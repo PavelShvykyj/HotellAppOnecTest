@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,15 +18,17 @@ namespace TestCOneConnection.RequestProxy
         private Func<IProxyParametr, Task<IProxyResponse>> SimpeProxyGetDelegate;
         private Func<IProxyParametr, Task<IProxyResponse>> SimpeProxyPostDelegate;
 
+        private IOptions<OneCOptions> _onecoptions;
 
 
-        public ProxyServise(IOneCDataProvider OneCDataProvider, INotificator notificator) 
+        public ProxyServise(IOneCDataProvider OneCDataProvider, INotificator notificator, IOptions<OneCOptions> onecoptions) 
         {
             _OneCDataProvider = OneCDataProvider;
             InitDelegates();
             _notificator = notificator;
             _notificator.NotificationRecieved += OnNotificationRecieved;
             _OneCDataProvider.SessionManager.ONECNotification += OnONECNotification;
+            _onecoptions = onecoptions;
         }
 
         async private void  OnNotificationRecieved(object source, TextEventArgs args)
@@ -44,6 +47,16 @@ namespace TestCOneConnection.RequestProxy
                     string message = "ИД сесии : " + status.OneCSesionId + " статус ответа : " + status.LastResponseStatus.ToString() + " пинг запущен : " + status.PingTimerStarted;
                     _notificator.SendNotificationText(message);
                     break;
+                case "ONEC_Stat":
+
+                    IProxyParametr parametr = new ProxyParametr();
+                    parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "ONEC_Stat");
+                    parametr.Parametr.Add("OneCBody", "");
+                    IProxyResponse response = await SimpleProxyGet(parametr);
+                    _notificator.SendNotificationText(response.FormatedAswer.ToString() , "@"+args.Sender);
+                    break;
+
+
                 default:
                     break;
             }

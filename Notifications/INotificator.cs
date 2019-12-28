@@ -16,6 +16,6 @@ namespace TestCOneConnection.Notifications
         event EventHandler<TextEventArgs> NotificationRecieved;
 
         void SendNotificationText(string message);
-
+        void SendNotificationText(string message, string sender);
     }
 }

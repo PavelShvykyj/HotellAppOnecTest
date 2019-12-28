@@ -37,6 +37,19 @@ namespace TestCOneConnection.Notifications
             
         }
 
+        public async void SendNotificationText(string message, string sender) {
+            try
+            {
+                await _client.SendTextMessageAsync(sender , message);
+            }
+            catch
+            {
+                /// что то тут делать? не ясно
+
+            }
+
+        }
+
         protected virtual void OnNotificationRecieved(object sourse, TextEventArgs args) {
 
             NotificationRecieved(sourse, args);
@@ -54,7 +67,8 @@ namespace TestCOneConnection.Notifications
 
                 TextEventArgs args = new TextEventArgs()
                 {
-                    Data = e.Update.ChannelPost.Text
+                    Data = e.Update.ChannelPost.Text,
+                    Sender = e.Update.ChannelPost.Chat.Username
                 };
 
                 OnNotificationRecieved(this, args);

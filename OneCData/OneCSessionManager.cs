@@ -295,7 +295,7 @@ namespace TestCOneConnection.OneCData
         public async Task StartSessionAsync()
         {
              await RunStartSessionTask();
-            ONECNotification(this, new TextEventArgs() { Data = "ONEC service stoped" });
+             //ONECNotification(this, new TextEventArgs() { Data = "ONEC service stoped" });
         }
 
 
