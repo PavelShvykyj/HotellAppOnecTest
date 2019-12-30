@@ -53,7 +53,7 @@ namespace TestCOneConnection.RequestProxy
                     parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "ONEC_Stat");
                     parametr.Parametr.Add("OneCBody", "");
                     IProxyResponse response = await SimpleProxyGet(parametr);
-                    _notificator.SendNotificationText(response.FormatedAswer.ToString() , "@"+args.Sender);
+                    _notificator.SendNotificationText(response.FormatedAswer.ToString() , args.Sender);
                     break;
 
 

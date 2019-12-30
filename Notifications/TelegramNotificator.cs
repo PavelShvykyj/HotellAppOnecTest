@@ -68,11 +68,25 @@ namespace TestCOneConnection.Notifications
                 TextEventArgs args = new TextEventArgs()
                 {
                     Data = e.Update.ChannelPost.Text,
-                    Sender = e.Update.ChannelPost.Chat.Username
+                    Sender = "@"+e.Update.ChannelPost.Chat.Username
                 };
 
                 OnNotificationRecieved(this, args);
             }
+            else if (e.Update.Type == UpdateType.Message)
+            {
+
+                TextEventArgs args = new TextEventArgs()
+                {
+                    Data = e.Update.Message.Text,
+                    Sender = e.Update.Message.Chat.Id.ToString()
+                };
+
+                OnNotificationRecieved(this, args);
+            }
+
+
+            
 
 
         }
