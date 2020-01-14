@@ -120,7 +120,7 @@ namespace TestCOneConnection.OneCData
                 if (_sessionstatus.BadResponseCount > _maxbadresponsecount & !_notificationSended)
                 {
                     _notificationSended = true;
-                    ONECNotification(this, new TextEventArgs() { Data = "ONEC service stoped" });
+                    OnONECNotification(this, new TextEventArgs() { Data = "ONEC service stoped" });
                     // тут что то можно отослать например на скайп и почту
                     //return;
                 }

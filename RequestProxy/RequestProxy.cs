@@ -33,9 +33,21 @@ namespace TestCOneConnection.RequestProxy
 
         async private void  OnNotificationRecieved(object source, TextEventArgs args)
         {
+
+            IProxyParametr parametr = null;
+            
+
             string command = args.Data;
+            if (!command.Contains("ONEC_")) {
+                return;
+            }
+                
+
+
+
             switch (command)
             {
+
                 case "ONEC_Start":
                     await StopOneCSession();
                     break;
@@ -49,15 +61,20 @@ namespace TestCOneConnection.RequestProxy
                     break;
                 case "ONEC_Stat":
 
-                    IProxyParametr parametr = new ProxyParametr();
-                    parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "ONEC_Stat");
+                    parametr = new ProxyParametr();
+                    parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "ONEC_Stat/default");
                     parametr.Parametr.Add("OneCBody", "");
                     IProxyResponse response = await SimpleProxyGet(parametr);
                     _notificator.SendNotificationText(response.FormatedAswer.ToString() , args.Sender);
                     break;
-
-
+ 
                 default:
+
+                    parametr = new ProxyParametr();
+                    parametr.Parametr.Add("OneCURL", _onecoptions.Value.BASE_URL + "ONEC_Stat/"+ command);
+                    parametr.Parametr.Add("OneCBody", "");
+                    response = await SimpleProxyGet(parametr);
+                    _notificator.SendNotificationText(response.FormatedAswer.ToString(), args.Sender);
                     break;
             }
         }

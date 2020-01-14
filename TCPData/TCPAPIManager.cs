@@ -452,7 +452,7 @@ namespace TestCOneConnection.TCPData
                 if (_connectionTrysCount > _onecoptions.Value.MAX_BADREQUEST_COUNT & !_notificationSended)
                 {
                     _notificationSended = true;
-                    TCPNotification(this, new TextEventArgs() { Data = "TCP service stoped" });
+                    OnTCPNotification(this, new TextEventArgs() { Data = "TCP service stoped" });
                     /// сигнал отослать
                     /// и обнулить чтоб не спамило 
                 }
@@ -656,7 +656,7 @@ namespace TestCOneConnection.TCPData
             _timer.Dispose();
             _timer = null;
 
-            OnTCPNotification(this, new TextEventArgs() { Data = "TCP service stoped" });
+            //OnTCPNotification(this, new TextEventArgs() { Data = "TCP service stoped" });
         }
 
         public void SaveLog() {
