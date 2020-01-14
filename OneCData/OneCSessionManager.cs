@@ -29,6 +29,8 @@ namespace TestCOneConnection.OneCData
 
         private int _restrequesttimeout;
         private byte _maxbadresponsecount;
+        private bool _notificationSended;
+
 
         public List<IMessage> Logg { get => _logger.Messages; }
         public IOneCSessionStatus SessionStatus { get => _sessionstatus; }
@@ -46,7 +48,7 @@ namespace TestCOneConnection.OneCData
             _maxbadresponsecount = options.Value.MAX_BADREQUEST_COUNT;
             _options = options;
             _logger = logger;
-
+            _notificationSended = false;
 
             _timer = new PingTimer<OneCTaskType>()  
             {
@@ -115,8 +117,10 @@ namespace TestCOneConnection.OneCData
             {
                 _sessionstatus.BadResponseCount += 1;
 
-                if (_sessionstatus.BadResponseCount > _maxbadresponsecount)
+                if (_sessionstatus.BadResponseCount > _maxbadresponsecount & !_notificationSended)
                 {
+                    _notificationSended = true;
+                    ONECNotification(this, new TextEventArgs() { Data = "ONEC service stoped" });
                     // тут что то можно отослать например на скайп и почту
                     //return;
                 }
@@ -124,6 +128,7 @@ namespace TestCOneConnection.OneCData
             }
             else {
                 _sessionstatus.BadResponseCount = 0;
+                _notificationSended = false;
                 RestResponseCookie cookie = response.Cookies.SingleOrDefault(c => c.Name == "ibsession");
                 _sessionstatus.OneCSesionId = cookie.Value.ToString();
                 _client.CookieContainer = new CookieContainer();

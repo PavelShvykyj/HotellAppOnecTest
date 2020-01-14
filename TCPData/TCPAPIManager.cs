@@ -36,6 +36,8 @@ namespace TestCOneConnection.TCPData
         private Queue<ITCPTask> _tasks;
 
         private int _connectionTrysCount;
+        private bool _notificationSended;
+
 
         private ITCPStatus _status;
 
@@ -48,6 +50,7 @@ namespace TestCOneConnection.TCPData
         public TCPAPIManager(ITCPDataLogger dataLogger, IOptions<TCPOptions> options, IOptions<OneCOptions> onecoptions, IRequestProxy Proxy)
         {
             _connectionTrysCount = 0;
+            _notificationSended = false;
             _tasks = new Queue<ITCPTask>();
             _chaintask = null;
             _cancelTokenSourse = new CancellationTokenSource();
@@ -434,6 +437,7 @@ namespace TestCOneConnection.TCPData
             if (Connect(token))
             {
                 _connectionTrysCount = 0;
+                _notificationSended = false;
                 _status.connected = true;
                 if (_tasks.Count == 0)
                 {
@@ -445,11 +449,13 @@ namespace TestCOneConnection.TCPData
             }
             else {
                 ++_connectionTrysCount;
-                //if (_connectionTrysCount > _onecoptions.Value.MAX_BADREQUEST_COUNT)
-                //{
-                //    /// сигнал отослать
-                //    /// и обнулить чтоб не спамило 
-                //}
+                if (_connectionTrysCount > _onecoptions.Value.MAX_BADREQUEST_COUNT & !_notificationSended)
+                {
+                    _notificationSended = true;
+                    TCPNotification(this, new TextEventArgs() { Data = "TCP service stoped" });
+                    /// сигнал отослать
+                    /// и обнулить чтоб не спамило 
+                }
 
                 _status.connected = false;
                 SwichTimer(TCPTaskType.reconnect);

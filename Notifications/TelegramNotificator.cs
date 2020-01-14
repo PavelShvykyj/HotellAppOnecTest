@@ -6,6 +6,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 using TestCOneConnection.CommonData;
 
 namespace TestCOneConnection.Notifications
@@ -32,7 +33,6 @@ namespace TestCOneConnection.Notifications
             catch 
             {
                 /// что то тут делать? не ясно
-
             }
             
         }
@@ -40,12 +40,11 @@ namespace TestCOneConnection.Notifications
         public async void SendNotificationText(string message, string sender) {
             try
             {
-                await _client.SendTextMessageAsync(sender , message);
+                await _client.SendTextMessageAsync(sender , message, ParseMode.Html);
             }
             catch
             {
                 /// что то тут делать? не ясно
-
             }
 
         }
@@ -60,11 +59,7 @@ namespace TestCOneConnection.Notifications
             
             if (e.Update.Type == UpdateType.ChannelPost)
             {
-
                 //// тут отсечем лишнее и проверим подписчиков
-
-
-
                 TextEventArgs args = new TextEventArgs()
                 {
                     Data = e.Update.ChannelPost.Text,
